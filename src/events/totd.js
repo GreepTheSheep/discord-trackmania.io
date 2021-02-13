@@ -36,12 +36,12 @@ module.exports = function(client, sql, config){
         embed.setTitle(`Track Of The Day - ${new Date().getDate()} ${months[new Date().getMonth()]} ${new Date().getFullYear()}`)
         embed.addField('Name:', totd.map.name, true)
         embed.addField('Created by:', totd.map.authordisplayname, true)
-        embed.addField('Medals:', `Author: ${ms(totd.map.authorScore, {colonNotation: true, secondsDecimalDigits: 3})}\nGold: ${ms(totd.map.goldScore, {colonNotation: true, secondsDecimalDigits: 3})}\nSilver: ${ms(totd.map.silverScore, {colonNotation: true, secondsDecimalDigits: 3})}\nBronze: ${ms(totd.map.bronzeScore, {colonNotation: true, secondsDecimalDigits: 3})}`, true)
-        embed.addField('Uploaded:', `${ms(new Date(totd.map.timestamp) - new Date(), {compact: true, verbose: true})} ago`, true)
-        embed.addField('Links:', `[Download](${totd.map.fileUrl}) | [Trackmania.io](https://trackmania.io/#/totd/leaderboard/${totd.map.mapId}/${totd.map.mapUid}) | [Trackmania.exchange](https://trackmania.exchange/tracks/view/${totd.map.exchangeid})`, true)
+        embed.addField('Medals:', `Author: ${ms(totd.map.authorScore, {colonNotation: true, secondsDecimalDigits: 3})}\nGold: ${ms(totd.map.goldScore, {colonNotation: true, secondsDecimalDigits: 3})}\nSilver: ${ms(totd.map.silverScore, {colonNotation: true, secondsDecimalDigits: 3})}\nBronze: ${ms(totd.map.bronzeScore, {colonNotation: true, secondsDecimalDigits: 3})}`)
+        embed.addField('Uploaded:', `${ms(new Date() - new Date(totd.map.timestamp), {compact: true, verbose: true})} ago`, true)
+        embed.addField('Links:', `[Download](${totd.map.fileUrl}) | [Trackmania.io](https://trackmania.io/#/leaderboard/${totd.map.mapUd})${totd.map.exchangeid != 0 ? `| [Trackmania.exchange](https://trackmania.exchange/tracks/view/${totd.map.exchangeid})`:''}`)
         embed.setImage(totd.map.thumbnailUrl)
         embed.setTimestamp()
-        embed.setFooter(`Map ID: ${totd.map.mapId}`)
+        embed.setFooter(`Map ID: ${totd.map.mapUid}`)
 
         fetchedChannels.forEach(c=>{
             console.log('TOTD Sending to guild', c.guild)
