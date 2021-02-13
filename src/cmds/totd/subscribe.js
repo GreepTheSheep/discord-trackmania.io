@@ -20,7 +20,7 @@ module.exports = function(client, message, prefix, config, sql){
                 }
             })
         }
-        if (message.toLowerCase().startsWith(prefix + 'totd-unsub')){
+        if (message.content.toLowerCase().startsWith(prefix + 'totd-unsub')){
             sql.query('DELETE FROM `totd_channels` WHERE `guildId` = ?', message.guild.id, (err, res) =>{
                 if (err){
                     console.error(err)
