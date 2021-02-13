@@ -1,7 +1,7 @@
 const Discord = require('discord.js')
 
 module.exports = function(client, message, prefix){
-    if (message.toLowerCase().startsWith(prefix + ('help' || 'cmds'))){
+    if (message.content.toLowerCase().startsWith(prefix + ('help' || 'cmds'))){
         const embed = new Discord.MessageEmbed()
         embed.setTitle(`Help of ${client.user.username}`)
         .setColor('RANDOM')

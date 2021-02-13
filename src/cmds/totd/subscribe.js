@@ -3,7 +3,7 @@ const Discord = require('discord.js')
 
 module.exports = function(client, message, prefix, config, sql){
     if (message.member.hasPermission("MANAGE_MESSAGES")) {
-        if (message.toLowerCase().startsWith(prefix + 'totd-sub')){
+        if (message.content.toLowerCase().startsWith(prefix + 'totd-sub')){
 
             let args = message.content.split(" ").shift()
             if (args.length < 1) return message.reply(`Usage \`${prefix}totd-sub [channel mention]\``)

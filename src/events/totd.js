@@ -4,7 +4,7 @@ const ms = require('pretty-ms')
 var fetchedChannels = []
 
 function fetchChannels(client, sql, config){
-    sql.query("SELECT * FROM 'totd_channels'", (err, res)=>{
+    sql.query("SELECT * FROM totd_channels", (err, res)=>{
         if (err){
             client.users.cache.find(u => u.id == config.owner_id).send(`:warning: Error on getting TOTD channels list: \`\`\`${err}\`\`\``)
             console.error(err)
