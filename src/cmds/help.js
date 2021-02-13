@@ -5,7 +5,8 @@ module.exports = function(client, message, prefix){
         const embed = new Discord.MessageEmbed()
         embed.setTitle(`Help of ${client.user.username}`)
         .setColor('RANDOM')
-        .addField(prefix + `totd-(un)sub`, 'Mods and Admins only: Subscribe or unsubscribe to get TOTD notifications on a channel')
+        .addField(prefix + `totd`, 'Gets the TOTD information of today', true)
+        .addField(prefix + `totd-(un)sub`, 'Mods and Admins only: Subscribe or unsubscribe to get TOTD notifications on a channel', true)
 
         message.channel.send(embed)
     }
