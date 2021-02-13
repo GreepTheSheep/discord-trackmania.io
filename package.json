@@ -27,6 +27,7 @@
     "discord.js": "^12.5.1",
     "fs": "^0.0.1-security",
     "mysql": "^2.18.1",
+    "pretty-ms": "^7.0.1",
     "trackmania.io": "^1.0.0"
   },
   "devDependencies": {
