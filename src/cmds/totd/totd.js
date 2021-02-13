@@ -3,7 +3,7 @@ const Discord = require('discord.js')
 const Trackmania = require('trackmania.io')
 const ms = require('pretty-ms')
 
-module.exports = function(message,client,prefix){
+module.exports = function(client, message, prefix){
     if (message.content.toLowerCase() == prefix + 'totd'){
         const totd = new Trackmania.TOTD()
         const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
