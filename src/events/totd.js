@@ -1,7 +1,6 @@
 const Discord = require('discord.js')
 const Trackmania = require('trackmania.io')
 const ms = require('pretty-ms')
-var fetchedChannels = []
 
 function fetchChannels(client, sql, config){
     sql.query("SELECT * FROM totd_channels", (err, res)=>{
@@ -9,7 +8,7 @@ function fetchChannels(client, sql, config){
             client.users.cache.find(u => u.id == config.owner_id).send(`:warning: Error on getting TOTD channels list: \`\`\`${err}\`\`\``)
             console.error(err)
         } else {
-            fetchedChannels = []
+            var fetchedChannels = []
             res.forEach(r=>{
                 fetchedChannels.push({
                     guild: r.guildId,
@@ -23,16 +22,15 @@ function fetchChannels(client, sql, config){
 
 
 module.exports = function(client, sql, config){
-    fetchChannels(client, sql, config)
-    setInterval(()=>{
-        fetchChannels(client, sql, config)
-    }, 10 * 60 * 1000)
 
     const totd = new Trackmania.TOTD()
     const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
     totd.on('new-totd', totd=>{
+        console.log('New TOTD!')
+        var fetchedChannels = fetchChannels(client, sql, config)
         if (fetchedChannels.length < 1) return
+        console.log('TOTD Channels Database:',fetchedChannels)
         const embed = new Discord.MessageEmbed()
         embed.setColor('#00ff00')
         embed.setTitle(`Track Of The Day - ${new Date().getDate()} ${months[new Date().getMonth()]} ${new Date().getFullYear()}`)
@@ -46,7 +44,8 @@ module.exports = function(client, sql, config){
         embed.setFooter(`Map ID: ${totd.map.mapId}`)
 
         fetchedChannels.forEach(c=>{
-            client.guilds.fetch(c.guild).channels.fetch(c.channel).send(embed)
+            console.log('TOTD Sending to guild', c.guild)
+            client.channels.fetch(c.channel).send(embed)
         })
     })
 }

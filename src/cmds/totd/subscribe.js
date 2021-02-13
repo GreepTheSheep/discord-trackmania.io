@@ -16,7 +16,7 @@ module.exports = function(client, message, prefix, config, sql){
                     message.channel.send('Hmm... There\'s an unattended error while updating the database. This is reported')
                     client.users.cache.find(u => u.id == config.owner_id).send(`:warning: Error on totd sub event: \`\`\`${err}\`\`\``)
                 } else {
-                    message.channel.send(`Successfully added #${channel.name} to get TOTD updates.\n*(note that the database is refreshed every 10 minutes so if you ran this command between 18h50 and 19h CET it will not work)*`)
+                    message.channel.send(`Successfully added #${channel.name} to get TOTD updates.`)
                 }
             })
         }
@@ -30,7 +30,7 @@ module.exports = function(client, message, prefix, config, sql){
                     if (res.affectedRows == 0) {
                         message.channel.send(`You have not subscribed on this server to get TOTD updates, please run \`${prefix}totd-sub [channel mention]\` to get updates`)
                     } else {
-                        message.channel.send(`Successfully deleted TOTD updates on this server.\n*(note that the database is refreshed every 10 minutes so if you ran this command between 18h50 and 19h CET it will not work)*`)
+                        message.channel.send(`Successfully deleted TOTD updates on this server.`)
                     }
                 }
             })
