@@ -1,0 +1,35 @@
+{
+  "name": "discord-trackmania.io",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A discord bot that uses node-trackmania.io",
+  "main": "shard.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GreepTheSheep/discord-trackmania.io.git"
+  },
+  "keywords": [
+    "trackmania",
+    "discord",
+    "bot",
+    "openplanet"
+  ],
+  "author": "GreepTheSheep",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/GreepTheSheep/discord-trackmania.io/issues"
+  },
+  "homepage": "https://github.com/GreepTheSheep/discord-trackmania.io#readme",
+  "dependencies": {
+    "discord.js": "^12.5.1",
+    "fs": "^0.0.1-security",
+    "mysql": "^2.18.1",
+    "trackmania.io": "^1.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^7.20.0"
+  }
+}
