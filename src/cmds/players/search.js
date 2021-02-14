@@ -3,7 +3,7 @@ const Discord = require('discord.js')
 const Table = require('easy-table')
 const Trackmania = require('trackmania.io')
 
-module.exports = function (client, message, prefix,){
+module.exports = function (client, message, prefix){
     if (message.content.toLowerCase().startsWith(prefix + 'searchplayer')){
         let args = message.content.split(" ").slice(1)
         if (args.length < 1) return message.reply(`Usage: \`${prefix}searchplayer [player name]\``)

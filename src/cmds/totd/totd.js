@@ -5,9 +5,6 @@ const ms = require('pretty-ms')
 const fs = require('fs')
 const download = require('download')
 
-function getRandomInt(max) {
-    return Math.floor(Math.random() * Math.floor(max));
-}
 function arrayMove(array, from, to) {
 	const startIndex = from < 0 ? array.length + from : from;
 
@@ -42,17 +39,43 @@ module.exports = function(client, message, prefix, config, sql){
                 embed.setFooter(`Map UID: ${totd.map.mapUid}`)
     
                 sql.query("SELECT * FROM `totd_thumbnail_cache` WHERE mapUid = ?", totd.map.mapUid, (err, res)=>{
-                    if (err){
-                        client.users.cache.find(u => u.id == config.owner_id).send(`:warning: Error on getting TOTD thumbnail on cache: \`\`\`${err}\`\`\``)
-                        console.error(err)
-                        if (getRandomInt(2) == 0) message.channel.send(`Tip: type \`${prefix}totd help\` to get help if you want a TOTD of another day`,embed)
-                        else message.channel.send(embed)
-                    } else {
-                        embed.setImage(res[0].thumbnail)
-                        if (getRandomInt(2) == 0) message.channel.send(`Tip: type \`${prefix}totd help\` to get help if you want a TOTD of another day`,embed)
-                        else message.channel.send(embed)
-                    }
-                })
+                            if (err){
+                                client.users.cache.find(u => u.id == config.owner_id).send(`:warning: Error on getting TOTD thumbnail on cache: \`\`\`${err}\`\`\``)
+                                console.error(err)
+                                message.channel.send(embed)
+                            } else {
+                                if (!res[0]){
+                                    download(totd.map.thumbnailUrl, './data', {filename: totd.map.name+'.jpg'}).then(()=>{
+                                        const attachment = new Discord.MessageAttachment('./data/'+totd.map.name+'.jpg')
+                                        client.channels.fetch('761520592066707468').then(c=>{
+                                            c.send(`TOTD - ${new Date().getDate()} ${months[new Date().getMonth()]} ${new Date().getFullYear()} - ${totd.map.name} by ${totd.map.authordisplayname}`, attachment)
+                                            .then(msg=>{
+                                                if (msg.attachments.size > 0){
+                                                    embed.setImage(msg.attachments.array()[0].url)
+                                                    message.channel.send(embed)
+                            
+                                                    sql.query("INSERT INTO `totd_thumbnail_cache` (mapUid, date, thumbnail) VALUES (?, ?, ?)", [totd.map.mapUid, new Date().getFullYear()+'-'+new Date().getMonth()+'-'+new Date().getDate(), msg.attachments.array()[0].url], (err) =>{
+                                                        if (err){
+                                                            client.users.cache.find(u => u.id == config.owner_id).send(`:warning: Error on setting TOTD thumbnail on cache: \`\`\`${err}\`\`\``)
+                                                            console.error(err)
+                                                        } else {
+                                                            console.log('Successfully added ' + totd.map.name + ' as TOTD thumbnail cache')
+                                                        }
+                                                    })
+                            
+                                                    fs.unlinkSync('./data/'+totd.map.name+'.jpg')
+                                                }
+                                            })
+                                        }).catch(()=>{
+                                            // do nothing because of shards
+                                        })
+                                    })
+                                } else {
+                                    embed.setImage(res[0].thumbnail)
+                                    message.channel.send(embed)
+                                }
+                            }
+                        })
             })
         } else {
             if (args[0].toLowerCase() == 'help'){
