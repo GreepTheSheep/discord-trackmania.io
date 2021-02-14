@@ -25,7 +25,7 @@ module.exports = function(client, message, prefix, config, sql){
                 embed.setTitle(`Track Of The Day - ${new Date().getDate()} ${months[new Date().getMonth()]} ${new Date().getFullYear()}`)
                 embed.addField('Name:', totd.map.name, true)
                 embed.addField('Created by:', totd.map.authordisplayname, true)
-                embed.addField('Medals:', `Author: ${ms(totd.map.authorScore, {colonNotation: true, secondsDecimalDigits: 3})}\nGold: ${ms(totd.map.goldScore, {colonNotation: true, secondsDecimalDigits: 3})}\nSilver: ${ms(totd.map.silverScore, {colonNotation: true, secondsDecimalDigits: 3})}\nBronze: ${ms(totd.map.bronzeScore, {colonNotation: true, secondsDecimalDigits: 3})}`)
+                embed.addField('Medals:', `Author: **${ms(totd.map.authorScore, {colonNotation: true, secondsDecimalDigits: 3})}**\nGold: ${ms(totd.map.goldScore, {colonNotation: true, secondsDecimalDigits: 3})}\nSilver: ${ms(totd.map.silverScore, {colonNotation: true, secondsDecimalDigits: 3})}\nBronze: ${ms(totd.map.bronzeScore, {colonNotation: true, secondsDecimalDigits: 3})}`)
                 embed.addField('Uploaded:', `${ms(new Date() - new Date(totd.map.timestamp), {compact: true, verbose: true})} ago`, true)
                 embed.addField('Links:', `[Download](${totd.map.fileUrl}) | [Trackmania.io](https://trackmania.io/#/leaderboard/${totd.map.mapUd})${totd.map.exchangeid != 0 ? ` | [Trackmania.exchange](https://trackmania.exchange/tracks/view/${totd.map.exchangeid})`:''}`)
                 embed.setFooter(`Map UID: ${totd.map.mapUid}`)
@@ -87,7 +87,7 @@ module.exports = function(client, message, prefix, config, sql){
                     var yearBefore = new Date().getFullYear() - Number(args[2])
                     var yearsBack = yearBefore * 12
                     var monthsBack
-                    var i = 1
+                    var i = 0
                     monthsShort.forEach(m=>{
                         if (args[0].toLowerCase() == m){
                             if (new Date().getMonth() < i) monthsBack = i - new Date().getMonth()
@@ -107,7 +107,7 @@ module.exports = function(client, message, prefix, config, sql){
                         embed.setTitle(`Track Of The Day - ${Number(args[1])} ${months[monthsShort.indexOf(args[0].toLowerCase())]} ${Number(args[2])}`)
                         embed.addField('Name:', totd.map.name, true)
                         embed.addField('Created by:', totd.map.authordisplayname, true)
-                        embed.addField('Medals:', `Author: ${ms(totd.map.authorScore, {colonNotation: true, secondsDecimalDigits: 3})}\nGold: ${ms(totd.map.goldScore, {colonNotation: true, secondsDecimalDigits: 3})}\nSilver: ${ms(totd.map.silverScore, {colonNotation: true, secondsDecimalDigits: 3})}\nBronze: ${ms(totd.map.bronzeScore, {colonNotation: true, secondsDecimalDigits: 3})}`)
+                        embed.addField('Medals:', `Author: **${ms(totd.map.authorScore, {colonNotation: true, secondsDecimalDigits: 3})}**\nGold: ${ms(totd.map.goldScore, {colonNotation: true, secondsDecimalDigits: 3})}\nSilver: ${ms(totd.map.silverScore, {colonNotation: true, secondsDecimalDigits: 3})}\nBronze: ${ms(totd.map.bronzeScore, {colonNotation: true, secondsDecimalDigits: 3})}`)
                         embed.addField('Uploaded:', `${ms(new Date() - new Date(totd.map.timestamp), {compact: true, verbose: true})} ago`, true)
                         embed.addField('Links:', `[Download](${totd.map.fileUrl}) | [Trackmania.io](https://trackmania.io/#/leaderboard/${totd.map.mapUid})${totd.map.exchangeid != 0 ? ` | [Trackmania.exchange](https://trackmania.exchange/tracks/view/${totd.map.exchangeid})`:''}`)
                         embed.setFooter(`Map UID: ${totd.map.mapUid}`)
@@ -122,7 +122,7 @@ module.exports = function(client, message, prefix, config, sql){
                                     download(totd.map.thumbnailUrl, './data', {filename: totd.map.name+'.jpg'}).then(()=>{
                                         const attachment = new Discord.MessageAttachment('./data/'+totd.map.name+'.jpg')
                                         client.channels.fetch('761520592066707468').then(c=>{
-                                            c.send(`${Number(args[1])} ${months[monthsShort.indexOf(args[0].toLowerCase())]} ${Number(args[2])} - ${totd.map.name}`, attachment)
+                                            c.send(`TOTD - ${Number(args[1])} ${months[monthsShort.indexOf(args[0].toLowerCase())]} ${Number(args[2])} - ${totd.map.name} by ${totd.map.authordisplayname}`, attachment)
                                             .then(msg=>{
                                                 if (msg.attachments.size > 0){
                                                     embed.setImage(msg.attachments.array()[0].url)
