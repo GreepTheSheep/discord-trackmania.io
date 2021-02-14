@@ -96,6 +96,8 @@ module.exports = function(client, message, prefix, config, sql){
                         else i++
                     })
 
+                    console.log(monthsBack)
+
                     totd.totd(monthsBack + yearsBack).then(totd=>{
                         totd = totd[Number(args[1])-1]
                         if (!totd) return message.reply('This was not found')
