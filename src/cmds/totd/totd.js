@@ -38,7 +38,7 @@ module.exports = function(client, message, prefix, config, sql){
                 })
             })
         } else {
-            if (args.length != 3 || args[0].toLowerCase() == 'help') return message.reply(`Usage \`${prefix}totd [3-char month] [day] [year]\`\nExample: \`${prefix}totd dec 24 2020\` for December, 24 2020. \`${prefix}totd sep 9 2020\` for September, 9 2020 etc...`)
+            if (args[0].toLowerCase() == 'help') return message.reply(`Usage \`${prefix}totd [3-char month] [day] [year]\`\nExample: \`${prefix}totd dec 24 2020\` for December, 24 2020. \`${prefix}totd sep 9 2020\` for September, 9 2020 etc...`)
             const monthsShort = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sepr", "oct", "nov", "dec"];
             if (monthsShort.includes(args[0].toLowerCase())){
                 if (isNaN(Number(args[1])) || isNaN(Number(args[2]))) return message.reply(`Date or year isn't a numeric value, type \`${prefix}totd help\` to get help`)
