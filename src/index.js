@@ -22,6 +22,8 @@ client.on('ready', async () => {
     try{
         console.log(`Logged in as ${client.user.tag}`)
 
+        client.user.setActivity(config.prefix, {type: 'LISTENING'})
+
         // Load TOTD listener
         require('./events/totd.js')(client, sql, config)
     } catch (err) {
