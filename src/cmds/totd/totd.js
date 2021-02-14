@@ -10,13 +10,13 @@ function getRandomInt(max) {
 }
 
 module.exports = function(client, message, prefix, config, sql){
-    if (message.content.toLowerCase() == prefix + 'totd'){
+    if (message.content.toLowerCase().startsWith(prefix + 'totd')){
         const totd = new Trackmania.TOTD()
         const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
         let args = message.content.split(" ")
         args.shift()
-        if (args.length == 0){
+        if (args.length < 1){
             totd.totd().then(totd=>{
                 totd.reverse()
                 totd = totd[0]
