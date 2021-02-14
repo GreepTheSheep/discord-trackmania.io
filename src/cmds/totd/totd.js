@@ -93,7 +93,7 @@ module.exports = function(client, message, prefix, config, sql){
                 })
             } else {
                 const monthsShort = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
-                const monthsShort2 = monthsShort
+                const monthsShort2 = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
                 if (monthsShort.includes(args[0].toLowerCase())){
                     if (isNaN(Number(args[1])) || isNaN(Number(args[2]))) return message.reply(`Date or year isn't a numeric value, type \`${prefix}totd help\` to get help`)
                     var yearBefore = new Date().getFullYear() - Number(args[2])
