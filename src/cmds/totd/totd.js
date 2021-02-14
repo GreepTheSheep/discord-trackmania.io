@@ -100,6 +100,7 @@ module.exports = function(client, message, prefix, config, sql){
                     var monthsBack
                     var i = 0
                     var monthsShortNew
+                    monthsShort.reverse()
                     for (var p = 0 ; p < new Date().getMonth() ; p++){
                         monthsShortNew = arrayMove(monthsShort, 0, -1)
                     }
