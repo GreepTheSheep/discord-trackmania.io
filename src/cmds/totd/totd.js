@@ -96,7 +96,8 @@ module.exports = function(client, message, prefix, config, sql){
                 if (monthsShort.includes(args[0].toLowerCase())){
                     if (isNaN(Number(args[1])) || isNaN(Number(args[2]))) return message.reply(`Date or year isn't a numeric value, type \`${prefix}totd help\` to get help`)
                     var yearBefore = new Date().getFullYear() - Number(args[2])
-                    var yearsBack = yearBefore * 12
+                    var yearsBack = 0
+                    if (yearBefore > 1) yearsBack = yearBefore * 12
                     var monthsBack
                     var i = 0
                     var monthsShortNew = monthsShort
@@ -165,6 +166,9 @@ module.exports = function(client, message, prefix, config, sql){
                                 }
                             }
                         })
+                    }).catch(err=>{
+                        console.error(err)
+                        message.channel.send('No TOTDs are found for this month.')
                     })
                 } else return message.reply(`Month not found, type \`${prefix}totd help\` to get help`)
             }
