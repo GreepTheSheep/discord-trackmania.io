@@ -5,7 +5,8 @@ module.exports = function(client, message, prefix, config, sql){
     if (message.member.hasPermission("MANAGE_MESSAGES")) {
         if (message.content.toLowerCase().startsWith(prefix + 'totd-sub')){
 
-            let args = message.content.split(" ").shift()
+            let args = message.content.split(" ")
+            args.shift()
             if (args.length < 1) return message.reply(`Usage \`${prefix}totd-sub [channel mention]\``)
             var channel = message.mentions.channels.first()
             if (!channel) return message.reply(`Usage \`${prefix}totd-sub [channel mention]\``)
