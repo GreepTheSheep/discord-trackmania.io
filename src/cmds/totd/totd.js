@@ -8,6 +8,17 @@ const download = require('download')
 function getRandomInt(max) {
     return Math.floor(Math.random() * Math.floor(max));
 }
+function arrayMove(array, from, to) {
+	const startIndex = from < 0 ? array.length + from : from;
+
+	if (startIndex >= 0 && startIndex < array.length) {
+		const endIndex = to < 0 ? array.length + to : to;
+
+		const [item] = array.splice(from, 1);
+		array.splice(endIndex, 0, item);
+    }
+    return array
+}
 
 module.exports = function(client, message, prefix, config, sql){
     if (message.content.toLowerCase().startsWith(prefix + 'totd')){
@@ -88,10 +99,13 @@ module.exports = function(client, message, prefix, config, sql){
                     var yearsBack = yearBefore * 12
                     var monthsBack
                     var i = 0
-                    monthsShort.forEach(m=>{
+                    var monthsShortNew
+                    for (var p = 0 ; p < new Date().getMonth() ; p++){
+                        monthsShortNew = arrayMove(monthsShort, 0, -1)
+                    }
+                    monthsShortNew.forEach(m=>{
                         if (args[0].toLowerCase() == m){
-                            if (new Date().getMonth() < i) monthsBack = i - new Date().getMonth()
-                            else monthsBack = i
+                            monthsBack = i
                         } 
                         else i++
                     })
