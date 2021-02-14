@@ -26,6 +26,7 @@
   "dependencies": {
     "discord.js": "^12.5.1",
     "download": "^8.0.0",
+    "easy-table": "^1.1.1",
     "fs": "^0.0.1-security",
     "mysql": "^2.18.1",
     "pretty-ms": "^7.0.1",
