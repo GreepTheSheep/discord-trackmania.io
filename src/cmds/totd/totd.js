@@ -94,13 +94,15 @@ module.exports = function(client, message, prefix, config, sql){
                         else i++
                     })
 
+                    console.log(monthsBack + yearsBack)
+
                     totd.totd(monthsBack + yearsBack).then(totd=>{
-                        totd = totd[Number(args[1])+1]
+                        totd = totd[Number(args[1])-1]
                         if (!totd) return message.reply('This was not found')
 
                         const embed = new Discord.MessageEmbed()
                         embed.setColor('#00ff00')
-                        embed.setTitle(`Track Of The Day - ${Number(args[1])+1} ${months[monthsShort.indexOf(args[0].toLowerCase())]} ${Number(args[2])}`)
+                        embed.setTitle(`Track Of The Day - ${Number(args[1])} ${months[monthsShort.indexOf(args[0].toLowerCase())]} ${Number(args[2])}`)
                         embed.addField('Name:', totd.map.name, true)
                         embed.addField('Created by:', totd.map.authordisplayname, true)
                         embed.addField('Medals:', `Author: ${ms(totd.map.authorScore, {colonNotation: true, secondsDecimalDigits: 3})}\nGold: ${ms(totd.map.goldScore, {colonNotation: true, secondsDecimalDigits: 3})}\nSilver: ${ms(totd.map.silverScore, {colonNotation: true, secondsDecimalDigits: 3})}\nBronze: ${ms(totd.map.bronzeScore, {colonNotation: true, secondsDecimalDigits: 3})}`)
@@ -118,13 +120,13 @@ module.exports = function(client, message, prefix, config, sql){
                                     download(totd.map.thumbnailUrl, './data', {filename: totd.map.name+'.jpg'}).then(()=>{
                                         const attachment = new Discord.MessageAttachment('./data/'+totd.map.name+'.jpg')
                                         client.channels.fetch('761520592066707468').then(c=>{
-                                            c.send(new Date() + ' - ' + totd.map.name, attachment)
+                                            c.send(`${Number(args[1])} ${months[monthsShort.indexOf(args[0].toLowerCase())]} ${Number(args[2])} - ${totd.map.name}`, attachment)
                                             .then(msg=>{
                                                 if (msg.attachments.size > 0){
                                                     embed.setImage(msg.attachments.array()[0].url)
                                                     message.channel.send(embed)
                             
-                                                    sql.query("INSERT INTO `totd_thumbnail_cache` (mapUid, date, thumbnail) VALUES (?, ?, ?)", [totd.map.mapUid, Number(args[2])+'-'+(monthsShort.indexOf(args[0].toLowerCase())+1)+'-'+(Number(args[1])+1), msg.attachments.array()[0].url], (err) =>{
+                                                    sql.query("INSERT INTO `totd_thumbnail_cache` (mapUid, date, thumbnail) VALUES (?, ?, ?)", [totd.map.mapUid, Number(args[2])+'-'+(monthsShort.indexOf(args[0].toLowerCase())+1)+'-'+(Number(args[1])), msg.attachments.array()[0].url], (err) =>{
                                                         if (err){
                                                             client.users.cache.find(u => u.id == config.owner_id).send(`:warning: Error on setting TOTD thumbnail on cache: \`\`\`${err}\`\`\``)
                                                             console.error(err)
