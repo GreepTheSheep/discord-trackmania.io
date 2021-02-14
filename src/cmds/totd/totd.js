@@ -100,11 +100,10 @@ module.exports = function(client, message, prefix, config, sql){
                     var monthsBack
                     var i = 0
                     var monthsShortNew = monthsShort
-                    for (var p = 0 ; p < new Date().getMonth() ; p++){
+                    for (var p = 0 ; p < new Date().getMonth()+1 ; p++){
                         monthsShortNew = arrayMove(monthsShortNew, 0, -1)
                     }
                     monthsShortNew.reverse()
-                    console.log(monthsShortNew)
                     monthsShortNew.forEach(m=>{
                         if (args[0].toLowerCase() == m){
                             monthsBack = i
@@ -112,7 +111,7 @@ module.exports = function(client, message, prefix, config, sql){
                         else i++
                     })
 
-                    console.log(monthsBack)
+                    console.log(monthsBack + yearsBack)
 
                     totd.totd(monthsBack + yearsBack).then(totd=>{
                         totd = totd[Number(args[1])-1]
