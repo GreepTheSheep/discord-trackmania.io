@@ -50,14 +50,14 @@ module.exports = function(client, sql, config){
                         embed.addField('Links:', `[Download](${totd.map.fileUrl}) | [Trackmania.io](https://trackmania.io/#/leaderboard/${totd.map.mapUd})${totd.map.exchangeid != 0 ? `| [Trackmania.exchange](https://trackmania.exchange/tracks/view/${totd.map.exchangeid})`:''}`)
                         embed.setImage(msg.attachments.array()[0].url)
                         embed.setTimestamp()
-                        embed.setFooter(`Map ID: ${totd.map.mapUid}`)
+                        embed.setFooter(`Map UID: ${totd.map.mapUid}`)
 
                         fetchedChannels.forEach(c=>{
                             console.log('TOTD Sending to guild', c.guild)
                             client.channels.fetch(c.channel).then(c=>c.send(embed))
                         })
 
-                        sql.query("INSERT INTO `totd_thumbnail_cache` (mapUid, date, thumbnail) VALUES (?, ?, ?)", [totd.map.mapUid, new Date(), msg.attachments.array()[0].url], (err) =>{
+                        sql.query("INSERT INTO `totd_thumbnail_cache` (mapUid, date, thumbnail) VALUES (?, ?, ?)", [totd.map.mapUid, new Date().getFullYear()+'-'+(new Date().getMonth()+1)+'-'+new Date().getDate(), msg.attachments.array()[0].url], (err) =>{
                             if (err){
                                 client.users.cache.find(u => u.id == config.owner_id).send(`:warning: Error on setting TOTD thumbnail on cache: \`\`\`${err}\`\`\``)
                                 console.error(err)
