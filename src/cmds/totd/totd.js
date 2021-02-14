@@ -103,6 +103,7 @@ module.exports = function(client, message, prefix, config, sql){
                     for (var p = 0 ; p < new Date().getMonth() ; p++){
                         monthsShortNew = arrayMove(monthsShort, 0, -1)
                     }
+                    console.log(monthsShortNew)
                     monthsShortNew.forEach(m=>{
                         if (args[0].toLowerCase() == m){
                             monthsBack = i
