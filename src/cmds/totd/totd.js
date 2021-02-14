@@ -45,7 +45,43 @@ module.exports = function(client, message, prefix, config, sql){
                 })
             })
         } else {
-            if (args[0].toLowerCase() == 'help') return message.reply(`Usage \`${prefix}totd [3-char month] [day] [year]\`\nExample: \`${prefix}totd dec 24 2020\` for December, 24 2020. \`${prefix}totd sep 9 2020\` for September, 9 2020 etc...`)
+            if (args[0].toLowerCase() == 'help'){
+                const embed = new Discord.MessageEmbed()
+                embed.setTitle(`TOTD help`)
+                .setColor('RANDOM')
+                .addField(prefix + `totd`, 'Gets the TOTD information of today', true)
+                .addField(prefix + `totd sub`, 'Subscribe to get the new TOTDs', true)
+                .addField(prefix + `totd unsub`, 'Unsubscribes to the TOTDs updates', true)
+                .addField(prefix + `totd [3-char month] [day] [year]`, 'Gets the TOTD of a specific day.\n' + `Example: \`${prefix}totd dec 24 2020\` for December, 24 2020. \`${prefix}totd sep 9 2020\` for September, 9 2020 etc...`, true)
+                message.channel.send(embed)
+            } else if (args[0].toLowerCase() == 'sub'){
+                var channel = message.mentions.channels.first()
+                if (!channel) return message.reply(`Usage \`${prefix}totd sub [channel mention]\``)
+                
+                sql.query('INSERT INTO `totd_channels` (userId, guildId, channelId) VALUES (?, ?, ?)', [message.author.id, message.guild.id, channel.id], (err) =>{
+                    if (err){
+                        console.error(err)
+                        message.channel.send('Hmm... There\'s an unattended error while updating the database. This is reported')
+                        client.users.cache.find(u => u.id == config.owner_id).send(`:warning: Error on totd sub event: \`\`\`${err}\`\`\``)
+                    } else {
+                        message.channel.send(`Successfully added #${channel.name} to get TOTD updates.`)
+                    }
+                })
+            } else if (args[0].toLowerCase() == 'unsub'){
+                sql.query('DELETE FROM `totd_channels` WHERE `guildId` = ?', message.guild.id, (err, res) =>{
+                    if (err){
+                        console.error(err)
+                        message.channel.send('Hmm... There\'s an unattended error while updating the database. This is reported')
+                        client.users.cache.find(u => u.id == config.owner_id).send(`:warning: Error on totd sub event: \`\`\`${err}\`\`\``)
+                    } else {
+                        if (res.affectedRows == 0) {
+                            message.channel.send(`You have not subscribed on this server to get TOTD updates, please run \`${prefix}totd-sub [channel mention]\` to get updates`)
+                        } else {
+                            message.channel.send(`Successfully deleted TOTD updates on this server.`)
+                        }
+                    }
+                })
+            } else {
             const monthsShort = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sepr", "oct", "nov", "dec"];
             if (monthsShort.includes(args[0].toLowerCase())){
                 if (isNaN(Number(args[1])) || isNaN(Number(args[2]))) return message.reply(`Date or year isn't a numeric value, type \`${prefix}totd help\` to get help`)
@@ -126,4 +162,5 @@ module.exports = function(client, message, prefix, config, sql){
             } else return message.reply(`Month not found, type \`${prefix}totd help\` to get help`)
         }
     }
+}
 }
