@@ -84,8 +84,7 @@ module.exports = function(client, message, prefix, config, sql){
                 const monthsShort = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sepr", "oct", "nov", "dec"];
                 if (monthsShort.includes(args[0].toLowerCase())){
                     if (isNaN(Number(args[1])) || isNaN(Number(args[2]))) return message.reply(`Date or year isn't a numeric value, type \`${prefix}totd help\` to get help`)
-                    var date = new Date()
-                    var yearBefore = date.getFullYear() - Number(args[2])
+                    var yearBefore = new Date().getFullYear() - Number(args[2])
                     var yearsBack = yearBefore * 12
                     var monthsBack
                     var i = 1
@@ -94,6 +93,8 @@ module.exports = function(client, message, prefix, config, sql){
                         else i++
                     })
 
+                    console.log(yearsBack)
+                    console.log(monthsBack)
                     console.log(monthsBack + yearsBack)
 
                     totd.totd(monthsBack + yearsBack).then(totd=>{
