@@ -100,7 +100,7 @@ module.exports = function(client, message, prefix, config, sql){
 
                         const embed = new Discord.MessageEmbed()
                         embed.setColor('#00ff00')
-                        embed.setTitle(`Track Of The Day - ${Number(args[1])+1} ${months[monthsBack]} ${Number(args[2])}`)
+                        embed.setTitle(`Track Of The Day - ${Number(args[1])+1} ${months[monthsShort.indexOf(args[0].toLowerCase())]} ${Number(args[2])}`)
                         embed.addField('Name:', totd.map.name, true)
                         embed.addField('Created by:', totd.map.authordisplayname, true)
                         embed.addField('Medals:', `Author: ${ms(totd.map.authorScore, {colonNotation: true, secondsDecimalDigits: 3})}\nGold: ${ms(totd.map.goldScore, {colonNotation: true, secondsDecimalDigits: 3})}\nSilver: ${ms(totd.map.silverScore, {colonNotation: true, secondsDecimalDigits: 3})}\nBronze: ${ms(totd.map.bronzeScore, {colonNotation: true, secondsDecimalDigits: 3})}`)
@@ -121,21 +121,10 @@ module.exports = function(client, message, prefix, config, sql){
                                             c.send(new Date() + ' - ' + totd.map.name, attachment)
                                             .then(msg=>{
                                                 if (msg.attachments.size > 0){
-                                                    const newEmbed = new Discord.MessageEmbed()
-                                                    newEmbed.setColor('#00ff00')
-                                                    newEmbed.setTitle(`Track Of The Day - ${new Date().getDate()} ${months[new Date().getMonth()]} ${new Date().getFullYear()}`)
-                                                    newEmbed.addField('Name:', totd.map.name, true)
-                                                    newEmbed.addField('Created by:', totd.map.authordisplayname, true)
-                                                    newEmbed.addField('Medals:', `Author: ${ms(totd.map.authorScore, {colonNotation: true, secondsDecimalDigits: 3})}\nGold: ${ms(totd.map.goldScore, {colonNotation: true, secondsDecimalDigits: 3})}\nSilver: ${ms(totd.map.silverScore, {colonNotation: true, secondsDecimalDigits: 3})}\nBronze: ${ms(totd.map.bronzeScore, {colonNotation: true, secondsDecimalDigits: 3})}`)
-                                                    newEmbed.addField('Uploaded:', `${ms(new Date() - new Date(totd.map.timestamp), {compact: true, verbose: true})} ago`, true)
-                                                    newEmbed.addField('Links:', `[Download](${totd.map.fileUrl}) | [Trackmania.io](https://trackmania.io/#/leaderboard/${totd.map.mapUd})${totd.map.exchangeid != 0 ? ` | [Trackmania.exchange](https://trackmania.exchange/tracks/view/${totd.map.exchangeid})`:''}`)
-                                                    newEmbed.setImage(msg.attachments.array()[0].url)
-                                                    newEmbed.setTimestamp()
-                                                    newEmbed.setFooter(`Map UID: ${totd.map.mapUid}`)
+                                                    embed.setImage(msg.attachments.array()[0].url)
+                                                    message.channel.send(embed)
                             
-                                                    message.channel.send(newEmbed)
-                            
-                                                    sql.query("INSERT INTO `totd_thumbnail_cache` (mapUid, date, thumbnail) VALUES (?, ?, ?)", [totd.map.mapUid, new Date().getFullYear()+'-'+(new Date().getMonth()+1)+'-'+new Date().getDate(), msg.attachments.array()[0].url], (err) =>{
+                                                    sql.query("INSERT INTO `totd_thumbnail_cache` (mapUid, date, thumbnail) VALUES (?, ?, ?)", [totd.map.mapUid, Number(args[2])+'-'+(monthsShort.indexOf(args[0].toLowerCase())+1)+'-'+(Number(args[1])+1), msg.attachments.array()[0].url], (err) =>{
                                                         if (err){
                                                             client.users.cache.find(u => u.id == config.owner_id).send(`:warning: Error on setting TOTD thumbnail on cache: \`\`\`${err}\`\`\``)
                                                             console.error(err)
