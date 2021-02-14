@@ -89,7 +89,7 @@ module.exports = function(client, message, prefix, config, sql){
                     var monthsBack
                     var i = 1
                     monthsShort.forEach(m=>{
-                        if (args[0].toLowerCase == m) monthsBack = i
+                        if (args[0].toLowerCase() == m) monthsBack = i
                         else i++
                     })
 
