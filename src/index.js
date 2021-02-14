@@ -18,14 +18,14 @@ sql.connect((err)=>{
     }
 })
 
+const Trackmania = require('trackmania.io')
+const totd = new Trackmania.TOTD()
+
 client.on('ready', async () => {
     try{
         console.log(`Logged in as ${client.user.tag}`)
 
         client.user.setActivity(config.prefix, {type: 'LISTENING'})
-
-        // Load TOTD listener
-        require('./events/totd.js')(client, sql, config)
     } catch (err) {
         console.error(err)
         client.users.cache.find(u => u.id == config.owner_id).send(`:warning: Error on ready event: \`\`\`${err}\`\`\``)
@@ -41,6 +41,10 @@ client.on('message', message => {
         message.channel.send('Hmm... There\'s an unattended error while runnding this command. This is reported')
         client.users.cache.find(u => u.id == config.owner_id).send(`:warning: Error on message event: \`\`\`${err}\`\`\``)
     }
+})
+
+totd.on('new-totd', totd=>{
+    require('./events/totd.js')(totd, client, sql, config)
 })
 
 client.login(config.token)
