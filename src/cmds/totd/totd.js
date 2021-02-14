@@ -99,12 +99,11 @@ module.exports = function(client, message, prefix, config, sql){
                     var yearsBack = yearBefore * 12
                     var monthsBack
                     var i = 0
-                    var monthsShortNew
-                    var monthsShort2 = monthsShort
-                    monthsShort.reverse()
-                    for (var p = 0 ; p < monthsShort.indexOf(args[0].toLowerCase()) ; p++){
-                        monthsShortNew = arrayMove(monthsShort2, 0, -1)
+                    var monthsShortNew = monthsShort
+                    for (var p = 0 ; p < new Date().getMonth() ; p++){
+                        monthsShortNew = arrayMove(monthsShortNew, 0, -1)
                     }
+                    monthsShortNew.reverse()
                     console.log(monthsShortNew)
                     monthsShortNew.forEach(m=>{
                         if (args[0].toLowerCase() == m){
