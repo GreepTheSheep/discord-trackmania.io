@@ -108,7 +108,7 @@ module.exports = function(client, message, prefix, config, sql){
                         client.users.cache.find(u => u.id == config.owner_id).send(`:warning: Error on totd sub event: \`\`\`${err}\`\`\``)
                     } else {
                         if (res.affectedRows == 0) {
-                            message.channel.send(`You have not subscribed on this server to get TOTD updates, please run \`${prefix}totd-sub [channel mention]\` to get updates`)
+                            message.channel.send(`You have not subscribed on this server to get TOTD updates, please run \`${prefix}totd sub [channel mention]\` to get updates`)
                         } else {
                             message.channel.send(`Successfully deleted TOTD updates on this server.`)
                         }

@@ -16,12 +16,29 @@ module.exports = function (client, message, prefix, config, sql){
                         console.error(err)
                         message.reply('Error while adding on your account, this was reported')
                     } else {
-                        console.log('Successfully registered ' + player[0].displayName + ' on Discord User ID ' + message.author.id)
-                        message.reply('Successfully registered ' + player[0].displayName + ' on your account!')
+                        console.log('Successfully registered ' + player[0].displayname + ' on Discord User ID ' + message.author.id)
+                        message.reply('Successfully registered ' + player[0].displayname + ' on your account!')
                     }
                 })
             } else {
-                message.reply('Player not found, please paste your Ubisoft Connect (Uplay) login, if it\'s still fails, check that you have made a Cup Of The Day within the week to be able to register (the system will improve soon to be able to open the access for Starter editions)')
+                message.reply('Player not found, please paste your Ubisoft Connect (Uplay) login, if it still fails, check yourself on https://trackmania.io/#/players')
+            }
+        })
+    }
+    if (message.content.toLowerCase() == prefix + 'unregister'){
+        let args = message.content.split(" ").slice(1)
+        if (args.length < 1) return message.reply(`Usage: \`${prefix}register [Uplay login]\``)
+        sql.query("DELETE FROM `players` WHERE discordId = ?", message.author.id, (err, res) =>{
+            if (err){
+                client.users.cache.find(u => u.id == config.owner_id).send(`:warning: Error on unregistering player on database: \`\`\`${err}\`\`\``)
+                console.error(err)
+                message.reply('Error while deleting on your account, this was reported')
+            } else {
+                if (res.affectedRows == 0) {
+                    message.channel.send(`You have not registered on here, please run \`${prefix}register [Uplay login]\` to register yourself`)
+                } else {
+                    message.channel.send(`Successfully unregistered!`)
+                }
             }
         })
     }
