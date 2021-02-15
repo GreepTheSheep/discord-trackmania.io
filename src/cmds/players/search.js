@@ -12,18 +12,18 @@ module.exports = function (client, message, prefix){
             var t = new Table
             players.forEach(player=>{
                 t.cell('Display name', player.displayname)
-                t.cell('ID', `\`${player.accountid}\``)
+                // t.cell('ID', player.accountid)
                 t.cell('MM 3v3', `3v3: ${player.matchmaking.find(m=>m.typename == "3v3").rank}th - ${player.matchmaking.find(m=>m.typename == "3v3").score} pts`)
-                if (!player.meta.vanity || player.meta.vanity != ""){
-                    t.cell('URL', `[TM.io page](https://trackmania.io/#/player/${player.meta.vanity})`)
+                if (!player.meta || !player.meta.vanity || player.meta.vanity != ""){
+                    t.cell('TM.io', `https://trackmania.io/#/player/${player.meta.vanity}`)
                 } else {
-                    t.cell('URL', `[TM.io page](https://trackmania.io/#/player/${player.accountid})`)
+                    t.cell('TM.io', `https://trackmania.io/#/player/${player.accountid}`)
                 }
                 t.newRow()
             })
             let embed = new Discord.MessageEmbed()
             embed.setTitle('Results for ' + args.join(' '))
-            .setDescription(t.print())
+            .setDescription(`\`\`\`${t.toString()}\`\`\``)
             message.channel.send(embed)
         })
     }
