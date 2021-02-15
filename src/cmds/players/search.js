@@ -14,7 +14,7 @@ module.exports = function (client, message, prefix){
                 t.cell('Display name', player.displayname)
                 t.cell('ID', `\`${player.accountid}\``)
                 t.cell('MM 3v3', `3v3: ${player.matchmaking.find(m=>m.typename == "3v3").rank}th - ${player.matchmaking.find(m=>m.typename == "3v3").score} pts`)
-                if (player.meta.vanity != ""){
+                if (!player.meta.vanity || player.meta.vanity != ""){
                     t.cell('URL', `[TM.io page](https://trackmania.io/#/player/${player.meta.vanity})`)
                 } else {
                     t.cell('URL', `[TM.io page](https://trackmania.io/#/player/${player.accountid})`)
