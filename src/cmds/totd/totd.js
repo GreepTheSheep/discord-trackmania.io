@@ -106,11 +106,11 @@ module.exports = function(client, message, prefix, config, sql){
                         leader.forEach(top=>{
                             tops_string.places.push(tops_string.places.length+1)
                             tops_string.author.push(top.displayname)
-                            tops_string.time.push(ms(top.time, {colonNotation: true, secondsDecimalDigits: 3}))
+                            tops_string.time.push(ms(top.time, {colonNotation: true, secondsDecimalDigits: 3}) + tops_string.time.length >= 1 ? `(+${ms(top.time - leader[0].time, {colonNotation: true, secondsDecimalDigits: 3})})` :'')
                         })
                         embed.addField('Position:', tops_string.places.join('\n'), true)
-                        embed.addField('Time:', tops_string.author.join('\n'), true)
-                        embed.addField('By:', tops_string.time.join('\n'), true)
+                        embed.addField('Time:', tops_string.time.join('\n'), true)
+                        embed.addField('By:', tops_string.author.join('\n'), true)
                         embed.setFooter('Last update:')
                         embed.setTimestamp()
 
