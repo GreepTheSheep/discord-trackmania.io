@@ -1,5 +1,4 @@
 const Discord = require('discord.js')
-const Table = require('easy-table')
 const Trackmania = require('trackmania.io')
 
 module.exports = function (client, message, prefix){
@@ -9,21 +8,17 @@ module.exports = function (client, message, prefix){
         const players = new Trackmania.Players()
 
         players.searchPlayer(args.join(' ')).then(players=>{
-            var t = new Table
+            var array = []
             players.forEach(player=>{
-                t.cell('Display name', player.displayname)
-                // t.cell('ID', player.accountid)
-                t.cell('MM 3v3', `3v3: ${player.matchmaking.find(m=>m.typename == "3v3").rank}th - ${player.matchmaking.find(m=>m.typename == "3v3").score} pts`)
-                if (!player.meta || !player.meta.vanity || player.meta.vanity != ""){
-                    t.cell('TM.io', `https://trackmania.io/#/player/${player.meta.vanity}`)
+                if (!player.meta || !player.meta.vanity || player.meta.vanity == ""){
+                    array.push(`[${player.displayname}](https://trackmania.io/#/player/${player.accountid})`)
                 } else {
-                    t.cell('TM.io', `https://trackmania.io/#/player/${player.accountid}`)
+                    array.push(`[${player.displayname}](https://trackmania.io/#/player/${player.meta.vanity})`)
                 }
-                t.newRow()
             })
             let embed = new Discord.MessageEmbed()
             embed.setTitle('Results for ' + args.join(' '))
-            .setDescription(`\`\`\`${t.toString()}\`\`\``)
+            .setDescription(`- ${array.join('\n- ')}`)
             message.channel.send(embed)
         })
     }

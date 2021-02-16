@@ -8,4 +8,5 @@ module.exports = function(client, message, prefix, config, sql){
 
     require('./players/search.js')(client, message, prefix)
     require('./players/register.js')(client, message, prefix, config, sql)
+    require('./players/stats.js')(client, message, prefix, config, sql)
 }
