@@ -10,10 +10,10 @@ module.exports = function (client, message, prefix){
         players.searchPlayer(args.join(' ')).then(players=>{
             var array = []
             for (var i = 0 ; i < 10; i++){
-                if (!players[i].meta || !players[i].meta.vanity || players[i].meta.vanity == ""){
-                    array.push(`[${players[i].displayname}](https://trackmania.io/#/player/${players[i].accountid})`)
-                } else {
+                if (players[i].meta && players[i].meta.vanity && players[i].meta.vanity != ""){
                     array.push(`[${players[i].displayname}](https://trackmania.io/#/player/${players[i].meta.vanity})`)
+                } else {
+                    array.push(`[${players[i].displayname}](https://trackmania.io/#/player/${players[i].accountid})`)
                 }
             }
             let embed = new Discord.MessageEmbed()
