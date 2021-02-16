@@ -7,7 +7,7 @@ module.exports = function (client, message, prefix, config, sql){
         let args = message.content.split(" ").slice(1)
         const players = new Trackmania.Players()
         if (args.length < 1) {
-            sql.query("SELECT * FROM `players` WHERE discordId = ?", message.auhor.id, (err, res) =>{
+            sql.query("SELECT * FROM `players` WHERE discordId = ?", message.author.id, (err, res) =>{
                 if (err){
                     console.error(err)
                     message.reply('There\'s an error while getting your profile, this was reported')
@@ -31,7 +31,7 @@ module.exports = function (client, message, prefix, config, sql){
             })
         } else {
             players.searchPlayer(args.join(' ')).then(player=>{
-                players.player(player[0].accountId).then(player=>{
+                players.player(player[0].accountid).then(player=>{
                     let embed = new Discord.MessageEmbed()
                     .setTitle('Statictics of '+ player.displayName)
                     .setDescription(player.displayName + ' has started playing Trackmania ' + ms(player.timestamp, {compact: true, verbose: true}) + ' ago.\nThis player was last seen ' + ms(player.trophies.timestamp, {compact: true, verbose: true}) + ' ago.\nIts Trackmania.io URL is ' + player.url)
@@ -44,6 +44,10 @@ module.exports = function (client, message, prefix, config, sql){
                     .setFooter(`Account id: ${player.accountId}`)
                     if (player.meta.comment != "") embed.addField('Comment:', player.meta.comment)
                     message.channel.send(embed)
+                })
+                .catch(err=>{
+                    console.error(err)
+                    message.reply('Player not found, use `' + prefix + 'searchplayer` if you want to find a specific user')
                 })
             })
         }

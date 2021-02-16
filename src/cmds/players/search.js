@@ -9,13 +9,13 @@ module.exports = function (client, message, prefix){
 
         players.searchPlayer(args.join(' ')).then(players=>{
             var array = []
-            players.forEach(player=>{
-                if (!player.meta || !player.meta.vanity || player.meta.vanity == ""){
-                    array.push(`[${player.displayname}](https://trackmania.io/#/player/${player.accountid})`)
+            for (var i = 0 ; i < 10; i++){
+                if (!players[i].meta || !players[i].meta.vanity || players[i].meta.vanity == ""){
+                    array.push(`[${players[i].displayname}](https://trackmania.io/#/player/${players[i].accountid})`)
                 } else {
-                    array.push(`[${player.displayname}](https://trackmania.io/#/player/${player.meta.vanity})`)
+                    array.push(`[${players[i].displayname}](https://trackmania.io/#/player/${players[i].meta.vanity})`)
                 }
-            })
+            }
             let embed = new Discord.MessageEmbed()
             embed.setTitle('Results for ' + args.join(' '))
             .setDescription(`- ${array.join('\n- ')}`)
