@@ -4,6 +4,7 @@ const Trackmania = require('trackmania.io')
 const ms = require('pretty-ms')
 const fs = require('fs')
 const download = require('download')
+const Table = require('easy-table')
 
 function arrayMove(array, from, to) {
 	const startIndex = from < 0 ? array.length + from : from;
@@ -35,7 +36,7 @@ module.exports = function(client, message, prefix, config, sql){
                 embed.addField('Created by:', totd.map.authordisplayname, true)
                 embed.addField('Medals:', `Author: **${ms(totd.map.authorScore, {colonNotation: true, secondsDecimalDigits: 3})}**\nGold: ${ms(totd.map.goldScore, {colonNotation: true, secondsDecimalDigits: 3})}\nSilver: ${ms(totd.map.silverScore, {colonNotation: true, secondsDecimalDigits: 3})}\nBronze: ${ms(totd.map.bronzeScore, {colonNotation: true, secondsDecimalDigits: 3})}`)
                 embed.addField('Uploaded:', `${ms(new Date() - new Date(totd.map.timestamp), {compact: true, verbose: true})} ago`, true)
-                embed.addField('Links:', `[Download](${totd.map.fileUrl}) | [Trackmania.io](https://trackmania.io/#/leaderboard/${totd.map.mapUd})${totd.map.exchangeid != 0 ? ` | [Trackmania.exchange](https://trackmania.exchange/tracks/view/${totd.map.exchangeid})`:''}`)
+                embed.addField('Links:', `[Download](${totd.map.fileUrl}) | [Trackmania.io](https://trackmania.io/#/totd/leaderboard/${totd.leaderboarduid}/${totd.map.mapUd})${totd.map.exchangeid != 0 ? ` | [Trackmania.exchange](https://trackmania.exchange/tracks/view/${totd.map.exchangeid})`:''}`)
                 embed.setFooter(`Map UID: ${totd.map.mapUid}`)
     
                 sql.query("SELECT * FROM `totd_thumbnail_cache` WHERE mapUid = ?", totd.map.mapUid, (err, res)=>{
@@ -98,19 +99,15 @@ module.exports = function(client, message, prefix, config, sql){
                         embed.setTitle('Leaderboard of ' + totd.map.name)
                         .setColor('#05B84E')
                         .setAuthor('Track of The Day')
-                        var tops_string = {
-                            places: [],
-                            author: [],
-                            time: []
-                        }
+                        var t = new Table()
+                        var i = 1
                         leader.forEach(top=>{
-                            tops_string.places.push(tops_string.places.length+1)
-                            tops_string.author.push(top.displayname)
-                            tops_string.time.push(ms(top.time, {colonNotation: true, secondsDecimalDigits: 3}) + tops_string.time.length >= 1 ? `(+${ms(top.time - leader[0].time, {colonNotation: true, secondsDecimalDigits: 3})})` :'')
+                            t.append("Pos", `${i}.`)
+                            t.append("Name", top.displayname)
+                            t.append("Time", ms(top.time, {colonNotation: true, secondsDecimalDigits: 3}))
+                            if (i >= 1) t.append("Diff", `(+${ms(top.time - leader[0].time, {colonNotation: true, secondsDecimalDigits: 3})})`)
                         })
-                        embed.addField('Position:', tops_string.places.join('\n'), true)
-                        embed.addField('Time:', tops_string.time.join('\n'), true)
-                        embed.addField('By:', tops_string.author.join('\n'), true)
+                        embed.setDescription(t.print())
                         embed.setFooter('Last update:')
                         embed.setTimestamp()
 
@@ -213,7 +210,7 @@ module.exports = function(client, message, prefix, config, sql){
                         embed.addField('Created by:', totd.map.authordisplayname, true)
                         embed.addField('Medals:', `Author: **${ms(totd.map.authorScore, {colonNotation: true, secondsDecimalDigits: 3})}**\nGold: ${ms(totd.map.goldScore, {colonNotation: true, secondsDecimalDigits: 3})}\nSilver: ${ms(totd.map.silverScore, {colonNotation: true, secondsDecimalDigits: 3})}\nBronze: ${ms(totd.map.bronzeScore, {colonNotation: true, secondsDecimalDigits: 3})}`)
                         embed.addField('Uploaded:', `${ms(new Date() - new Date(totd.map.timestamp), {compact: true, verbose: true})} ago`, true)
-                        embed.addField('Links:', `[Download](${totd.map.fileUrl}) | [Trackmania.io](https://trackmania.io/#/leaderboard/${totd.map.mapUid})${totd.map.exchangeid != 0 ? ` | [Trackmania.exchange](https://trackmania.exchange/tracks/view/${totd.map.exchangeid})`:''}`)
+                        embed.addField('Links:', `[Download](${totd.map.fileUrl}) | [Trackmania.io](https://trackmania.io/#/totd/leaderboard/${totd.leaderboarduid}/${totd.map.mapUd})${totd.map.exchangeid != 0 ? ` | [Trackmania.exchange](https://trackmania.exchange/tracks/view/${totd.map.exchangeid})`:''}`)
                         embed.setFooter(`Map UID: ${totd.map.mapUid}`)
 
                         sql.query("SELECT * FROM `totd_thumbnail_cache` WHERE mapUid = ?", totd.map.mapUid, (err, res)=>{
