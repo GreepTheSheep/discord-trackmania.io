@@ -34,7 +34,7 @@ module.exports = function (client, message, prefix, config, sql){
                 }
             })
         } else {
-            players.player(args.join(' ')).then(player=>{
+            players.player(args[0]).then(player=>{
                 var trophies_str = []
                 var totalTrophies = 0
                 player.trophies.counts.forEach(tier=>{
@@ -52,7 +52,8 @@ module.exports = function (client, message, prefix, config, sql){
                 if (player.meta.comment != "") embed.addField('Comment:', player.meta.comment)
                 message.channel.send(embed)
             })
-            .catch(()=>{
+            .catch(err=>{
+                console.log(err)
                 players.searchPlayer(args.join(' ')).then(player=>{
                     players.player(player[0].accountid).then(player=>{
                         var trophies_str = []
