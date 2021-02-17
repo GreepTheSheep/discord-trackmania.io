@@ -96,7 +96,7 @@ module.exports = function(client, message, prefix, config, sql){
 
                     Trackmania.leaderboard(totd.map.mapUid).then(leader=>{
                         let embed = new Discord.MessageEmbed()
-                        embed.setTitle('Leaderboard of ' + totd.map.name)
+                        embed.setTitle('Top 15 of ' + totd.map.name)
                         .setColor('#05B84E')
                         .setAuthor('Track of The Day')
                         var t = new Table()
@@ -105,11 +105,11 @@ module.exports = function(client, message, prefix, config, sql){
                             t.cell("Pos", `${i}.`)
                             t.cell("Name", top.displayname)
                             t.cell("Time", ms(top.time, {colonNotation: true, secondsDecimalDigits: 3}))
-                            if (i >= 1) t.cell("Diff", `(+${ms(top.time - leader[0].time, {colonNotation: true, secondsDecimalDigits: 3})})`)
+                            if (i > 1) t.cell("Diff", `(+${ms(top.time - leader[0].time, {colonNotation: true, secondsDecimalDigits: 3})})`)
                             t.newRow()
                             i++
                         })
-                        embed.setDescription(t.print())
+                        embed.setDescription(t.toString())
                         embed.setFooter('Last update:')
                         embed.setTimestamp()
 
