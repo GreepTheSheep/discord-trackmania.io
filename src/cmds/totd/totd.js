@@ -95,62 +95,18 @@ module.exports = function(client, message, prefix, config, sql){
                     totd = totd[0]
 
                     Trackmania.leaderboard(totd.map.mapUid).then(leader=>{
-                        let embed = new Discord.MessageEmbed()
-                        embed.setTitle('Top 15 of ' + totd.map.name)
-                        .setColor('#05B84E')
-                        .setAuthor('Track of The Day')
                         var t = new Table()
                         var i = 1
                         leader.forEach(top=>{
-                            t.cell("Pos", `${i}.`)
+                            t.cell("Pos.", i)
                             t.cell("Name", top.displayname)
                             t.cell("Time", ms(top.time, {colonNotation: true, secondsDecimalDigits: 3}))
-                            if (i > 1) t.cell("Diff", `(+${ms(top.time - leader[0].time, {colonNotation: true, secondsDecimalDigits: 3})})`)
+                            if (i > 1) t.cell("Diff.", `(+${ms(top.time - leader[0].time, {colonNotation: true, secondsDecimalDigits: 3})})`)
                             t.newRow()
                             i++
                         })
-                        embed.setDescription(t.toString())
-                        embed.setFooter('Last update:')
-                        embed.setTimestamp()
 
-                        sql.query("SELECT * FROM `totd_thumbnail_cache` WHERE mapUid = ?", totd.map.mapUid, (err, res)=>{
-                            if (err){
-                                client.users.cache.find(u => u.id == config.owner_id).send(`:warning: Error on getting TOTD thumbnail on cache: \`\`\`${err}\`\`\``)
-                                console.error(err)
-                                message.channel.send(embed)
-                            } else {
-                                if (!res[0]){
-                                    download(totd.map.thumbnailUrl, './data', {filename: totd.map.name+'.jpg'}).then(()=>{
-                                        const attachment = new Discord.MessageAttachment('./data/'+totd.map.name+'.jpg')
-                                        client.channels.fetch('761520592066707468').then(c=>{
-                                            c.send(`TOTD - ${new Date().getDate()} ${months[new Date().getMonth()]} ${new Date().getFullYear()} - ${totd.map.name} by ${totd.map.authordisplayname}`, attachment)
-                                            .then(msg=>{
-                                                if (msg.attachments.size > 0){
-                                                    embed.setImage(msg.attachments.array()[0].url)
-                                                    message.channel.send(embed)
-                            
-                                                    sql.query("INSERT INTO `totd_thumbnail_cache` (mapUid, date, thumbnail) VALUES (?, ?, ?)", [totd.map.mapUid, new Date().getFullYear()+'-'+new Date().getMonth()+'-'+new Date().getDate(), msg.attachments.array()[0].url], (err) =>{
-                                                        if (err){
-                                                            client.users.cache.find(u => u.id == config.owner_id).send(`:warning: Error on setting TOTD thumbnail on cache: \`\`\`${err}\`\`\``)
-                                                            console.error(err)
-                                                        } else {
-                                                            console.log('Successfully added ' + totd.map.name + ' as TOTD thumbnail cache')
-                                                        }
-                                                    })
-                            
-                                                    fs.unlinkSync('./data/'+totd.map.name+'.jpg')
-                                                }
-                                            })
-                                        }).catch(()=>{
-                                            // do nothing because of shards
-                                        })
-                                    })
-                                } else {
-                                    embed.setImage(res[0].thumbnail)
-                                    message.channel.send(embed)
-                                }
-                            }
-                        })
+                        message.channel.send('Top 15 of ' + totd.map.name +`\`\`\`css\n${t.toString()}\`\`\``)
                     })
                 })
             } else if (args[0].toLowerCase() == 'sub'){
