@@ -102,10 +102,12 @@ module.exports = function(client, message, prefix, config, sql){
                         var t = new Table()
                         var i = 1
                         leader.forEach(top=>{
-                            t.append("Pos", `${i}.`)
-                            t.append("Name", top.displayname)
-                            t.append("Time", ms(top.time, {colonNotation: true, secondsDecimalDigits: 3}))
-                            if (i >= 1) t.append("Diff", `(+${ms(top.time - leader[0].time, {colonNotation: true, secondsDecimalDigits: 3})})`)
+                            t.cell("Pos", `${i}.`)
+                            t.cell("Name", top.displayname)
+                            t.cell("Time", ms(top.time, {colonNotation: true, secondsDecimalDigits: 3}))
+                            if (i >= 1) t.cell("Diff", `(+${ms(top.time - leader[0].time, {colonNotation: true, secondsDecimalDigits: 3})})`)
+                            t.newRow()
+                            i++
                         })
                         embed.setDescription(t.print())
                         embed.setFooter('Last update:')
