@@ -106,7 +106,7 @@ module.exports = function(client, message, prefix, config, sql){
                             i++
                         })
 
-                        message.channel.send('Top 15 of ' + totd.map.name +`\`\`\`css\n${t.toString()}\`\`\``)
+                        message.channel.send('Top 15 of ' + totd.map.name +`\`\`\`${t.toString()}\`\`\``)
                     })
                 })
             } else if (args[0].toLowerCase() == 'sub'){
