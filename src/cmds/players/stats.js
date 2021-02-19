@@ -13,6 +13,7 @@ module.exports = function (client, message, prefix, config, sql){
                     message.reply('There\'s an error while getting your profile, this was reported')
                     client.users.cache.find(u => u.id == config.owner_id).send(`:warning: Error on getting player on database: \`\`\`${err}\`\`\``)
                 } else {
+                    if (res.length < 1) return message.reply('Usage: `'+prefix+'stats [Uplay login]`, if you want to get your stats you can register with `'+prefix+'register`')
                     players.player(res[0].accountId).then(player=>{
                         var trophies_str = []
                         var totalTrophies = 0

@@ -54,8 +54,6 @@ module.exports = function (client, message, prefix, config, sql){
         })
     }
     if (message.content.toLowerCase() == prefix + 'unregister'){
-        let args = message.content.split(" ").slice(1)
-        if (args.length < 1) return message.reply(`Usage: \`${prefix}register [Uplay login]\``)
         sql.query("DELETE FROM `players` WHERE discordId = ?", message.author.id, (err, res) =>{
             if (err){
                 client.users.cache.find(u => u.id == config.owner_id).send(`:warning: Error on unregistering player on database: \`\`\`${err}\`\`\``)
