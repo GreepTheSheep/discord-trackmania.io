@@ -6,7 +6,7 @@ module.exports = function(client, message, prefix) {
     if (message.content.startsWith(prefix + 'update')) {
         try {
             message.channel.startTyping()
-            shell.exec('git pull && npm update && pm2 reload ecosystem.config.js', {silent:false}, function(code, stdout, stderr) {
+            shell.exec('git checkout . && git pull && npm update && pm2 reload ecosystem.config.js', {silent:false}, function(code, stdout, stderr) {
                 message.reply(`Output:\n\`\`\`${stdout}${stderr}\`\`\``).then(()=>message.channel.stopTyping(true));
             })
         } catch (err) {
