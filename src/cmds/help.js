@@ -5,8 +5,14 @@ module.exports = function(client, message, prefix){
         const embed = new Discord.MessageEmbed()
         embed.setTitle(`Help of ${client.user.username}`)
         .setColor('RANDOM')
-        .addField(prefix + `totd`, 'Gets the TOTD information of today', true)
-        .addField(prefix + '(un)register', '(Un)registers yourself to get your stats in one command')
+        .setDescription(`
+${prefix}totd: Gets the TOTD information of today
+${prefix}(un)register: (Un)registers yourself to get your stats in one command
+${prefix}searchplayer: Search a specific player
+${prefix}stats: Gets the stats of a player
+${prefix}searchclub: Search a specific club
+${prefix}club: Gets the information of a club
+`)
         message.channel.send(embed)
     }
 }
