@@ -20,8 +20,7 @@ module.exports = function (client, message, prefix){
                 arrayMembers.push(`${member.name} (${member.role})${member.vip && member.role != 'Creator' ? ' [VIP]' : ''}`)
             });
             embed.addField('Management:', '- ' + arrayMembers.join('\n- '))
-            embed.setTimestamp(club.creationTimestamp)
-            embed.setFooter(`Club ID: ${club.id}. Created: `)
+            embed.setFooter(`Club ID: ${club.id}`)
 
             message.channel.send(embed)
         })
@@ -41,8 +40,7 @@ module.exports = function (client, message, prefix){
                         arrayMembers.push(`${member.name} (${member.role})${member.vip && member.role != 'Creator' ? ' [VIP]' : ''}`)
                     });
                     embed.addField('Management:', '- ' + arrayMembers.join('\n- '))
-                    embed.setTimestamp(club.creationTimestamp)
-                    embed.setFooter(`Club ID: ${club.id}. Created: `)
+                    embed.setFooter(`Club ID: ${club.id}`)
 
                     message.channel.send(embed)
                 })
