@@ -2,7 +2,7 @@ const Discord = require('discord.js')
 const Trackmania = require('trackmania.io')
 
 module.exports = function (client, message, prefix){
-    if (message.content.toLowerCase().startsWith(prefix + 'stats')){
+    if (message.content.toLowerCase().startsWith(prefix + 'club')){
         let args = message.content.split(" ").slice(1)
         const clubs = new Trackmania.Clubs()
         if (args.length < 1) return message.reply(`Usage \`${prefix}club [Club name or Club ID]\``)
