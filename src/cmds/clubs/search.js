@@ -5,7 +5,7 @@ module.exports = function (client, message, prefix){
     if (message.content.toLowerCase().startsWith(prefix + 'searchclub')){
         let args = message.content.split(" ").slice(1)
         if (args.length < 1) return message.reply(`Usage: \`${prefix}searchclub [club name]\``)
-        const clubs = new Trackmania.Clubs()
+        const clubs = new Trackmania.Clubs({listener: false})
 
         clubs.searchClubs(args.join(' ')).then(clubs=>{
             var array = []

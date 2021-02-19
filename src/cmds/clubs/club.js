@@ -1,10 +1,11 @@
 const Discord = require('discord.js')
 const Trackmania = require('trackmania.io')
+const ms = require('pretty-ms')
 
 module.exports = function (client, message, prefix){
     if (message.content.toLowerCase().startsWith(prefix + 'club')){
         let args = message.content.split(" ").slice(1)
-        const clubs = new Trackmania.Clubs()
+        const clubs = new Trackmania.Clubs({listener: false})
         if (args.length < 1) return message.reply(`Usage \`${prefix}club [Club name or Club ID]\``)
 
         clubs.club(args.join(' ')).then(club=>{
@@ -20,7 +21,7 @@ module.exports = function (client, message, prefix){
                 arrayMembers.push(`${member.name} (${member.role})${member.vip && member.role != 'Creator' ? ' [VIP]' : ''}`)
             });
             embed.addField('Management:', '- ' + arrayMembers.join('\n- '))
-            embed.setFooter(`Club ID: ${club.id}`)
+            embed.setFooter(`Club ID: ${club.id}. Created ${ms(new Date() - new Date(club.creationTimestamp), {compact: true, verbose: true})} ago.`)
 
             message.channel.send(embed)
         })
@@ -40,7 +41,7 @@ module.exports = function (client, message, prefix){
                         arrayMembers.push(`${member.name} (${member.role})${member.vip && member.role != 'Creator' ? ' [VIP]' : ''}`)
                     });
                     embed.addField('Management:', '- ' + arrayMembers.join('\n- '))
-                    embed.setFooter(`Club ID: ${club.id}`)
+                    embed.setFooter(`Club ID: ${club.id}. Created ${ms(new Date() - new Date(club.creationTimestamp), {compact: true, verbose: true})} ago.`)
 
                     message.channel.send(embed)
                 })
