@@ -3,6 +3,11 @@ const Discord = require('discord.js')
 
 module.exports = function(client, message, prefix, config, sql){
     if (message.author.bot) return
+
+    if (message.author.id == config.owner_id){
+        require('./owner/update')(client, message, prefix)
+    }
+
     require('./help.js')(client, message, prefix)
     require('./totd/totd.js')(client, message, prefix, config, sql)
 

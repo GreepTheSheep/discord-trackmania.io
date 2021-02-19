@@ -30,6 +30,7 @@
     "fs": "^0.0.1-security",
     "mysql": "^2.18.1",
     "pretty-ms": "^7.0.1",
+    "shelljs": "^0.8.4",
     "trackmania.io": "^1.1.6"
   },
   "devDependencies": {
