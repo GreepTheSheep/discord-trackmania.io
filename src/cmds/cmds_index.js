@@ -14,6 +14,7 @@ module.exports = function(client, message, prefix, config, sql){
     require('./players/search.js')(client, message, prefix)
     require('./players/register.js')(client, message, prefix, config, sql)
     require('./players/stats.js')(client, message, prefix, config, sql)
+    require('./players/cotd.js')(client, message, prefix, config, sql)
 
     require('./clubs/search.js')(client, message, prefix)
     require('./clubs/club.js')(client, message, prefix)
