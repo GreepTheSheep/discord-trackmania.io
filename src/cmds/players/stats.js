@@ -37,11 +37,16 @@ module.exports = function (client, message, prefix, config, sql){
                         var zone_str = []
                         zone_str = constructZoneArray(zone_str, player.trophies.zone)
 
+                        var top_str
+                        for(var i = 0; i < zone_str.length; i++){
+                            top_str.push(`Top ${player.trophies.zonepositions[i]} ${zone_str[i]}`)
+                        }
+
                         let embed = new Discord.MessageEmbed()
                         .setTitle('Statictics of '+ player.displayname)
                         .setDescription(player.displayname + ' has started playing Trackmania on '+ new Date(player.timestamp).getFullYear()+'-'+(new Date(player.timestamp).getMonth()+1)+'-'+new Date(player.timestamp).getDate() +' (' + ms(new Date() - new Date(player.timestamp), {compact: true, verbose: true}) + ' ago).\nThis player was last seen ' + ms(new Date() - new Date(player.trophies.timestamp), {compact: true, verbose: true}) + ' ago.\nIts Trackmania.io URL is ' + player.url)
                         .addField('Zone:', zone_str.join(', '))
-                        .addField('Ranking:', `${player.trophies.points} points. (Echelon ${player.trophies.echelon})\n__Number of trophies__:\n${trophies_str.join('\n')}`, true)
+                        .addField('Ranking:', `${player.trophies.points} points. (Echelon ${player.trophies.echelon})\n__Number of trophies__:\n${trophies_str.join('\n')}\n${top_str.join('\n')}`, true)
                         if (player.matchmaking.length > 0) embed.addField('Matchmaking:', `**__Teams 3v3:__**\nScore: ${player.matchmaking.find(m=>m.info.typename == '3v3').info.score} (${player.matchmaking.find(m=>m.info.typename == '3v3').info.rank.name})\nRank: ${player.matchmaking.find(m=>m.info.typename == '3v3').info.place}/${player.matchmaking.find(m=>m.info.typename == '3v3').total}`, true)
                         if (player.meta && (player.meta.nadeo || player.meta.tmgl || player.meta.team || player.meta.sponsor || player.accountid == "26d9a7de-4067-4926-9d93-2fe62cd869fc")) embed.addField('Part of', `${player.meta.nadeo ? '- Nadeo Team\n' : ''}${player.meta.tmgl ? '- TMGL Player\n' : ''}${player.meta.team ? '- Trackmania.io Team\n' : ''}${player.accountid == "26d9a7de-4067-4926-9d93-2fe62cd869fc" ? '- Trackmania.io Discord bot developer\n' : ''}${player.meta.sponsor ? '- Trackmania.io Sponsor\n' : ''}`)
                         embed.setFooter(`Account id: ${player.accountid}`)
@@ -53,21 +58,31 @@ module.exports = function (client, message, prefix, config, sql){
         } else {
             players.player(args[0]).then(player=>{
                 var trophies_str = []
-                var totalTrophies = 0
-                player.trophies.counts.forEach(tier=>{
-                    totalTrophies = totalTrophies + tier
-                    if (tier>0) trophies_str.push(`${trophies_str.length+1} : ${tier}`)
-                })
-                trophies_str.push(`Total : ${totalTrophies}`)
-                let embed = new Discord.MessageEmbed()
-                .setTitle('Statictics of '+ player.displayname)
-                .setDescription(player.displayname + ' has started playing Trackmania on '+ new Date(player.timestamp).getFullYear()+'-'+(new Date(player.timestamp).getMonth()+1)+'-'+new Date(player.timestamp).getDate() +' (' + ms(new Date() - new Date(player.timestamp), {compact: true, verbose: true}) + ' ago).\nThis player was last seen ' + ms(new Date() - new Date(player.trophies.timestamp), {compact: true, verbose: true}) + ' ago.\nIts Trackmania.io URL is ' + player.url)
-                .addField('Ranking:', `${player.trophies.points} points.\n__Number of trophies__:\n${trophies_str.join('\n')}`, true)
-                if (player.matchmaking.length > 0) embed.addField('Matchmaking:', `**__Teams 3v3:__**\nScore: ${player.matchmaking.find(m=>m.info.typename == '3v3').info.score} (${player.matchmaking.find(m=>m.info.typename == '3v3').info.rank.name})\nRank: ${player.matchmaking.find(m=>m.info.typename == '3v3').info.place}/${player.matchmaking.find(m=>m.info.typename == '3v3').total}`, true)
-                if (player.meta && (player.meta.nadeo || player.meta.tmgl || player.meta.team || player.meta.sponsor || player.accountid == "26d9a7de-4067-4926-9d93-2fe62cd869fc")) embed.addField('Part of', `${player.meta.nadeo ? '- Nadeo Team\n' : ''}${player.meta.tmgl ? '- TMGL Player\n' : ''}${player.meta.team ? '- Trackmania.io Team\n' : ''}${player.accountid == "26d9a7de-4067-4926-9d93-2fe62cd869fc" ? '- Trackmania.io Discord bot developer\n' : ''}${player.meta.sponsor ? '- Trackmania.io Sponsor\n' : ''}`)
-                embed.setFooter(`Account id: ${player.accountid}`)
-                if (player.meta && player.meta.comment != "") embed.addField('Comment:', player.meta.comment)
-                message.channel.send(embed)
+                    var totalTrophies = 0
+                    player.trophies.counts.forEach(tier=>{
+                        totalTrophies = totalTrophies + tier
+                        if (tier>0) trophies_str.push(`${trophies_str.length+1} : ${tier}`)
+                    })
+                    trophies_str.push(`Total : ${totalTrophies}`)
+
+                    var zone_str = []
+                    zone_str = constructZoneArray(zone_str, player.trophies.zone)
+
+                    var top_str
+                    for(var i = 0; i < zone_str.length; i++){
+                        top_str.push(`Top ${player.trophies.zonepositions[i]} ${zone_str[i]}`)
+                    }
+
+                    let embed = new Discord.MessageEmbed()
+                    .setTitle('Statictics of '+ player.displayname)
+                    .setDescription(player.displayname + ' has started playing Trackmania on '+ new Date(player.timestamp).getFullYear()+'-'+(new Date(player.timestamp).getMonth()+1)+'-'+new Date(player.timestamp).getDate() +' (' + ms(new Date() - new Date(player.timestamp), {compact: true, verbose: true}) + ' ago).\nThis player was last seen ' + ms(new Date() - new Date(player.trophies.timestamp), {compact: true, verbose: true}) + ' ago.\nIts Trackmania.io URL is ' + player.url)
+                    .addField('Zone:', zone_str.join(', '))
+                    .addField('Ranking:', `${player.trophies.points} points. (Echelon ${player.trophies.echelon})\n__Number of trophies__:\n${trophies_str.join('\n')}\n${top_str.join('\n')}`, true)
+                    if (player.matchmaking.length > 0) embed.addField('Matchmaking:', `**__Teams 3v3:__**\nScore: ${player.matchmaking.find(m=>m.info.typename == '3v3').info.score} (${player.matchmaking.find(m=>m.info.typename == '3v3').info.rank.name})\nRank: ${player.matchmaking.find(m=>m.info.typename == '3v3').info.place}/${player.matchmaking.find(m=>m.info.typename == '3v3').total}`, true)
+                    if (player.meta && (player.meta.nadeo || player.meta.tmgl || player.meta.team || player.meta.sponsor || player.accountid == "26d9a7de-4067-4926-9d93-2fe62cd869fc")) embed.addField('Part of', `${player.meta.nadeo ? '- Nadeo Team\n' : ''}${player.meta.tmgl ? '- TMGL Player\n' : ''}${player.meta.team ? '- Trackmania.io Team\n' : ''}${player.accountid == "26d9a7de-4067-4926-9d93-2fe62cd869fc" ? '- Trackmania.io Discord bot developer\n' : ''}${player.meta.sponsor ? '- Trackmania.io Sponsor\n' : ''}`)
+                    embed.setFooter(`Account id: ${player.accountid}`)
+                    if (player.meta && player.meta.comment != "") embed.addField('Comment:', player.meta.comment)
+                    message.channel.send(embed)
             })
             .catch(err=>{
                 console.log(err)
@@ -80,10 +95,20 @@ module.exports = function (client, message, prefix, config, sql){
                             if (tier>0) trophies_str.push(`${trophies_str.length+1} : ${tier}`)
                         })
                         trophies_str.push(`Total : ${totalTrophies}`)
+
+                        var zone_str = []
+                        zone_str = constructZoneArray(zone_str, player.trophies.zone)
+
+                        var top_str
+                        for(var i = 0; i < zone_str.length; i++){
+                            top_str.push(`Top ${player.trophies.zonepositions[i]} ${zone_str[i]}`)
+                        }
+
                         let embed = new Discord.MessageEmbed()
                         .setTitle('Statictics of '+ player.displayname)
                         .setDescription(player.displayname + ' has started playing Trackmania on '+ new Date(player.timestamp).getFullYear()+'-'+(new Date(player.timestamp).getMonth()+1)+'-'+new Date(player.timestamp).getDate() +' (' + ms(new Date() - new Date(player.timestamp), {compact: true, verbose: true}) + ' ago).\nThis player was last seen ' + ms(new Date() - new Date(player.trophies.timestamp), {compact: true, verbose: true}) + ' ago.\nIts Trackmania.io URL is ' + player.url)
-                        .addField('Ranking:', `${player.trophies.points} points.\n__Number of trophies__:\n${trophies_str.join('\n')}`, true)
+                        .addField('Zone:', zone_str.join(', '))
+                        .addField('Ranking:', `${player.trophies.points} points. (Echelon ${player.trophies.echelon})\n__Number of trophies__:\n${trophies_str.join('\n')}\n${top_str.join('\n')}`, true)
                         if (player.matchmaking.length > 0) embed.addField('Matchmaking:', `**__Teams 3v3:__**\nScore: ${player.matchmaking.find(m=>m.info.typename == '3v3').info.score} (${player.matchmaking.find(m=>m.info.typename == '3v3').info.rank.name})\nRank: ${player.matchmaking.find(m=>m.info.typename == '3v3').info.place}/${player.matchmaking.find(m=>m.info.typename == '3v3').total}`, true)
                         if (player.meta && (player.meta.nadeo || player.meta.tmgl || player.meta.team || player.meta.sponsor || player.accountid == "26d9a7de-4067-4926-9d93-2fe62cd869fc")) embed.addField('Part of', `${player.meta.nadeo ? '- Nadeo Team\n' : ''}${player.meta.tmgl ? '- TMGL Player\n' : ''}${player.meta.team ? '- Trackmania.io Team\n' : ''}${player.accountid == "26d9a7de-4067-4926-9d93-2fe62cd869fc" ? '- Trackmania.io Discord bot developer\n' : ''}${player.meta.sponsor ? '- Trackmania.io Sponsor\n' : ''}`)
                         embed.setFooter(`Account id: ${player.accountid}`)
