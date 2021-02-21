@@ -18,4 +18,6 @@ module.exports = function(client, message, prefix, config, sql){
 
     require('./clubs/search.js')(client, message, prefix)
     require('./clubs/club.js')(client, message, prefix)
+
+    require('./news/news-sub.js')(client, message, prefix, config, sql)
 }

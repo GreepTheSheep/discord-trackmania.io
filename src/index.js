@@ -20,6 +20,7 @@ sql.connect((err)=>{
 
 const Trackmania = require('trackmania.io')
 const totd = new Trackmania.TOTD()
+const news = new Trackmania.News()
 
 client.on('ready', async () => {
     try{
@@ -45,6 +46,10 @@ client.on('message', message => {
 
 totd.on('new-totd', totd=>{
     require('./events/totd.js')(totd, client, sql, config)
+})
+
+news.on('new-news', news=>{
+    require('./events/news.js')(news, client, sql, config)
 })
 
 client.login(config.token)
