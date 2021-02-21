@@ -37,7 +37,7 @@ module.exports = function (client, message, prefix, config, sql){
                         var zone_str = []
                         zone_str = constructZoneArray(zone_str, player.trophies.zone)
 
-                        var top_str
+                        var top_str = []
                         for(var i = 0; i < zone_str.length; i++){
                             top_str.push(`Top ${player.trophies.zonepositions[i]} ${zone_str[i]}`)
                         }
