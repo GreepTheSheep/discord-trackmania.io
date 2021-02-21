@@ -18,6 +18,13 @@ module.exports = function (client, message, prefix, config, sql){
                         embed.setTitle('Cup of the day of '+ cotd.date+', results of ' + player.displayname)
                         embed.setDescription(`${player.displayname} was on match ${cotd.server}.`)
                         embed.addField('Rank:', `Server: ${cotd.serverRank}\n\nGlobal: ${cotd.globalRank}/${cotd.totalPlayer}`)
+                        var oldCotd_str = []
+                        for (var i = 0; i < cotdRes.length; i++){
+                            if (i != 0){
+                                oldCotd_str.push(`${cotd.date}: ${cotd.globalRank}/${cotd.totalPlayer}`)
+                            }
+                        }
+                        if (oldCotd_str.length != 0) embed.addField('Older COTDs:', oldCotd_str.join('\n'))
                         message.channel.send(embed)
                     })
                 })
