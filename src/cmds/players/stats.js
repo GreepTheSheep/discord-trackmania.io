@@ -8,7 +8,7 @@ function constructZoneArray(array, obj){
         if (key == 'name'){
             array.push(value)
         }
-        if (key == 'parent') constructZoneArray(array, value)
+        if (key == 'parent' && value != null) constructZoneArray(array, value)
     });
     return array
 }
