@@ -21,7 +21,7 @@ module.exports = function (client, message, prefix, config, sql){
                         var oldCotd_str = []
                         for (var i = 0; i < cotdRes.length; i++){
                             if (i != 0){
-                                oldCotd_str.push(`${cotd.date}: ${cotd.globalRank}/${cotd.totalPlayer}`)
+                                oldCotd_str.push(`${cotdRes[i].date}: ${cotdRes[i].globalRank}/${cotdRes[i].totalPlayer}`)
                             }
                         }
                         if (oldCotd_str.length != 0) embed.addField('Older COTDs:', oldCotd_str.join('\n'))
