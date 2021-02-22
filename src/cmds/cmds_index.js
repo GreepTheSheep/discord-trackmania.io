@@ -9,6 +9,8 @@ module.exports = function(client, message, prefix, config, sql){
     }
 
     require('./help.js')(client, message, prefix)
+    require('./about.js')(client, message, prefix)
+
     require('./totd/totd.js')(client, message, prefix, config, sql)
 
     require('./players/search.js')(client, message, prefix)
