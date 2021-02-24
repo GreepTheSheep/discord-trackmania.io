@@ -6,6 +6,9 @@ module.exports = function(client, message, prefix, config, sql){
 
     if (message.author.id == config.owner_id){
         require('./owner/update')(client, message, prefix)
+        require('./owner/eval')(client, message, prefix)
+        require('./owner/sql')(client, message, prefix, sql)
+        require('./owner/ssh')(client, message, prefix)
     }
 
     require('./help.js')(client, message, prefix)
