@@ -28,7 +28,7 @@ module.exports = function(totd, client, sql, config){
             download(totd.map.thumbnailUrl, './data', {filename: totd.map.name+'.jpg'}).then(()=>{
                 const attachment = new Discord.MessageAttachment('./data/'+totd.map.name+'.jpg')
                 client.channels.fetch('761520592066707468').then(c=>{
-                    c.send(`TOTD - ${new Date().getDay()} ${months[new Date().getMonth()]} ${new Date().getFullYear()} - ${totd.map.name} by ${totd.map.authordisplayname}`, attachment)
+                    c.send(`TOTD - ${new Date().getDate()} ${months[new Date().getMonth()]} ${new Date().getFullYear()} - ${totd.map.name} by ${totd.map.authordisplayname}`, attachment)
                     .then(msg=>{
                         if (msg.attachments.size > 0){
                             const embed = new Discord.MessageEmbed()
