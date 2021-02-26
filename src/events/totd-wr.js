@@ -5,7 +5,7 @@ const totd = new Trackmania.TOTD({listener: false})
 
 module.exports = function(client, sql, config){
     var fetchedChannels;
-    sql.query("SELECT * FROM totd-wr_channels", (err, res)=>{
+    sql.query("SELECT * FROM `totd-wr_channels`", (err, res)=>{
         if (err){
             client.users.cache.find(u => u.id == config.owner_id).send(`:warning: Error on getting TOTD channels list: \`\`\`${err}\`\`\``)
             console.error(err)
