@@ -84,13 +84,16 @@ module.exports = function(client, message, prefix, config, sql){
                 embed.setTitle(`TOTD help`)
                 .setColor('RANDOM')
                 .addField(prefix + `totd`, 'Gets the TOTD information of today', true)
-                .addField(prefix + `totd leaderboard`, 'Gets the leaderboard of the TOTD of today', true)
                 .addField(prefix + `totd sub`, 'Subscribe to get the new TOTDs', true)
                 .addField(prefix + `totd unsub`, 'Unsubscribes to the TOTDs updates', true)
+                .addField(prefix + `totd leaderboard`, 'Gets the leaderboard of the TOTD of today', true)
+                .addField(prefix + `totd leaderboard sub`, 'Subscribe to get the World Record updates on your TOTD (checks every 10 minutes)', true)
+                .addField(prefix + `totd leaderboard unsub`, 'Unsubscribes to the TOTD WR updates', true)
                 .addField(prefix + `totd [3-char month] [day] [year]`, 'Gets the TOTD of a specific day.\n' + `Example: \`${prefix}totd dec 24 2020\` for December, 24 2020. \`${prefix}totd sep 9 2020\` for September, 9 2020 etc...`, true)
                 message.channel.send(embed)
             } else if (args[0].toLowerCase() == 'leaderboard' || args[0].toLowerCase() == 'leader'){
-                totd.totd().then(totd=>{
+                args.shift()
+                if (args.length < 1) return totd.totd().then(totd=>{
                     totd.reverse()
                     totd = totd[0]
 
@@ -109,7 +112,36 @@ module.exports = function(client, message, prefix, config, sql){
                         message.channel.send('Top 15 of ' + totd.map.name +`\`\`\`${t.toString()}\`\`\``)
                     })
                 })
+                if (args[0].toLowerCase().startsWith('sub')){
+                    var channel = message.mentions.channels.first()
+                    if (!channel) return message.reply(`Usage \`${prefix}totd leader sub [channel mention]\``)
+                
+                    sql.query('INSERT INTO `totd-wr_channels` (userId, guildId, channelId) VALUES (?, ?, ?)', [message.author.id, message.guild.id, channel.id], (err) =>{
+                        if (err){
+                            console.error(err)
+                            message.channel.send('Hmm... There\'s an unattended error while updating the database. This is reported')
+                            client.users.cache.find(u => u.id == config.owner_id).send(`:warning: Error on totd sub event: \`\`\`${err}\`\`\``)
+                        } else {
+                            message.channel.send(`Successfully added #${channel.name} to get TOTD World Record updates.`)
+                        }
+                    })
+                } else if (args[0].toLowerCase().startsWith('unsub')){
+                    sql.query('DELETE FROM `totd-wr_channels` WHERE `guildId` = ?', message.guild.id, (err, res) =>{
+                        if (err){
+                            console.error(err)
+                            message.channel.send('Hmm... There\'s an unattended error while updating the database. This is reported')
+                            client.users.cache.find(u => u.id == config.owner_id).send(`:warning: Error on totd sub event: \`\`\`${err}\`\`\``)
+                        } else {
+                            if (res.affectedRows == 0) {
+                                message.channel.send(`You have not subscribed on this server to get TOTD updates, please run \`${prefix}totd sub [channel mention]\` to get updates`)
+                            } else {
+                                message.channel.send(`Successfully deleted TOTD World Record updates on this server.`)
+                            }
+                        }
+                    })
+                }
             } else if (args[0].toLowerCase() == 'sub'){
+                // eslint-disable-next-line no-redeclare
                 var channel = message.mentions.channels.first()
                 if (!channel) return message.reply(`Usage \`${prefix}totd sub [channel mention]\``)
                 
