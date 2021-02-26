@@ -22,10 +22,10 @@ module.exports = function(client, config){
                 totd.reverse()
                 totd = totd[0]
                 if (status == 'totd name'){
-                    client.user.setActivity(`Today's TOTD is called ${totd.map.name} and it's created by ${totd.map.authordisplayname}`, {type: 'LISTENING'})
+                    client.user.setActivity(`Today's TOTD is called ${totd.map.name} and it's created by ${totd.map.authordisplayname}`, {type: 'WATCHING'})
                 } else if (status == 'totd wr'){
                     Trackmania.leaderboard(totd.map.mapUid).then(leader=>{
-                        client.user.setActivity(`TOTD WR is at ${ms(leader[0].time, {colonNotation: true, secondsDecimalDigits: 3})} by ${leader[0].displayname}`, {type: 'LISTENING'})
+                        client.user.setActivity(`TOTD WR is at ${ms(leader[0].time, {colonNotation: true, secondsDecimalDigits: 3})} by ${leader[0].displayname}`, {type: 'WATCHING'})
                     })
                 }
             })
