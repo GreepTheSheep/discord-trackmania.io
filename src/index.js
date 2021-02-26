@@ -26,7 +26,7 @@ client.on('ready', async () => {
     try{
         console.log(`Logged in as ${client.user.tag}`)
 
-        client.user.setActivity(config.prefix, {type: 'LISTENING'})
+        require('./events/activites')(client, config)
     } catch (err) {
         console.error(err)
         client.users.cache.find(u => u.id == config.owner_id).send(`:warning: Error on ready event: \`\`\`${err}\`\`\``)
