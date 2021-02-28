@@ -3,6 +3,21 @@ const ms = require('pretty-ms')
 const Trackmania = require('trackmania.io')
 const matches = new Trackmania.Matches({listener: false})
 
+function ordinal_suffix_of(i) {
+    var j = i % 10,
+        k = i % 100;
+    if (j == 1 && k != 11) {
+        return i + "st";
+    }
+    if (j == 2 && k != 12) {
+        return i + "nd";
+    }
+    if (j == 3 && k != 13) {
+        return i + "rd";
+    }
+    return i + "th";
+}
+
 module.exports = function(client, message, prefix){
     if (message.content.toLowerCase().startsWith(prefix + 'mminfo')){
         let args = message.content.split(" ").slice(1)
@@ -15,7 +30,7 @@ module.exports = function(client, message, prefix){
                     let embed = new Discord.MessageEmbed()
                     embed.setTitle(match.name)
                     .setFooter(match.lid)
-                    .setDescription(`This match started ${ms(new Date() - new Date(match.startdate), {compact: true, verbose: true})} ago.\nThis match is ${match.status == 'PENDING' ? 'active' : 'completed'}.\n${match.players.length} players where in.`)
+                    .setDescription(`This match started ${ms((new Date().valueOf() - match.startdate), {compact: true, verbose: true})} ago.\nThis match is ${match.status == 'PENDING' ? 'active' : 'completed'}.\n${match.players.length} players where in.`)
                     var team = []
                     match.players.forEach(player=>{
                         if (!team[player.team]) team[player.team] = []
@@ -24,7 +39,7 @@ module.exports = function(client, message, prefix){
                     for (var i = 0; i < team.length; i++){
                         var teamstr = []
                         team[i].forEach(player=>{
-                            teamstr.push(`${player.rank}. ${player.displayname} - ${player.score} pts ${player.mvp ? '(MVP)':''}`)
+                            teamstr.push(`${ordinal_suffix_of(player.rank)} ${player.displayname} - ${player.score} pts ${player.mvp ? '(MVP)':''}`)
                         })
                         embed.addField(`Team ${i+1}${match.status == 'COMPLETED' ? ` - ${match.teams.find(t=>t.index==i).score} pts`:''}` , teamstr.join('\n'), true)
                     }
