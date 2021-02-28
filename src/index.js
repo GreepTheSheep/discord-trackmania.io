@@ -1,5 +1,5 @@
 const Discord = require('discord.js')
-const client = new Discord.Client()
+const client = new Discord.Client({fetchAllMembers:false})
 const fs = require('fs')
 const config = JSON.parse(fs.readFileSync('./data/config.json'))
 const MySQL = require('mysql')
