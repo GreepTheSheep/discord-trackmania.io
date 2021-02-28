@@ -30,7 +30,7 @@ module.exports = function(client, message, prefix){
                     let embed = new Discord.MessageEmbed()
                     embed.setTitle(match.name)
                     .setFooter(match.lid)
-                    .setDescription(`This match started ${ms((match.startdate - new Date().valueOf()), {compact: true, verbose: true})} ago.\nThis match is ${match.status == 'PENDING' ? 'active' : 'completed'}.\n${match.players.length} players where in.\n${match.maps.length} map${match.maps.length > 1 ? 's':''} was played`)
+                    .setDescription(`This match is ${match.status == 'PENDING' ? 'active' : 'completed'}.\n${match.players.length} players where in.\n${match.maps.length} map${match.maps.length > 1 ? 's':''} was played`)
                     var team = []
                     match.players.forEach(player=>{
                         if (!team[player.team]) team[player.team] = []
