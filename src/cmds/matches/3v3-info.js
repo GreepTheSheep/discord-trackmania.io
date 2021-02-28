@@ -30,7 +30,7 @@ module.exports = function(client, message, prefix){
                     let embed = new Discord.MessageEmbed()
                     embed.setTitle(match.name)
                     .setFooter(match.lid)
-                    .setDescription(`This match started ${ms((new Date().valueOf() - match.startdate), {compact: true, verbose: true})} ago.\nThis match is ${match.status == 'PENDING' ? 'active' : 'completed'}.\n${match.players.length} players where in.`)
+                    .setDescription(`This match started ${ms((match.startdate - new Date().valueOf()), {compact: true, verbose: true})} ago.\nThis match is ${match.status == 'PENDING' ? 'active' : 'completed'}.\n${match.players.length} players where in.\n${match.maps.length} map${match.maps.length > 1 ? 's':''} was played`)
                     var team = []
                     match.players.forEach(player=>{
                         if (!team[player.team]) team[player.team] = []
@@ -39,12 +39,10 @@ module.exports = function(client, message, prefix){
                     for (var i = 0; i < team.length; i++){
                         var teamstr = []
                         team[i].forEach(player=>{
-                            teamstr.push(`${ordinal_suffix_of(player.rank)} ${player.displayname} - ${player.score} pts ${player.mvp ? '(MVP)':''}`)
+                            teamstr.push(`**${ordinal_suffix_of(player.rank)} - ${player.displayname}** - ${player.score} pts ${player.mvp ? '**(MVP)**':''}`)
                         })
                         embed.addField(`Team ${i+1}${match.status == 'COMPLETED' ? ` - ${match.teams.find(t=>t.index==i).score} pts`:''}` , teamstr.join('\n'), true)
                     }
-                    
-                    embed.addField('Number of maps:', match.maps.length + ' map(s) on the playlist')
 
                     message.channel.send(embed)
                 } else return message.reply('This match is not a matchmaking match.')
