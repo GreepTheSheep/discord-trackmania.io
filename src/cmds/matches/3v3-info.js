@@ -21,9 +21,8 @@ module.exports = function(client, message, prefix){
                         if (!team[player.team]) team[player.team] = []
                         team[player.team].push(player)
                     })
-                    for (var i; i < team.length; i++){
+                    for (var i = 0; i < team.length; i++){
                         var teamstr = []
-                        console.log(i)
                         team[i].forEach(player=>{
                             teamstr.push(`${player.rank}. ${player.displayname} - ${player.score} pts ${player.mvp ? '(MVP)':''}`)
                         })
