@@ -16,7 +16,7 @@ module.exports = function(client, message, prefix){
                     embed.setTitle(match.name)
                     .setFooter(match.lid)
                     .setDescription(`This match started ${ms(new Date() - new Date(match.startdate), {compact: true, verbose: true})} ago.\nThis match is ${match.status == 'PENDING' ? 'active' : 'completed'}.\n${match.players.length} players where in.`)
-                    var team = []
+                    var team = {}
                     match.players.forEach(player=>{
                         if (!team[player.team]) team[player.team] = []
                         team[player.team].push(player)
