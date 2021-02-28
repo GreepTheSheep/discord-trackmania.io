@@ -25,4 +25,6 @@ module.exports = function(client, message, prefix, config, sql){
     require('./clubs/club.js')(client, message, prefix)
 
     require('./news/news-sub.js')(client, message, prefix, config, sql)
+
+    require('./matches/3v3-info')(client, message, prefix)
 }

@@ -13,6 +13,8 @@ module.exports = function(client, message, prefix){
 \`${prefix}searchclub\`: Search a specific club
 \`${prefix}club\`: Gets the information of a club
 \`${prefix}news-(un)sub\`: (Un)subscribe to get the latest Trackmania News
+\`${prefix}mminfo\`: Get info on a Matchmaking match
+
 
 \`${prefix}about\`: About the bot
 \`${prefix}invite\`: Gets an invite link to your server
