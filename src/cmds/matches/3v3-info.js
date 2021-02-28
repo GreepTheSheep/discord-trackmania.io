@@ -21,6 +21,7 @@ module.exports = function(client, message, prefix){
                         if (!team[player.team]) team[player.team] = []
                         team[player.team].push(player)
                     })
+                    console.log(team)
                     for (var i; i < team.length; i++){
                         var teamstr = []
                         team[i].forEach(player=>{
