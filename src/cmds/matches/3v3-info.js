@@ -1,5 +1,4 @@
 const Discord = require('discord.js')
-const ms = require('pretty-ms')
 const Trackmania = require('trackmania.io')
 const matches = new Trackmania.Matches({listener: false})
 
