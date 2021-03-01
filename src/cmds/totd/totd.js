@@ -20,7 +20,7 @@ function arrayMove(array, from, to) {
 
 module.exports = function(client, message, prefix, config, sql){
     if (message.content.toLowerCase().startsWith(prefix + 'totd')){
-        const totd = new Trackmania.TOTD()
+        const totd = new Trackmania.TOTD({listener: false})
         const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
         let args = message.content.split(" ").slice(1)

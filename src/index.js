@@ -19,8 +19,8 @@ sql.connect((err)=>{
 })
 
 const Trackmania = require('trackmania.io')
-const totd = new Trackmania.TOTD()
-const news = new Trackmania.News()
+const totd = new Trackmania.TOTD({listener: true})
+const news = new Trackmania.News({listener: true})
 
 client.on('ready', async () => {
     try{
@@ -45,9 +45,13 @@ client.on('message', message => {
     }
 })
 
+totd.on('debug', msg=>console.log('TOTD Listener:', msg))
+
 totd.on('new-totd', totd=>{
     require('./events/totd.js')(totd, client, sql, config)
 })
+
+news.on('debug', msg=>console.log('News Listener:', msg))
 
 news.on('new-news', news=>{
     require('./events/news.js')(news, client, sql, config)
