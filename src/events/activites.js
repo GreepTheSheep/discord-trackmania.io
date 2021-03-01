@@ -1,14 +1,17 @@
 // eslint-disable-next-line no-unused-vars
 const Discord = require('discord.js')
+/*
 const ms = require('pretty-ms')
 const Trackmania = require('trackmania.io')
 
 function randomItem(array) {
     return array[Math.floor(Math.random() * array.length)];
 }
+*/
 
 module.exports = function(client, config){
     client.user.setActivity(config.prefix+'help', {type: 'LISTENING'})
+    /*
     setInterval(()=>{
         const activities = [
             config.prefix+'help',
@@ -31,4 +34,5 @@ module.exports = function(client, config){
             })
         } else client.user.setActivity(status, {type: 'LISTENING'})
     }, 2*60*1000)
+    */
 }
