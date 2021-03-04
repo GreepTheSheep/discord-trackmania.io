@@ -5,3 +5,4 @@ CREATE TABLE IF NOT EXISTS `totd_thumbnail_cache` ( `mapUid` VARCHAR(100) NOT NU
 CREATE TABLE IF NOT EXISTS `totd-wr_channels` ( `guildId` VARCHAR(64) NOT NULL , `userId` VARCHAR(64) NOT NULL , `channelId` VARCHAR(64) NOT NULL , PRIMARY KEY (`guildId`), UNIQUE (`channelId`));
 CREATE TABLE IF NOT EXISTS `totd_channels` ( `guildId` VARCHAR(64) NOT NULL , `userId` VARCHAR(64) NOT NULL , `channelId` VARCHAR(64) NOT NULL , PRIMARY KEY (`guildId`), UNIQUE (`channelId`));
 CREATE TABLE IF NOT EXISTS `news_channels` ( `guildId` VARCHAR(64) NOT NULL , `userId` VARCHAR(64) NOT NULL , `channelId` VARCHAR(64) NOT NULL , PRIMARY KEY (`guildId`), UNIQUE (`channelId`));
+CREATE TABLE IF NOT EXISTS `players` ( `accountId` TEXT NOT NULL , `discordId` VARCHAR(64) NOT NULL , PRIMARY KEY (`accountId`));
