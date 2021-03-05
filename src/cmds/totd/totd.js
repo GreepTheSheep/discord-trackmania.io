@@ -79,19 +79,7 @@ module.exports = function(client, message, prefix, config, sql){
                 })
             })
         } else {
-            if (args[0].toLowerCase() == 'help'){
-                const embed = new Discord.MessageEmbed()
-                embed.setTitle(`TOTD help`)
-                .setColor('RANDOM')
-                .addField(prefix + `totd`, 'Gets the TOTD information of today', true)
-                .addField(prefix + `totd sub`, 'Subscribe to get the new TOTDs', true)
-                .addField(prefix + `totd unsub`, 'Unsubscribes to the TOTDs updates', true)
-                .addField(prefix + `totd leaderboard`, 'Gets the leaderboard of the TOTD of today', true)
-                .addField(prefix + `totd leaderboard sub`, 'Subscribe to get the World Record updates on your TOTD (checks every 10 minutes)', true)
-                .addField(prefix + `totd leaderboard unsub`, 'Unsubscribes to the TOTD WR updates', true)
-                .addField(prefix + `totd [3-char month] [day] [year]`, 'Gets the TOTD of a specific day.\n' + `Example: \`${prefix}totd dec 24 2020\` for December, 24 2020. \`${prefix}totd sep 9 2020\` for September, 9 2020 etc...`, true)
-                message.channel.send(embed)
-            } else if (args[0].toLowerCase() == 'leaderboard' || args[0].toLowerCase() == 'leader'){
+            if (args[0].toLowerCase() == 'leaderboard' || args[0].toLowerCase() == 'leader'){
                 args.shift()
                 if (args.length < 1) return totd.totd().then(totd=>{
                     totd.reverse()
