@@ -106,9 +106,20 @@ module.exports = function(client, message, prefix, config, sql){
                 
                     sql.query('INSERT INTO `totd-wr_channels` (userId, guildId, channelId) VALUES (?, ?, ?)', [message.author.id, message.guild.id, channel.id], (err) =>{
                         if (err){
-                            console.error(err)
-                            message.channel.send('Hmm... There\'s an unattended error while updating the database. This is reported')
-                            client.users.cache.find(u => u.id == config.owner_id).send(`:warning: Error on totd sub event: \`\`\`${err}\`\`\``)
+                            if (err.code == 'ER_DUP_ENTRY'){
+                                sql.query("UPDATE `totd-wr_channels` SET channelId = ? WHERE guildId = ?", [channel.id, message.guild.id], (err)=>{
+                                    if (err){
+                                        console.error(err)
+                                        message.channel.send('Error while updating the database. This is reported')
+                                        client.users.cache.find(u => u.id == config.owner_id).send(`:warning: Error on TOTD WR sub event: \`\`\`${err}\`\`\``)
+                                    } else {
+                                        message.channel.send(`Successfully updated #${channel.name} to get TOTD World Record updates.`)
+                                    }
+                                })
+                            } else {
+                                message.channel.send('Error while updating the database. This is reported')
+                                client.users.cache.find(u => u.id == config.owner_id).send(`:warning: Error on TOTD WR sub event: \`\`\`${err}\`\`\``)
+                            }
                         } else {
                             message.channel.send(`Successfully added #${channel.name} to get TOTD World Record updates.`)
                         }
@@ -135,9 +146,20 @@ module.exports = function(client, message, prefix, config, sql){
                 
                 sql.query('INSERT INTO `totd_channels` (userId, guildId, channelId) VALUES (?, ?, ?)', [message.author.id, message.guild.id, channel.id], (err) =>{
                     if (err){
-                        console.error(err)
-                        message.channel.send('Hmm... There\'s an unattended error while updating the database. This is reported')
-                        client.users.cache.find(u => u.id == config.owner_id).send(`:warning: Error on totd sub event: \`\`\`${err}\`\`\``)
+                        if (err.code == 'ER_DUP_ENTRY'){
+                            sql.query("UPDATE `totd-wr_channels` SET channelId = ? WHERE guildId = ?", [channel.id, message.guild.id], (err)=>{
+                                if (err){
+                                    console.error(err)
+                                    message.channel.send('Error while updating the database. This is reported')
+                                    client.users.cache.find(u => u.id == config.owner_id).send(`:warning: Error on totd sub event: \`\`\`${err}\`\`\``)
+                                } else {
+                                    message.channel.send(`Successfully updated #${channel.name} to get TOTD updates.`)
+                                }
+                            })
+                        } else {
+                            message.channel.send('Error while updating the database. This is reported')
+                            client.users.cache.find(u => u.id == config.owner_id).send(`:warning: Error on totd sub event: \`\`\`${err}\`\`\``)
+                        }
                     } else {
                         message.channel.send(`Successfully added #${channel.name} to get TOTD updates.`)
                     }
