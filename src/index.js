@@ -37,6 +37,8 @@ client.on('ready', async () => {
 
 client.on('message', async message => {
     try{
+        if (message.author.bot) return
+        if (message.channel.type != 'text') return
         sql.query("SELECT * FROM `prefix` WHERE guildId = ?", message.guild.id, (err, res)=>{
             var prefix;
             if (err) prefix = config.prefix
@@ -53,7 +55,7 @@ client.on('message', async message => {
         })
     } catch (err) {
         console.error(err)
-        message.channel.send('Hmm... There\'s an unattended error while runnding this command. This is reported')
+        message.channel.send('Hmm... There\'s an unattended error while running this command. This is reported')
         client.users.cache.find(u => u.id == config.owner_id).send(`:warning: Error on message event: \`\`\`${err}\`\`\``)
     }
 })
