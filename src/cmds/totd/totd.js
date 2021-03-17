@@ -151,7 +151,7 @@ module.exports = function(client, message, prefix, config, sql){
                     sql.query('INSERT INTO `totd_channels` (userId, guildId, channelId, roleId) VALUES (?, ?, ?, ?)', [message.author.id, message.guild.id, channel.id, role.id], (err) =>{
                         if (err){
                             if (err.code == 'ER_DUP_ENTRY'){
-                                sql.query("UPDATE `totd-wr_channels` SET channelId = ?, roleId = ? WHERE guildId = ?", [channel.id, role.id, message.guild.id], (err)=>{
+                                sql.query("UPDATE `totd-wr_channels` SET channelId = ? WHERE guildId = ?; UPDATE `totd-wr_channels` SET roleId = ? WHERE guildId = ?;", [channel.id, message.guild.id, role.id, message.guild.id], (err)=>{
                                     if (err){
                                         console.error(err)
                                         message.channel.send('Error while updating the database. This is reported')
