@@ -18,6 +18,21 @@ sql.connect((err)=>{
     }
 })
 
+async function getGuildPrefix(message) {
+    sql.query("SELECT * FROM `prefix` WHERE guildId = ?", message.guild.id, (err, res)=>{
+        if (err) return config.prefix
+        else {
+            if (res.length == 1){
+                return res[0].prefix
+            } else {
+                sql.query("INSERT INTO `prefix` (guildId, prefix, ownerId) VALUES (?, ?, ?)", [message.guild.id, config.prefix, message.guild.owner.id], ()=>{
+                    return config.prefix
+                })
+            }
+        }
+    })
+}
+
 const Trackmania = require('trackmania.io')
 const totd = new Trackmania.TOTD({listener: true})
 const news = new Trackmania.News({listener: true})
@@ -34,21 +49,9 @@ client.on('ready', async () => {
     }
 })
 
-client.on('message', message => {
+client.on('message', async message => {
     try{
-        var prefix;
-        sql.query("SELECT * FROM `prefix` WHERE guildId = ?", message.guild.id, (err, res)=>{
-            if (err) prefix = config.prefix
-            else {
-                if (res.length == 1){
-                    prefix = res[0].prefix
-                } else {
-                    sql.query("INSERT INTO `prefix` (guildId, prefix, ownerId) VALUES (?, ?, ?)", [message.guild.id, config.prefix, message.guild.owner.id], ()=>{
-                        prefix = config.prefix
-                    })
-                }
-            }
-        })
+        var prefix = await getGuildPrefix(message)
         require('./cmds/cmds_index')(client, message, prefix, config, sql)
     } catch (err) {
         console.error(err)
