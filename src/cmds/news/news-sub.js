@@ -11,7 +11,7 @@ module.exports = function(client, message, prefix, config, sql){
                 if (err){
                     console.error(err)
                     if (err.code == 'ER_DUP_ENTRY'){
-                        sql.query("UPDATE `news_channels` SET channelId = ? AND roleId = ? WHERE guildId = ?", [channel.id, role.id, message.guild.id], (err)=>{
+                        sql.query("UPDATE `news_channels` SET channelId = ?, roleId = ? WHERE guildId = ?", [channel.id, role.id, message.guild.id], (err)=>{
                             if (err){
                                 console.error(err)
                                 message.channel.send('Error while updating the database. This is reported')
