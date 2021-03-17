@@ -19,7 +19,8 @@ module.exports = function(totd, client, sql, config){
             res.forEach(r=>{
                 fetchedChannels.push({
                     guild: r.guildId,
-                    channel: r.channelId
+                    channel: r.channelId,
+                    role: r.roleId
                 })
             })
 
@@ -45,7 +46,7 @@ module.exports = function(totd, client, sql, config){
 
                             fetchedChannels.forEach(c=>{
                                 console.log('TOTD Sending to guild', c.guild)
-                                client.channels.fetch(c.channel).then(c=>c.send(embed))
+                                client.channels.fetch(c.channel).then(c=>c.send(c.role != null ? `<@&${c.role}>` : '',embed))
                             })
 
                             sql.query("INSERT INTO `totd_thumbnail_cache` (mapUid, date, thumbnail) VALUES (?, ?, ?)", [totd.map.mapUid, new Date().getFullYear()+'-'+(new Date().getMonth()+1)+'-'+new Date().getDate(), msg.attachments.array()[0].url], (err) =>{

@@ -143,27 +143,50 @@ module.exports = function(client, message, prefix, config, sql){
                 // eslint-disable-next-line no-redeclare
                 var channel = message.mentions.channels.first()
                 if (!channel) return message.reply(`Usage \`${prefix}totd sub [channel mention]\``)
-                
-                sql.query('INSERT INTO `totd_channels` (userId, guildId, channelId) VALUES (?, ?, ?)', [message.author.id, message.guild.id, channel.id], (err) =>{
-                    if (err){
-                        if (err.code == 'ER_DUP_ENTRY'){
-                            sql.query("UPDATE `totd-wr_channels` SET channelId = ? WHERE guildId = ?", [channel.id, message.guild.id], (err)=>{
-                                if (err){
-                                    console.error(err)
-                                    message.channel.send('Error while updating the database. This is reported')
-                                    client.users.cache.find(u => u.id == config.owner_id).send(`:warning: Error on totd sub event: \`\`\`${err}\`\`\``)
-                                } else {
-                                    message.channel.send(`Successfully updated #${channel.name} to get TOTD updates.`)
-                                }
-                            })
+                var role = message.mentions.roles.first()
+                if (role){
+                    sql.query('INSERT INTO `totd_channels` (userId, guildId, channelId, roleId) VALUES (?, ?, ?, ?)', [message.author.id, message.guild.id, channel.id, role.id], (err) =>{
+                        if (err){
+                            if (err.code == 'ER_DUP_ENTRY'){
+                                sql.query("UPDATE `totd-wr_channels` SET channelId = ? AND roleId = ? WHERE guildId = ?", [channel.id, role.id, message.guild.id], (err)=>{
+                                    if (err){
+                                        console.error(err)
+                                        message.channel.send('Error while updating the database. This is reported')
+                                        client.users.cache.find(u => u.id == config.owner_id).send(`:warning: Error on totd sub event: \`\`\`${err}\`\`\``)
+                                    } else {
+                                        message.channel.send(`Successfully updated #${channel.name} to get TOTD updates with mentionning ${role.name}.`)
+                                    }
+                                })
+                            } else {
+                                message.channel.send('Error while updating the database. This is reported')
+                                client.users.cache.find(u => u.id == config.owner_id).send(`:warning: Error on totd sub event: \`\`\`${err}\`\`\``)
+                            }
                         } else {
-                            message.channel.send('Error while updating the database. This is reported')
-                            client.users.cache.find(u => u.id == config.owner_id).send(`:warning: Error on totd sub event: \`\`\`${err}\`\`\``)
+                            message.channel.send(`Successfully added #${channel.name} to get TOTD updates with mentionning ${role.name}.`)
                         }
-                    } else {
-                        message.channel.send(`Successfully added #${channel.name} to get TOTD updates.`)
-                    }
-                })
+                    })
+                } else {
+                    sql.query('INSERT INTO `totd_channels` (userId, guildId, channelId) VALUES (?, ?, ?)', [message.author.id, message.guild.id, channel.id], (err) =>{
+                        if (err){
+                            if (err.code == 'ER_DUP_ENTRY'){
+                                sql.query("UPDATE `totd-wr_channels` SET channelId = ? WHERE guildId = ?", [channel.id, message.guild.id], (err)=>{
+                                    if (err){
+                                        console.error(err)
+                                        message.channel.send('Error while updating the database. This is reported')
+                                        client.users.cache.find(u => u.id == config.owner_id).send(`:warning: Error on totd sub event: \`\`\`${err}\`\`\``)
+                                    } else {
+                                        message.channel.send(`Successfully updated #${channel.name} to get TOTD updates.`)
+                                    }
+                                })
+                            } else {
+                                message.channel.send('Error while updating the database. This is reported')
+                                client.users.cache.find(u => u.id == config.owner_id).send(`:warning: Error on totd sub event: \`\`\`${err}\`\`\``)
+                            }
+                        } else {
+                            message.channel.send(`Successfully added #${channel.name} to get TOTD updates.`)
+                        }
+                    })
+                }
             } else if (args[0].toLowerCase() == 'unsub'){
                 sql.query('DELETE FROM `totd_channels` WHERE `guildId` = ?', message.guild.id, (err, res) =>{
                     if (err){
