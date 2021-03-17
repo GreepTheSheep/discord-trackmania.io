@@ -13,7 +13,8 @@ module.exports = function(news, client, sql, config){
             res.forEach(r=>{
                 fetchedChannels.push({
                     guild: r.guildId,
-                    channel: r.channelId
+                    channel: r.channelId,
+                    role: r.roleId
                 })
             })
 
@@ -26,7 +27,7 @@ module.exports = function(news, client, sql, config){
 
             fetchedChannels.forEach(c=>{
                 console.log('News Sending to guild', c.guild)
-                client.channels.fetch(c.channel).then(c=>c.send(embed))
+                client.channels.fetch(c.channel).then(c=>c.send(c.role != null ? `<@&${c.role}>` : '',embed))
             })
         }
     })
