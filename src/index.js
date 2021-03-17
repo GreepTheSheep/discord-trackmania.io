@@ -26,7 +26,7 @@ function getGuildPrefix(message) {
                 sql.query("INSERT INTO `prefix` (guildID, prefix, ownerID) VALUES (?, ?, ?)", [message.guild.id, config.prefix, message.guild.owner.id], ()=>{
                     return config.prefix
                 })
-            } else return res[0].prefix || config.prefix
+            } else return res[0].prefix
         }
     })
 }
