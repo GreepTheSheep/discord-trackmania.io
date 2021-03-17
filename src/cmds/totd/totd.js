@@ -142,7 +142,7 @@ module.exports = function(client, message, prefix, config, sql){
             } else if (args[0].toLowerCase() == 'sub'){
                 // eslint-disable-next-line no-redeclare
                 var channel = message.mentions.channels.first()
-                if (!channel) return message.reply(`Usage \`${prefix}totd sub [channel mention]\``)
+                if (!channel) return message.reply(`Usage \`${prefix}totd sub [channel mention] {role mention}\`. Role mention is falcultative`)
                 var role = message.mentions.roles.first()
                 if (role){
                     sql.query('INSERT INTO `totd_channels` (userId, guildId, channelId, roleId) VALUES (?, ?, ?, ?)', [message.author.id, message.guild.id, channel.id, role.id], (err) =>{

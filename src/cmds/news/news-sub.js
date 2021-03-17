@@ -4,7 +4,7 @@ const Discord = require('discord.js')
 module.exports = function(client, message, prefix, config, sql){
     if (message.content.toLowerCase().startsWith(prefix + 'news-sub')){
         var channel = message.mentions.channels.first()
-        if (!channel) return message.reply(`Usage \`${prefix}news-sub [channel mention]\``)
+        if (!channel) return message.reply(`Usage \`${prefix}news-sub [channel mention] {role mention}\`. Role mention is falcultative`)
         var role = message.mentions.roles.first()
         if (role){
             sql.query('INSERT INTO `news_channels` (userId, guildId, channelId, roleId) VALUES (?, ?, ?, ?)', [message.author.id, message.guild.id, channel.id, role.id], (err) =>{
