@@ -7,16 +7,6 @@ module.exports = function (client, message, prefix, config, sql){
         let args = message.content.split(" ").slice(1)
         if (args.length < 1) return message.reply(`Usage: \`${prefix}register [Uplay login]\``)
 
-        sql.query("SELECT * FROM `players` WHERE discordId = ?", message.author.id, (err, res) =>{
-            if (err){
-                client.users.cache.find(u => u.id == config.owner_id).send(`:warning: Error on looking player on database: \`\`\`${err}\`\`\``)
-                console.error(err)
-                message.reply('Error while looking your account, this was reported')
-            } else {
-                if (res.length > 0) return message.reply('You have already registered an account on your Discord profile, please unregister before with `'+prefix+'unregister`')
-            }
-        })
-
         const players = new Trackmania.Players()
 
         players.player(args[0]).then(player=>{
