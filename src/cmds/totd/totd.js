@@ -101,6 +101,7 @@ module.exports = function(client, message, prefix, config, sql){
                     })
                 })
                 if (args[0].toLowerCase().startsWith('sub')){
+                    if (!message.member.hasPermission('ADMINISTRATOR')) return message.reply(`:warning: Only administrators on this server can do that.`)
                     var channel = message.mentions.channels.first()
                     if (!channel) return message.reply(`Usage \`${prefix}totd leader sub [channel mention]\``)
                 
@@ -125,6 +126,7 @@ module.exports = function(client, message, prefix, config, sql){
                         }
                     })
                 } else if (args[0].toLowerCase().startsWith('unsub')){
+                    if (!message.member.hasPermission('ADMINISTRATOR')) return message.reply(`:warning: Only administrators on this server can do that.`)
                     sql.query('DELETE FROM `totd-wr_channels` WHERE `guildId` = ?', message.guild.id, (err, res) =>{
                         if (err){
                             console.error(err)
@@ -140,6 +142,7 @@ module.exports = function(client, message, prefix, config, sql){
                     })
                 }
             } else if (args[0].toLowerCase() == 'sub'){
+                if (!message.member.hasPermission('ADMINISTRATOR')) return message.reply(`:warning: Only administrators on this server can do that.`)
                 // eslint-disable-next-line no-redeclare
                 var channel = message.mentions.channels.first()
                 if (!channel) return message.reply(`Usage \`${prefix}totd sub [channel mention] {role mention}\`. Role mention is falcultative`)
@@ -188,6 +191,7 @@ module.exports = function(client, message, prefix, config, sql){
                     })
                 }
             } else if (args[0].toLowerCase() == 'unsub'){
+                if (!message.member.hasPermission('ADMINISTRATOR')) return message.reply(`:warning: Only administrators on this server can do that.`)
                 sql.query('DELETE FROM `totd_channels` WHERE `guildId` = ?', message.guild.id, (err, res) =>{
                     if (err){
                         console.error(err)

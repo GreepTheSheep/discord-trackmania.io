@@ -3,6 +3,7 @@ const Discord = require('discord.js')
 
 module.exports = function(client, message, prefix, config, sql){
     if (message.content.toLowerCase().startsWith(prefix + 'news-sub')){
+        if (!message.member.hasPermission('ADMINISTRATOR')) return message.reply(`:warning: Only administrators on this server can do that.`)
         var channel = message.mentions.channels.first()
         if (!channel) return message.reply(`Usage \`${prefix}news-sub [channel mention] {role mention}\`. Role mention is falcultative`)
         var role = message.mentions.roles.first()
@@ -53,6 +54,7 @@ module.exports = function(client, message, prefix, config, sql){
         }
     }
     if (message.content.toLowerCase() == prefix + 'news-unsub'){
+        if (!message.member.hasPermission('ADMINISTRATOR')) return message.reply(`:warning: Only administrators on this server can do that.`)
         sql.query('DELETE FROM `news_channels` WHERE `guildId` = ?', message.guild.id, (err, res) =>{
             if (err){
                 console.error(err)
