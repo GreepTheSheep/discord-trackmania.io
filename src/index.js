@@ -22,11 +22,13 @@ function getGuildPrefix(message) {
     sql.query("SELECT * FROM `prefix` WHERE guildId = ?", message.guild.id, (err, res)=>{
         if (err) return config.prefix
         else {
-            if (res.length<1){
-                sql.query("INSERT INTO `prefix` (guildID, prefix, ownerID) VALUES (?, ?, ?)", [message.guild.id, config.prefix, message.guild.owner.id], ()=>{
+            if (res.length == 1){
+                return res[0].prefix
+            } else {
+                sql.query("INSERT INTO `prefix` (guildId, prefix, ownerId) VALUES (?, ?, ?)", [message.guild.id, config.prefix, message.guild.owner.id], ()=>{
                     return config.prefix
                 })
-            } else return res[0].prefix
+            }
         }
     })
 }
