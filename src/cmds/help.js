@@ -46,6 +46,7 @@ module.exports = function(client, message, prefix){
         } else if (args[0].toLowerCase() == 'bot') {
             embed.addField(prefix + `about`, 'About the bot', true)
             embed.addField(prefix + `invite`, 'Gets an invite link to your server', true)
+            embed.addField(prefix + `prefix`, 'Set a new prefix for your server', true)
             message.channel.send(embed)
         } else message.channel.send('Category not found, type `'+prefix+'help` to get the categories')
     }

@@ -13,6 +13,7 @@ module.exports = function(client, message, prefix, config, sql){
 
     require('./help.js')(client, message, prefix)
     require('./about.js')(client, message, prefix)
+    require('./set-prefix.js')(client, message, prefix, sql, config)
 
     require('./totd/totd.js')(client, message, prefix, config, sql)
 
