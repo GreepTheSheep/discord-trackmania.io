@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/GreepTheSheep/discord-trackmania.io#readme",
   "dependencies": {
-    "discord.js": "^12.5.2",
+    "discord.js": "^12.5.3",
     "download": "^8.0.0",
     "easy-table": "^1.1.1",
     "fs": "^0.0.1-security",
