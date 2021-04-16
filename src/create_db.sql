@@ -6,3 +6,4 @@ CREATE TABLE IF NOT EXISTS `totd-wr_channels` ( `guildId` VARCHAR(64) NOT NULL ,
 CREATE TABLE IF NOT EXISTS `totd_channels` ( `guildId` VARCHAR(64) NOT NULL , `userId` VARCHAR(64) NOT NULL , `channelId` VARCHAR(64) NOT NULL , PRIMARY KEY (`guildId`), UNIQUE (`channelId`));
 CREATE TABLE IF NOT EXISTS `news_channels` ( `guildId` VARCHAR(64) NOT NULL , `userId` VARCHAR(64) NOT NULL , `channelId` VARCHAR(64) NOT NULL , PRIMARY KEY (`guildId`), UNIQUE (`channelId`));
 CREATE TABLE IF NOT EXISTS `players` ( `accountId` VARCHAR(128) NOT NULL , `discordId` VARCHAR(64) NOT NULL , PRIMARY KEY (`accountId`));
+CREATE TABLE IF NOT EXISTS `map-wr_channels` ( `guildId` VARCHAR(64) NOT NULL , `userId` VARCHAR(64) NOT NULL , `channelId` VARCHAR(64) NOT NULL , `mapUid` VARCHAR(64) NOT NULL , PRIMARY KEY (`guildId`));
