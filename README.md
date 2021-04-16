@@ -1,6 +1,8 @@
 # discord-trackmania.io
  A discord.js bot that uses [node-trackmania.io](https://github.com/GreepTheSheep/node-trackmania.io)
 
+### [Invite the bot to your server](https://discordapp.com/oauth2/authorize?client_id=810191349214871583&scope=bot&permissions=604367952)
+
 [![Trackmania.io icon](https://trackmania.io/img/square.png)](https://trackmania.io)
 
 ![Trackmania.io API](https://img.shields.io/website?down_message=Offline&label=Trackmania.io%20API&up_message=Online&url=https%3A%2F%2Ftrackmania.io)
@@ -24,6 +26,10 @@ It aims the content of [Trackmania.io](https://trackmania.io) into this lib than
 discord-trackmania.io is a Discord bot that uses this library. It will aims the content of auto-posting the TOTD, the results of COTD, and Trackmania live updates in real-time.
 It also aims the map info, the map leaderboard, the campaign info, the room info, the club info and the competitions (events) info and leaderboard by calling commands.
 
+
+## Contributing
+
+All contributors are welcome! Study the source code before trying to modify/add features. Then open a PR to develop branch and I'll review that
 ## Thanks
 
 Thanks to Miss#8888 ([@codecat](https://github.com/codecat)) for creating trackmania.io and for helping me with their API.
