@@ -15,7 +15,7 @@ module.exports = function(client, message, prefix, config, sql) {
             else {
                 args.shift()
                 if (args.length < 1){
-                    Trackmania.leaderboard(args[0]).then(leader=>{
+                    Trackmania.leaderboard(map.mapUid).then(leader=>{
                         var t = new Table()
                         var i = 1
                         leader.forEach(top=>{
