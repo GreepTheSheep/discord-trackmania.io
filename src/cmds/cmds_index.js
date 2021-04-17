@@ -17,6 +17,9 @@ module.exports = function(client, message, prefix, config, sql){
 
     require('./totd/totd.js')(client, message, prefix, config, sql)
 
+    require('./campaign/campaignInfo.js')(client, message, prefix)
+    require('./campaign/campaignLeaderboard.js')(client, message, prefix, config, sql)
+
     require('./map/mapInfo.js')(client, message, prefix, config, sql)
     require('./map/leaderboard.js')(client, message, prefix, config, sql)
 
