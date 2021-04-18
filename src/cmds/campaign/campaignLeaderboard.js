@@ -42,8 +42,8 @@ async function campaignLeader(thisCampaign, client, message, prefix, args, confi
                         }
                     }
                 })
-                message.channel.send(`Successfully added #${channel.name} to get all maps World Record updates on the campaign ${thisCampaign.name}.`)
             })
+            message.channel.send(`Successfully added #${channel.name} to get all maps World Record updates on the campaign ${thisCampaign.name}.`)
         } else if (args[0].toLowerCase().startsWith('unsub')){
             if (!message.member.hasPermission('ADMINISTRATOR')) return message.reply(`:warning: Only administrators on this server can do that.`)
             thisCampaign.playlist.forEach(map=>{
