@@ -5,15 +5,16 @@ const campaign = new Trackmania.Campaigns({listener: false})
 const club = new Trackmania.Clubs({listener: false})
 const Table = require('easy-table')
 
-async function generateMessage(campaign, message){
+async function generateMessage(campaign, message, clubID){
     if (campaign.error) return message.reply('Invalid campaign or club ID, check the campaign\'s page at trackmania.io and copy paste the corresponding IDs.')
     else {
-        var thisClub = await club.club(campaign.clubid)
+        var thisClub = {}
+        if (clubID != 0) thisClub = await club.club(campaign.clubid)
         let embed = new Discord.MessageEmbed()
         embed.setColor('#9B850E')
         embed.setTitle(campaign.name)
-        embed.addField('Club:', thisClub.name, true)
-        embed.addField('Created by:', thisClub.creatordisplayname, true)
+        if (clubID != 0) embed.addField('Club:', thisClub.name, true)
+        embed.addField('Created by:', clubID != 0 ? thisClub.creatordisplayname : 'Nadeo', true)
         embed.addField('Maps number:', `${campaign.playlist.length} maps`, true)
         embed.addField('Links:', `[Trackmania.io](https://trackmania.io/#/campaigns/${campaign.clubid}/${campaign.id})`)
         embed.setImage(campaign.media)
@@ -58,11 +59,11 @@ module.exports = function(client, message, prefix) {
 
         if (clubID == 0) {
             campaign.officialCampaign(campaignID).then(async thisCampaign=>{
-                await generateMessage(thisCampaign, message)
+                await generateMessage(thisCampaign, message, clubID)
             })
         } else {
             campaign.campaign(clubID, campaignID).then(async thisCampaign=>{
-                await generateMessage(thisCampaign, message)
+                await generateMessage(thisCampaign, message, clubID)
             })
         }
     }
