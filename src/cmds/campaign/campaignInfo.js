@@ -17,7 +17,7 @@ async function generateMessage(campaign, message, clubID){
         embed.addField('Created by:', clubID != 0 ? thisClub.creatordisplayname : 'Nadeo', true)
         embed.addField('Maps number:', `${campaign.playlist.length} maps`, true)
         embed.addField('Links:', `[Trackmania.io](https://trackmania.io/#/campaigns/${campaign.clubid}/${campaign.id})`)
-        embed.setImage(campaign.media)
+        embed.setImage(clubID != 0 ? campaign.media : 'https://trackmania.io'+campaign.mediae.decal)
         embed.setFooter(`Leaderboard UID: ${campaign.leaderboarduid}\n\nClick on 🏎 to see the map list`)
         const campaignMsg = await message.channel.send(embed)
 
