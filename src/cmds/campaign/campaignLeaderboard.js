@@ -1,7 +1,8 @@
 // eslint-disable-next-line no-unused-vars
 const Discord = require('discord.js');
-const Trackmania = require('trackmania.io')
+const Trackmania = require('trackmania.io');
 const campaign = new Trackmania.Campaigns({listener: false})
+const Table = require('easy-table')
 
 module.exports = function(client, message, prefix, config, sql) {
     if (message.content.startsWith(prefix + 'campaignleaderboard') || message.content.startsWith(prefix + 'campaignleader')) {
@@ -22,9 +23,19 @@ module.exports = function(client, message, prefix, config, sql) {
             else {
                 args.shift()
                 if (args.length < 1){
-
-                    // return campaign leaderboard (waiting for the feature on the dependency)
-                    
+                    campaign.leaderboard(thisCampaign).then(leader=>{
+                        var t = new Table()
+                        var i = 1
+                        leader.forEach(top=>{
+                            t.cell("Pos.", i)
+                            t.cell("Name", top.displayname)
+                            t.cell("Points", top.points)
+                            if (i > 1) t.cell("Diff.", `(+${top.points - leader[0].points})`)
+                            t.newRow()
+                            i++
+                        })
+                        message.channel.send('Top 10 of ' + thisCampaign.name +` campaign:\`\`\`${t.toString()}\`\`\``)
+                    })
                 } else if (args[0].toLowerCase() == 'sub'){
                     if (!message.member.hasPermission('ADMINISTRATOR')) return message.reply(`:warning: Only administrators on this server can do that.`)
                     var channel = message.mentions.channels.first()
