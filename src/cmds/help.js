@@ -10,6 +10,7 @@ module.exports = function(client, message, prefix){
             
             embed.addField('🏎 TOTD', 'Informations about the Track Of The Day\n`'+prefix+'help totd`', true)
             .addField('🎮 Players', 'Informations about players / the player\n`'+prefix+'help player`', true)
+            .addField('📜 Campaign', 'Informations about a campaign\n`'+prefix+'help campaign`', true)
             .addField('🏎 Map', 'Informations about a map\n`'+prefix+'help map`', true)
             .addField('🚩 Clubs', 'Informations about Clubs\n`'+prefix+'help club`', true)
             .addField('🏁 Matches', 'Informations about Official Matches\n`'+prefix+'help match`', true)
@@ -32,6 +33,10 @@ module.exports = function(client, message, prefix){
             .addField(prefix + `register`, 'Registers yourself to get your stats easily', true)
             .addField(prefix + `unregister`, 'Unregisters your account from the bot', true)
             .addField(prefix + `mycotd`, 'Gets your results on your latest Cup of The Day', true)
+            message.channel.send(embed)
+        } else if (args[0].toLowerCase() == 'campaign') {
+            embed.addField(prefix + `campaign`, 'Gets the campaign info', true)
+            embed.addField(prefix + `campaignleaderboard`, 'Gets the leaderboard on a campaign', true)
             message.channel.send(embed)
         } else if (args[0].toLowerCase() == 'map') {
             embed.addField(prefix + `map`, 'Gets the map info', true)
