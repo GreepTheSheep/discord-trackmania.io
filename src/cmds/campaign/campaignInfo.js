@@ -5,8 +5,47 @@ const campaign = new Trackmania.Campaigns({listener: false})
 const club = new Trackmania.Clubs({listener: false})
 const Table = require('easy-table')
 
+async function generateMessage(campaign, message){
+    if (campaign.error) return message.reply('Invalid campaign or club ID, check the campaign\'s page at trackmania.io and copy paste the corresponding IDs.')
+    else {
+        var thisClub = await club.club(campaign.clubid)
+        let embed = new Discord.MessageEmbed()
+        embed.setColor('#9B850E')
+        embed.setTitle(campaign.name)
+        embed.addField('Club:', thisClub.name, true)
+        embed.addField('Created by:', thisClub.creatordisplayname, true)
+        embed.addField('Maps number:', `${campaign.playlist.length} maps`, true)
+        embed.addField('Links:', `[Trackmania.io](https://trackmania.io/#/campaigns/${campaign.clubid}/${campaign.id})`)
+        embed.setImage(campaign.media)
+        embed.setFooter(`Leaderboard UID: ${campaign.leaderboarduid}\n\nClick on 🏎 to see the map list`)
+        const campaignMsg = await message.channel.send(embed)
+
+        campaignMsg.react('🏎')
+        const filter = (reaction, user) => {
+            return reaction.emoji.name == '🏎' && user.id === message.author.id;
+        };
+
+        campaignMsg.awaitReactions(filter, {max: 1, time: 1*60*60*1000}).then(collected=>{
+            const reaction = collected.first();
+            if (reaction.emoji.name == '🏎'){
+                var t = new Table()
+                var i = 1
+                campaign.playlist.forEach(map=>{
+                    t.cell("Nb.", i)
+                    t.cell("Name", map.name)
+                    t.cell("UID", map.mapUid)
+                    t.cell("AT.", ms(map.authorScore, {colonNotation: true, secondsDecimalDigits: 3}))
+                    t.newRow()
+                    i++
+                })
+                campaignMsg.edit('Maps - ' + campaign.name +`\`\`\`${t.toString()}\`\`\``)
+            }
+        })
+    }
+}
+
 module.exports = function(client, message, prefix) {
-    if (message.content.startsWith(prefix + 'campaign')) {
+    if (message.content.startsWith(prefix + 'campaign ') && !message.content.startsWith(prefix+'campaignleader')) {
         let args = message.content.split(" ")
         args.shift()
         if (args.length < 1) return message.reply('Usage: `'+prefix+'campaign [Club ID] [campaign ID]`')
@@ -17,45 +56,14 @@ module.exports = function(client, message, prefix) {
 
         if (isNaN(clubID) || isNaN(campaignID)) return message.reply('Club ID or Campaign ID is not numbers. Check your syntax and retry')
 
-        if (clubID == 0) return message.reply('Official campaigns are not actually supported. An update will come later, just be patient ;)')
-
-        campaign.campaign(clubID, campaignID).then(async thisCampaign=>{
-            if (thisCampaign.error) return message.reply('Invalid campaign or club ID, check the campaign\'s page at trackmania.io and copy paste the corresponding IDs.')
-            else {
-                var thisClub = await club.club(thisCampaign.clubid)
-                let embed = new Discord.MessageEmbed()
-                embed.setColor('#9B850E')
-                embed.setTitle(thisCampaign.name)
-                embed.addField('Created by:', thisClub.name, true)
-                embed.addField('Uploaded:', `${ms(new Date() - new Date(thisCampaign.publishtime), {compact: true, verbose: true})} ago`, true)
-                embed.addField('Maps number:', `${thisCampaign.playlist.length} maps`, true)
-                embed.addField('Links:', `[Trackmania.io](https://trackmania.io/#/campaigns/${thisCampaign.clubid}/${thisCampaign.id})`)
-                embed.setImage(thisCampaign.media)
-                embed.setFooter(`Leaderboard UID: ${thisCampaign.leaderboarduid}\n\nClick on 🏎 to see the map list`)
-                const campaignMsg = await message.channel.send(embed)
-
-                campaignMsg.react('🏎')
-                const filter = (reaction, user) => {
-                    return reaction.emoji.name == '🏎' && user.id === message.author.id;
-                };
-
-                campaignMsg.awaitReactions(filter, {max: 1, time: Infinity}).then(collected=>{
-                    const reaction = collected.first();
-                    if (reaction.emoji.name == '🏎'){
-                        var t = new Table()
-                        var i = 1
-                        thisCampaign.playlist.forEach(map=>{
-                            t.cell("Nb.", i)
-                            t.cell("Name", map.name)
-                            t.cell("UID", map.mapUid)
-                            t.cell("AT.", ms(map.authorScore, {colonNotation: true, secondsDecimalDigits: 3}))
-                            t.newRow()
-                            i++
-                        })
-                        campaignMsg.edit('Maps - ' + thisCampaign.name +`\`\`\`${t.toString()}\`\`\``)
-                    }
-                })
-            }
-        })
+        if (clubID == 0) {
+            campaign.officialCampaign(campaignID).then(async thisCampaign=>{
+                await generateMessage(thisCampaign, message)
+            })
+        } else {
+            campaign.campaign(clubID, campaignID).then(async thisCampaign=>{
+                await generateMessage(thisCampaign, message)
+            })
+        }
     }
 }
