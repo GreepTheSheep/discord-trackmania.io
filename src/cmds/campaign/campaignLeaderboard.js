@@ -4,12 +4,12 @@ const Trackmania = require('trackmania.io');
 const campaign = new Trackmania.Campaigns({listener: false})
 const Table = require('easy-table')
 
-async function campaignLeader(campaign, client, message, prefix, args, config, sql, clubID, campaignID){
-    if (campaign.error) return message.reply('Invalid campaign or club ID, check the campaign\'s page at trackmania.io and copy paste the corresponding IDs.')
+async function campaignLeader(thisCampaign, client, message, prefix, args, config, sql, clubID, campaignID){
+    if (thisCampaign.error) return message.reply('Invalid campaign or club ID, check the campaign\'s page at trackmania.io and copy paste the corresponding IDs.')
     else {
         args.splice(0,2)
         if (args.length < 1){
-            campaign.leaderboard(campaign).then(leader=>{
+            campaign.leaderboard(thisCampaign).then(leader=>{
                 var t = new Table()
                 var i = 1
                 leader.forEach(top=>{
@@ -20,14 +20,14 @@ async function campaignLeader(campaign, client, message, prefix, args, config, s
                     t.newRow()
                     i++
                 })
-                message.channel.send('Top 10 of ' + campaign.name +` campaign:\`\`\`${t.toString()}\`\`\``)
+                message.channel.send('Top 10 of ' + thisCampaign.name +` campaign:\`\`\`${t.toString()}\`\`\``)
             })
         } else if (args[0].toLowerCase() == 'sub'){
             if (!message.member.hasPermission('ADMINISTRATOR')) return message.reply(`:warning: Only administrators on this server can do that.`)
             var channel = message.mentions.channels.first()
             if (!channel) return message.reply(`Usage \`${prefix}campaignleader ${clubID} ${campaignID} sub [channel mention]\``)
 
-            campaign.playlist.forEach(map=>{
+            thisCampaign.playlist.forEach(map=>{
                 sql.query('INSERT INTO `map-wr_channels` (userId, guildId, channelId, mapUid) VALUES (?, ?, ?, ?)', [message.author.id, message.guild.id, channel.id, map.mapUid], (err) =>{
                     if (err){
                         if (err.code == 'ER_DUP_ENTRY'){
@@ -42,11 +42,11 @@ async function campaignLeader(campaign, client, message, prefix, args, config, s
                         }
                     }
                 })
-                message.channel.send(`Successfully added #${channel.name} to get all maps World Record updates on the campaign ${campaign.name}.`)
+                message.channel.send(`Successfully added #${channel.name} to get all maps World Record updates on the campaign ${thisCampaign.name}.`)
             })
         } else if (args[0].toLowerCase().startsWith('unsub')){
             if (!message.member.hasPermission('ADMINISTRATOR')) return message.reply(`:warning: Only administrators on this server can do that.`)
-            campaign.playlist.forEach(map=>{
+            thisCampaign.playlist.forEach(map=>{
                 sql.query('DELETE FROM `map-wr_channels` WHERE `guildId` = ? AND `mapUid` = ?', [message.guild.id, map.mapUid], (err) =>{
                     if (err){
                         console.error(err)
@@ -54,7 +54,7 @@ async function campaignLeader(campaign, client, message, prefix, args, config, s
                     }
                 })
             })
-            message.channel.send(`Successfully deleted all maps World Record updates for ${campaign.name} on this server.`)
+            message.channel.send(`Successfully deleted all maps World Record updates for ${thisCampaign.name} on this server.`)
         }
     }
 }
