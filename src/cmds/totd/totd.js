@@ -209,7 +209,7 @@ module.exports = function(client, message, prefix, config, sql){
                 const monthsShort = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
                 const monthsShort2 = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
                 if (monthsShort.includes(args[0].toLowerCase())){
-                    if (isNaN(Number(args[1])) || isNaN(Number(args[2]))) return message.reply(`Date or year isn't a numeric value, type \`${prefix}totd help\` to get help`)
+                    if (isNaN(Number(args[1])) || isNaN(Number(args[2]))) return message.reply(`Date or year isn't a numeric value, type \`${prefix}help totd\` to get help`)
                     var yearBefore = new Date().getFullYear() - Number(args[2])
                     var yearsBack = 0
                     if (yearBefore > 1) yearsBack = yearBefore * 12
@@ -282,7 +282,7 @@ module.exports = function(client, message, prefix, config, sql){
                         console.error(err)
                         message.channel.send('No TOTDs are found for this month.')
                     })
-                } else return message.reply(`Month not found, type \`${prefix}totd help\` to get help`)
+                } else return message.reply(`Month not found, type \`${prefix}help totd\` to get help`)
             }
         }
     }
