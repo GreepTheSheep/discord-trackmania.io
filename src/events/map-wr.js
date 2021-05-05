@@ -11,6 +11,7 @@ module.exports = function(client, sql, config){
         } else {
             if (res.length<1) return
             res.forEach(r=>{
+                console.log('Getting map-wr for ' + r.channelId + ' - #' + client.channels.cache.find(c=>c.id == r.channelId).name + ' - ' + client.guilds.cache.find(g=>g.id == r.guildId).name)
                 fetchedChannels.push({
                     guild: r.guildId,
                     channel: r.channelId,
@@ -37,6 +38,7 @@ module.exports = function(client, sql, config){
             } else {
                 if (res.length<1) return
                 res.forEach(r=>{
+                    console.log('Getting map-wr for ' + r.channelId + ' - #' + client.channels.cache.find(c=>c.id == r.channelId).name + ' - ' + client.guilds.cache.find(g=>g.id == r.guildId).name)
                     fetchedChannels.push({
                         guild: r.guildId,
                         channel: r.channelId,
@@ -49,6 +51,7 @@ module.exports = function(client, sql, config){
             Trackmania.map(fetched.map).then(map=>{
                 if (map.error) return
                 Trackmania.leaderboard(map.mapUid).then(leader=>{
+                    console.log('Fetching map-wr for ' + map.name + ' ('+map.mapUid+') to channel #' + client.channels.cache.find(c=>c.id == fetched.channel).name + ' - guild: ' + client.guilds.cache.find(g=>g.id == fetched.guild).name)
                     var wr = leader[0]
                     if (wr1[map.mapUid] && wr.time < wr1[map.mapUid].time){
                         let embed = new Discord.MessageEmbed
