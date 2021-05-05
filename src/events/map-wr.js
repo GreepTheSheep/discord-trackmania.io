@@ -4,33 +4,35 @@ const Trackmania = require('trackmania.io')
 
 module.exports = function(client, sql, config){
     var fetchedChannels = [];
-    sql.query("SELECT * FROM `map-wr_channels`", (err, res)=>{
+    var wr1 = {}
+    sql.query("SELECT * FROM `map-wr_channels`", function(err, res){
         if (err){
             client.users.cache.find(u => u.id == config.owner_id).send(`:warning: Error on getting TOTD channels list: \`\`\`${err}\`\`\``)
             console.error(err)
         } else {
             if (res.length<1) return
-            res.forEach(r=>{
+            res.forEach(function(r){
                 fetchedChannels.push({
                     guild: r.guildId,
                     channel: r.channelId,
                     map: r.mapUid
                 })
+                Trackmania.leaderboard(r.mapUid).then(function(leader){
+                    wr1[r.mapUid] = leader[0]
+                })
             })
         }
     })
 
-    var wr1 = {}
-
-    fetchedChannels.forEach(f=>{
-        Trackmania.leaderboard(f.map).then(leader=>{
+    fetchedChannels.forEach(function(f){
+        Trackmania.leaderboard(f.map).then(function(leader){
             wr1[f.map] = leader[0]
         })
     })
 
     setInterval(()=>{
         var fetchedChannels = [];
-        sql.query("SELECT * FROM `map-wr_channels`", (err, res)=>{
+        sql.query("SELECT * FROM `map-wr_channels`", function(err, res){
             if (err){
                 client.users.cache.find(u => u.id == config.owner_id).send(`:warning: Error on getting TOTD channels list: \`\`\`${err}\`\`\``)
                 console.error(err)
@@ -45,10 +47,10 @@ module.exports = function(client, sql, config){
                 })
             }
         })
-        fetchedChannels.forEach(fetched=>{
-            Trackmania.map(fetched.map).then(map=>{
+        fetchedChannels.forEach(function(fetched){
+            Trackmania.map(fetched.map).then(function(map){
                 if (map.error) return
-                Trackmania.leaderboard(map.mapUid).then(leader=>{
+                Trackmania.leaderboard(map.mapUid).then(function(leader){
                     var wr = leader[0]
                     if (wr1[map.mapUid] && wr.time < wr1[map.mapUid].time){
                         let embed = new Discord.MessageEmbed
