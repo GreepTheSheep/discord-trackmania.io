@@ -13,7 +13,7 @@ module.exports = function(client, message, prefix){
             .addField('📜 Campaign', 'Informations about a campaign\n`'+prefix+'help campaign`', true)
             .addField('🏎 Map', 'Informations about a map\n`'+prefix+'help map`', true)
             .addField('🚩 Clubs', 'Informations about Clubs\n`'+prefix+'help club`', true)
-            .addField('🏁 Matches', 'Informations about Official Matches\n`'+prefix+'help match`', true)
+            .addField('🏁 Matches', 'Informations about Official Matches and Ranking (Matchmaking)\n`'+prefix+'help match`', true)
             .addField('📧 News', 'Informations about Official News\n`'+prefix+'help news`', true)
             .addField('🤖 Bot', 'Informations about the bot itself\n`'+prefix+'help bot`', true)
             return message.channel.send(embed)
@@ -48,6 +48,7 @@ module.exports = function(client, message, prefix){
             message.channel.send(embed)
         } else if (args[0].toLowerCase() == 'match') {
             embed.addField(prefix + `mminfo`, 'Get info on a 3v3 Matchmaking match', true)
+            embed.addField(prefix + `mmranking`, 'Get top 25 players in the Ranking', true)
             message.channel.send(embed)
         } else if (args[0].toLowerCase() == 'news') {
             embed.addField(prefix + `news-sub`, 'Subscribes to get the latest Trackmania News', true)
