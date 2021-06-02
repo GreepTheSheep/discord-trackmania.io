@@ -33,7 +33,7 @@ module.exports = function(client, message, prefix){
                     t.cell("Name", top.displayname)
                     t.cell("Division", top.division.rank.name)
                     t.cell("Points", top.score)
-                    if (i > 1) t.cell("Diff.", `(+${top.score - ranks.ranks[0].score})`)
+                    if (i > 1) t.cell("Diff.", `(${top.score - ranks.ranks[0].score})`)
                     t.newRow()
                     i++
                 })

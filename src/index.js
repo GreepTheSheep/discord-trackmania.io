@@ -40,20 +40,24 @@ client.on('message', async message => {
     try{
         if (message.author.bot) return
         if (message.channel.type != 'text') return
-        sql.query("SELECT * FROM `prefix` WHERE guildId = ?", message.guild.id, (err, res)=>{
-            var prefix;
-            if (err) prefix = config.prefix
-            else {
-                if (res.length == 1){
-                    prefix = res[0].prefix
-                } else {
-                    sql.query("INSERT INTO `prefix` (guildId, prefix, ownerId) VALUES (?, ?, ?)", [message.guild.id, config.prefix, message.guild.owner.id], ()=>{
-                        prefix = config.prefix
-                    })
+        if (config.dev.enable){
+            require('./cmds/cmds_index')(client, message, config.dev.prefix, config, sql)
+        } else {
+            sql.query("SELECT * FROM `prefix` WHERE guildId = ?", message.guild.id, (err, res)=>{
+                var prefix;
+                if (err) prefix = config.prefix
+                else {
+                    if (res.length == 1){
+                        prefix = res[0].prefix
+                    } else {
+                        sql.query("INSERT INTO `prefix` (guildId, prefix, ownerId) VALUES (?, ?, ?)", [message.guild.id, config.prefix, message.guild.owner.id], ()=>{
+                            prefix = config.prefix
+                        })
+                    }
                 }
-            }
-            require('./cmds/cmds_index')(client, message, prefix, config, sql)
-        })
+                require('./cmds/cmds_index')(client, message, prefix, config, sql)
+            })
+        }
     } catch (err) {
         console.error(err)
         message.channel.send('Hmm... There\'s an unattended error while running this command. This is reported')
@@ -73,4 +77,4 @@ news.on('new-news', news=>{
     require('./events/news.js')(news, client, sql, config)
 })
 
-client.login(config.token)
+config.dev.enable ? client.login(config.dev.token) : client.login(config.token)
