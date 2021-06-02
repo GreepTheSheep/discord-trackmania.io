@@ -52,17 +52,18 @@ module.exports = function(client, sql, config){
                 if (map.error) return
                 Trackmania.leaderboard(map.mapUid).then(function(leader){
                     var wr = leader[0]
-                    if (wr1[map.mapUid] && wr.time < wr1[map.mapUid].time){
+                    if (wr[map.mapUid] && wr.time < wr1[map.mapUid].time){
                         let embed = new Discord.MessageEmbed
                         embed.setColor('#A2C175')
                         .setTitle('New WR on '+map.name)
                         .setDescription(`The new World Record on ${map.name} is set by **${wr.displayname}** with a time of **__${ms(wr.time, {colonNotation: true, secondsDecimalDigits: 3})}__**`)
                         .setFooter('Map UID: ' + fetched.map + '. To unsubscribe enter command "leader '+fetched.map+' unsub"')
                         if (wr1[map.mapUid].time != Infinity) embed.addField('Before:', `The old World Record is set by ${wr1[map.mapUid].displayname} with a time of ${ms(wr1[map.mapUid].time, {colonNotation: true, secondsDecimalDigits: 3})}`)
+                        
+                        wr1[map.mapUid] = wr
 
                         client.channels.fetch(fetched.channel).then(c=>c.send(embed))
                     }
-                    wr1[map.mapUid] = wr
                 })
             })
         })
