@@ -22,10 +22,10 @@ module.exports = function (client, message, prefix, sql, config){
                             }
                             else affectedGuilds.push(guild.id)
                         })
-                        
-                        message.reply(`Done. ${affectedGuilds.length} affected guilds: \`\`\`${affectedGuilds.join('\n')}\`\`\`${errorGuilds.length} guilds with error`)
                     }
                 })
+                
+                message.reply(`Done. ${affectedGuilds.length} affected guilds: \`\`\`${affectedGuilds.join('\n')}\`\`\`${errorGuilds.length} guilds with error`)
             }
         })
     }
