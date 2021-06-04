@@ -62,7 +62,7 @@ client.on('message', async message => {
 })
 
 client.on('guildCreate', guild=>{
-    sql.query("INSERT INTO `prefix` (guildId, prefix, ownerId) VALUES (?, ?, ?)", [guild.id, config.prefix, guild.owner.id], (err)=>{
+    sql.query("INSERT INTO `prefix` (guildId, prefix) VALUES (?, ?, ?)", [guild.id, config.prefix], (err)=>{
         if (err) console.error('[SQL] Error on adding prefix on server', err)
         else console.log('Default prefix added for guild ' + guild.id)
     })

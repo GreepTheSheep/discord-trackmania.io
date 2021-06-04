@@ -1,7 +1,3 @@
-// sql.query("INSERT INTO `prefix` (guildId, prefix, ownerId) VALUES (?, ?, ?)", [message.guild.id, config.prefix, message.guild.owner.id], ()=>{
-//     prefix = config.prefix
-// })
-
 // eslint-disable-next-line no-unused-vars
 const Discord = require('discord.js')
 
@@ -21,7 +17,7 @@ module.exports = function (client, message, prefix, sql, config){
         var errorGuilds = []
         client.guilds.cache.forEach(guild=>{
             if (!guildsInSQL.includes(guild.id)){
-                sql.query("INSERT INTO `prefix` (guildId, prefix, ownerId) VALUES (?, ?, ?)", [guild.id, config.prefix, guild.owner.id], (err)=>{
+                sql.query("INSERT INTO `prefix` (guildId, prefix) VALUES (?, ?, ?)", [guild.id, config.prefix], (err)=>{
                     if (err){
                         message.reply('Error for guild `'+guild.id+'`: ' + err)
                         errorGuilds.push(guild.id)
