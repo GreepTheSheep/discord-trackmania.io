@@ -44,18 +44,14 @@ client.on('message', async message => {
             require('./cmds/cmds_index')(client, message, config.dev.prefix, config, sql)
         } else {
             sql.query("SELECT * FROM `prefix` WHERE guildId = ?", message.guild.id, (err, res)=>{
-                var prefix;
-                if (err) prefix = config.prefix
+                if (err) require('./cmds/cmds_index')(client, message, config.prefix, config, sql)
                 else {
-                    if (res.length == 1){
-                        prefix = res[0].prefix
+                    if (res.length >= 1){
+                        require('./cmds/cmds_index')(client, message, res[0].prefix, config, sql)
                     } else {
-                        sql.query("INSERT INTO `prefix` (guildId, prefix, ownerId) VALUES (?, ?, ?)", [message.guild.id, config.prefix, message.guild.owner.id], ()=>{
-                            prefix = config.prefix
-                        })
+                        require('./cmds/cmds_index')(client, message, config.prefix, config, sql)
                     }
                 }
-                require('./cmds/cmds_index')(client, message, prefix, config, sql)
             })
         }
     } catch (err) {
@@ -63,6 +59,13 @@ client.on('message', async message => {
         message.channel.send('Hmm... There\'s an unattended error while running this command. This is reported')
         client.users.cache.find(u => u.id == config.owner_id).send(`:warning: Error on message event: \`\`\`${err}\`\`\``)
     }
+})
+
+client.on('guildCreate', guild=>{
+    sql.query("INSERT INTO `prefix` (guildId, prefix, ownerId) VALUES (?, ?, ?)", [guild.id, config.prefix, guild.owner.id], (err)=>{
+        if (err) console.error('[SQL] Error on adding prefix on server', err)
+        else console.log('Default prefix added for guild ' + guild.id)
+    })
 })
 
 totd.on('debug', msg=>console.log('TOTD Listener:', msg))

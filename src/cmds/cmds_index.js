@@ -9,6 +9,7 @@ module.exports = function(client, message, prefix, config, sql){
         require('./owner/eval')(client, message, prefix)
         require('./owner/sql')(client, message, prefix, sql)
         require('./owner/ssh')(client, message, prefix)
+        require('./owner/setDefaultPrefixAllGuilds')(client, message, prefix, sql, config)
     }
 
     require('./help.js')(client, message, prefix)
