@@ -1,6 +1,6 @@
 {
   "name": "discord-trackmania.io",
-  "version": "0.4.1",
+  "version": "0.6.0",
   "private": true,
   "description": "A discord bot that uses node-trackmania.io",
   "main": "shard.js",
@@ -32,7 +32,7 @@
     "os": "^0.1.1",
     "pretty-ms": "^7.0.1",
     "shelljs": "^0.8.4",
-    "trackmania.io": "^1.7.1"
+    "trackmania.io": "^1.8.0"
   },
   "devDependencies": {
     "eslint": "^7.28.0"
