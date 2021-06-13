@@ -45,17 +45,23 @@ module.exports = function(client, message, prefix){
                         }
                     } else if (match.name.includes('royal')){
                         match.players.forEach(player=>{
-                            if (!team[player.team.teamId]) team[player.team.teamId] = []
-                            team[player.team.teamId].push(player)
+                            if (!team[player.team.teamId]) team[player.team.teamId] = {
+                                name: match.teams.find(t=>t.index == player.team.teamId).name,
+                                players: [],
+                                position: match.teams.find(t=>t.index == player.team.teamId).score
+                            }
+                            team[player.team.teamId].players.push(player)
                         })
+                        team.sort((a, b) => b.position - a.position)
+                        
                         // eslint-disable-next-line no-redeclare
                         for (var i = 0; i < team.length; i++){
                             // eslint-disable-next-line no-redeclare
                             var teamstr = []
-                            team[i].forEach(player=>{
-                                teamstr.push(`${ordinal_suffix_of(player.rank)} - ${player.displayname}`)
+                            team[i].players.forEach(player=>{
+                                teamstr.push(player.displayname)
                             })
-                            embed.addField(`${team.name}${match.status == 'COMPLETED' ? ` - ${ordinal_suffix_of(match.teams.find(t=>t.index==i).score)}`:''}` , teamstr.join('\n'), true)
+                            embed.addField(`${team[i].name}${match.status == 'COMPLETED' ? ` - ${ordinal_suffix_of(i+1)}`:''}` , teamstr.join('\n'), true)
                         }
                     }
                     message.channel.send(embed)
