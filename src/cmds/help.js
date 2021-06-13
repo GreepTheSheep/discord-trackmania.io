@@ -47,9 +47,8 @@ module.exports = function(client, message, prefix){
             .addField(prefix + `club`, 'Gets the informations of a club', true)
             message.channel.send(embed)
         } else if (args[0].toLowerCase() == 'match') {
-            embed.addField(prefix + `mminfo`, 'Get info on a 3v3 Matchmaking match', true)
-            embed.addField(prefix + `mmranking`, 'Get top 25 players in the 3v3 Ranking', true)
-            embed.addField(prefix + `royalranking`, 'Get top 25 players in the Royal mode Ranking', true)
+            embed.addField(prefix + `mminfo`, 'Get info on a 3v3 or a Royal match', true)
+            embed.addField(prefix + `mmranking`, 'Get top 25 players in the 3v3 or Royal mode', true)
             message.channel.send(embed)
         } else if (args[0].toLowerCase() == 'news') {
             embed.addField(prefix + `news-sub`, 'Subscribes to get the latest Trackmania News', true)
