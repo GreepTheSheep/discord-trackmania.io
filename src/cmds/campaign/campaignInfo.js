@@ -49,8 +49,7 @@ module.exports = function(client, message, prefix) {
     if (message.content.startsWith(prefix + 'campaign ') && !message.content.startsWith(prefix+'campaignleader')) {
         let args = message.content.split(" ")
         args.shift()
-        if (args.length < 1) return message.reply('Usage: `'+prefix+'campaign [Club ID] [campaign ID]`')
-        if (args.length < 2) return message.reply('Usage: `'+prefix+'campaign [Club ID] [campaign ID]`. We need a club ID because of Trackmania.io API')
+        if (args.length < 2) return message.reply('Usage: `'+prefix+'campaign [Club ID] [campaign ID]`')
 
         var clubID = Number(args[0])
         var campaignID = Number(args[1])

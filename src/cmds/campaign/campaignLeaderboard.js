@@ -63,8 +63,7 @@ module.exports = function(client, message, prefix, config, sql) {
     if (message.content.startsWith(prefix + 'campaignleaderboard') || message.content.startsWith(prefix + 'campaignleader')) {
         let args = message.content.split(" ")
         args.shift()
-        if (args.length < 1) return message.reply('Usage: `'+prefix+'campaignleader [Club ID] [Campaign ID] (optional: sub/unsub)`. Use sub to get any map WR updates on the campaign, unsub to unsubscribe.')
-        if (args.length < 2) return message.reply('Usage: `'+prefix+'campaignleader [Club ID] [Campaign ID] (optional: sub/unsub)`. We need a club ID because of Trackmania.io API. Use sub to get any map WR updates on the campaign, unsub to unsubscribe.')
+        if (args.length < 2) return message.reply('Usage: `'+prefix+'campaignleader [Club ID] [Campaign ID] (optional: sub/unsub)`. Use sub to get any map WR updates on the campaign, unsub to unsubscribe.')
 
         var clubID = Number(args[0])
         var campaignID = Number(args[1])
