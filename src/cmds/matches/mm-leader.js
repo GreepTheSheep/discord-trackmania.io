@@ -31,7 +31,7 @@ module.exports = function(client, message, prefix){
                     if (i>25) return
                     t.cell("Pos.", ordinal_suffix_of(i))
                     t.cell("Name", top.displayname)
-                    t.cell("Division", top.division.rank.name)
+                    t.cell("Division", top.division.rank ? top.division.rank.name : "Error :(")
                     t.cell("Points", top.score)
                     if (i > 1) t.cell("Diff.", `(${top.score - ranks.ranks[0].score})`)
                     t.newRow()
@@ -52,7 +52,7 @@ module.exports = function(client, message, prefix){
                     if (i>25) return
                     t.cell("Pos.", ordinal_suffix_of(i))
                     t.cell("Name", top.displayname)
-                    t.cell("Division", top.division.rank.name)
+                    t.cell("Division", top.division.rank ? top.division.rank.name : "Error :(")
                     t.cell("Wins", top.progression)
                     if (i > 1) t.cell("Diff.", `(${top.progression - ranks.ranks[0].progression})`)
                     t.newRow()
