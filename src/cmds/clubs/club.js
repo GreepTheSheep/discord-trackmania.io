@@ -38,7 +38,8 @@ async function buildEmbed(club){
                 arrayActivities.push(`${!activity.public ? "🔒 ":""}${activity.password ? "🔑 ":""}${activity.name}`)
             }
         });
-        embed.addField('Activities:', '- ' + arrayActivities.join('\n- '))
+        if (arrayActivities.join('\n- ').length >= 1024) embed.addField('Activities:', 'Too much for Discord\'s limitations')
+        else embed.addField('Activities:', '- ' + arrayActivities.join('\n- '))
         embed.setFooter(`Club ID: ${club.id}`)
     
         return embed
