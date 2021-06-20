@@ -28,8 +28,9 @@ client.on('ready', async () => {
         console.log(`Logged in as ${client.user.tag}`)
 
         require('./events/activites')(client, config)
-        require('./events/totd-wr')(client, sql, config)
+        
         require('./events/map-wr')(client, sql, config)
+        require('./events/totd-wr')(client, sql, config)
     } catch (err) {
         console.error(err)
         client.users.cache.find(u => u.id == config.owner_id).send(`:warning: Error on ready event: \`\`\`${err}\`\`\``)
