@@ -2,18 +2,14 @@ const Discord = require('discord.js')
 const Trackmania = require('trackmania.io')
 const clubs = new Trackmania.Clubs({listener: false})
 
-function buildEmbed(club){
-    clubs.clubActivities(club.id).then(activities=>{
-        club.activities = activities
-    })
-    clubs.clubMembers(club.id).then(members=>{
-        var management = []
-        members.members.forEach(member=>{
-            if (member.role != "Member" || (member.role == "Member" && member.vip == true)){
-                management.push(member)
-            }
-        })
-        club.management = management
+async function buildEmbed(club){
+    club.activities = await clubs.clubActivities(club.id)
+    club.members = await clubs.clubMembers(club.id)
+    club.management = []
+    club.members.members.forEach(member=>{
+        if (member.role != "Member" || (member.role == "Member" && member.vip == true)){
+            club.management.push(member)
+        }
     })
 
     let embed = new Discord.MessageEmbed()
@@ -54,14 +50,14 @@ module.exports = function (client, message, prefix){
         
         if (args.length < 1) return message.reply(`Usage \`${prefix}club [Club name or Club ID]\``)
 
-        clubs.club(args.join(' ')).then(club=>{
-            message.channel.send(buildEmbed(club))
+        clubs.club(args.join(' ')).then(async club=>{
+            message.channel.send(await buildEmbed(club))
         })
         .catch(err=>{
             console.log(err)
             clubs.searchClubs(args.join(' ')).then(club=>{
-                clubs.club(club[0].id).then(club=>{
-                    message.channel.send(buildEmbed(club))
+                clubs.club(club[0].id).then(async club=>{
+                    message.channel.send(await buildEmbed(club))
                 })
                 .catch(err=>{
                     console.error(err)
