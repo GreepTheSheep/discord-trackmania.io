@@ -33,7 +33,7 @@ function buildEmbedMessage(player){
     let embed = new Discord.MessageEmbed()
     .setThumbnail(player.trophies.echelon.img)
     .setTitle('Statictics of '+ (player.clubtag && player.clubtag != "" ? `[${player.clubtag}] ` : "") + player.displayname)
-    .setDescription(player.displayname + ' has started playing Trackmania on '+ new Date(player.timestamp).getFullYear()+'-'+(new Date(player.timestamp).getMonth()+1)+'-'+new Date(player.timestamp).getDate() +' (' + ms(new Date() - new Date(player.timestamp), {compact: true, verbose: true}) + ' ago).\nThis player was last seen ' + ms(new Date() - new Date(player.trophies.timestamp), {compact: true, verbose: true}) + ' ago.\nIts Trackmania.io URL is ' + player.url)
+    .setDescription(player.displayname + ' has started playing Trackmania on '+ new Date(player.timestamp).getFullYear()+'-'+(new Date(player.timestamp).getMonth()+1)+'-'+new Date(player.timestamp).getDate() +' (' + ms(new Date() - new Date(player.timestamp), {compact: true, verbose: true}) + ' ago).\nThis player was last seen ' + ms(new Date() - new Date(player.trophies.timestamp), {compact: true, verbose: true}) + ' ago.\nTheir Trackmania.io URL is ' + player.url)
     .addField('Zone:', zone_str.join(', '))
     .addField('Ranking:', `${player.trophies.points} points (${player.trophies.echelon.name})\n__Number of trophies__:\n${trophies_str.join('\n')}`, true)
     .addField('Top:', top_str.join('\n'), true)
