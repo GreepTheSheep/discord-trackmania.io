@@ -29,7 +29,7 @@ client.on('ready', async () => {
 
         require('./events/activites')(client, config)
         
-        require('./events/map-wr')(client, sql, config)
+        //require('./events/map-wr')(client, sql, config)
         require('./events/totd-wr')(client, sql, config)
     } catch (err) {
         console.error(err)
