@@ -41,8 +41,57 @@ function buildEmbedMessage(player){
     if (player.matchmaking.some(m=>m.info.typename == '3v3')) embed.addField('Matchmaking:', `**__Teams 3v3:__**\nScore: ${player.matchmaking.find(m=>m.info.typename == '3v3').info.score}/${player.matchmaking.find(m=>m.info.typename == '3v3').info.rank.endPts} (${player.matchmaking.find(m=>m.info.typename == '3v3').info.rank.name})\nRank: ${player.matchmaking.find(m=>m.info.typename == '3v3').info.place}/${player.matchmaking.find(m=>m.info.typename == '3v3').total}`, player.clubtag && player.clubtag != "")
     if (player.matchmaking.some(m=>m.info.typename == 'Royal')) embed.addField('Royal:', `Wins: ${player.matchmaking.find(m=>m.info.typename == 'Royal').info.progression}/${player.matchmaking.find(m=>m.info.typename == 'Royal').info.rank.endPts} (${player.matchmaking.find(m=>m.info.typename == 'Royal').info.rank.name})\nScore: ${player.matchmaking.find(m=>m.info.typename == 'Royal').info.score} pts\nRank: ${player.matchmaking.find(m=>m.info.typename == 'Royal').info.place}/${player.matchmaking.find(m=>m.info.typename == 'Royal').total}`, true)
     if (player.meta && (player.meta.nadeo || player.meta.tmgl || player.meta.tmwc21 || player.meta.team || player.meta.sponsor || player.accountid == "26d9a7de-4067-4926-9d93-2fe62cd869fc")) embed.addField('Part of', `${player.meta.nadeo ? '- Nadeo Team\n' : ''}${player.meta.tmgl ? '- Trackmania Grand League\n' : ''}${player.meta.tmwc21 ? '- Trackmania Grand League World Cup 2021\n' : ''}${player.meta.team ? '- Openplanet Team\n' : ''}${player.accountid == "26d9a7de-4067-4926-9d93-2fe62cd869fc" ? '- Trackmania.io Discord bot developer\n' : ''}${player.meta.sponsor ? '- Trackmania.io / Openplanet Sponsor\n' : ''}`)
-    embed.setFooter(`Account id: ${player.accountid}`)
+    if (player.meta && (player.meta.twitch || player.meta.youtube || player.meta.twitter)) embed.addField('Links:', `${player.meta.twitch ? `- [Twitch](${player.meta.twitch})\n`:""}${player.meta.youtube ? `- [YouTube](${player.meta.youtube})\n`:""}${player.meta.twitter ? `- [Twitter](${player.meta.twitter})\n`:""}`, true)
     if (player.meta && (player.meta.comment && player.meta.comment != "")) embed.addField('Comment:', player.meta.comment)
+    embed.setFooter(`Account id: ${player.accountid}`)
+
+    // Embed color based on echelon
+    var embedColors = [
+        {
+            "echelon": 0,
+            "color": "#1BA56A"
+        },
+        {
+            "echelon": 1,
+            "color": "#6B3811"
+        },
+        {
+            "echelon": 2,
+            "color": "#A65B22"
+        },
+        {
+            "echelon": 3,
+            "color": "#F6AB74"
+        },
+        {
+            "echelon": 4,
+            "color": "#403F40"
+        },
+        {
+            "echelon": 5,
+            "color": "#646664"
+        },
+        {
+            "echelon": 6,
+            "color": "#F7F3F7"
+        },
+        {
+            "echelon": 7,
+            "color": "#724600"
+        },
+        {
+            "echelon": 8,
+            "color": "#C58500"
+        },
+        {
+            "echelon": 9,
+            "color": "#F8D34D"
+        }
+    ]
+
+    embedColors.forEach(r=>{
+        if (r.echelon == player.trophies.echelon.echelon) embed.setColor(r.color)
+    })
 
     return embed;
 }
