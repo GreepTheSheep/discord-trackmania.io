@@ -58,4 +58,24 @@ module.exports = function(client, message, prefix, config){
             client.users.cache.find(u => u.id == config.owner_id).send(`:warning: Error on mm ranking command: \`\`\`${err}\`\`\``)
         })
     }
+
+    if (message.content.toLowerCase().startsWith(prefix + 'ranking')){
+        matches.trophiesRanking().then(ranks=>{
+            if (ranks.error) return message.reply(ranks.error)
+            else {
+                var t = new Table()
+                var i = 1
+                ranks.ranks.forEach(top=>{
+                    if (i>25) return
+                    t.cell("Pos.", ordinal_suffix_of(i))
+                    t.cell("Club Tag", top.player.tag)
+                    t.cell("Name", top.player.name)
+                    t.cell('Points', top.score)
+                    t.newRow()
+                    i++
+                })
+                message.channel.send(`${ranks.note != "" ? "⚠ " + ranks.note : ""}\`\`\`${t.toString()}\`\`\`Tip: if you're looking for 3v3 or Royal ranking, type \`${prefix}mmranking\``)
+            }
+        })
+    }
 }
