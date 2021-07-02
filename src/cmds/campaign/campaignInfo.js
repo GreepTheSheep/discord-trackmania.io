@@ -14,7 +14,7 @@ async function generateMessage(campaign, message, clubID){
         embed.setColor('#9B850E')
         embed.setTitle(campaign.name)
         if (clubID != 0) embed.addField('Club:', thisClub.name, true)
-        embed.addField('Created by:', clubID != 0 ? thisClub.creatordisplayname : 'Nadeo', true)
+        embed.addField('Created by:', clubID != 0 ? thisClub.creatorplayer.name : 'Nadeo', true)
         embed.addField('Maps number:', `${campaign.playlist.length} maps`, true)
         embed.addField('Links:', `[Trackmania.io](https://trackmania.io/#/campaigns/${campaign.clubid}/${campaign.id})`)
         embed.setImage(clubID != 0 ? campaign.media : 'https://trackmania.io'+campaign.mediae.decal)

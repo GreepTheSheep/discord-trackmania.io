@@ -10,10 +10,10 @@ module.exports = function (client, message, prefix){
         players.searchPlayer(args.join(' ')).then(players=>{
             var array = []
             players.forEach(player=>{
-                if (player.meta && player.meta.vanity != ""){
-                    array.push(`[${player.displayname}](https://trackmania.io/#/player/${player.meta.vanity})`)
+                if (player.player.meta && player.player.meta.vanity != ""){
+                    array.push(`${player.player.clubtag && player.player.clubtag != "" ? `[${player.player.clubtag}] ` : ""}[${player.player.displayname}](https://trackmania.io/#/player/${player.player.meta.vanity})`)
                 } else {
-                    array.push(`[${player.displayname}](https://trackmania.io/#/player/${player.accountid})`)
+                    array.push(`${player.player.clubtag && player.player.clubtag != "" ? `[${player.player.clubtag}] ` : ""}[${player.player.displayname}](https://trackmania.io/#/player/${player.player.id})`)
                 }
             })
             let embed = new Discord.MessageEmbed()

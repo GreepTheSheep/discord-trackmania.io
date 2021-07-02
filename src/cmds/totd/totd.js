@@ -33,7 +33,7 @@ module.exports = function(client, message, prefix, config, sql){
                 embed.setColor('#00ff00')
                 embed.setTitle(`Track Of The Day - ${new Date().getDate()} ${months[new Date().getMonth()]} ${new Date().getFullYear()}`)
                 embed.addField('Name:', totd.map.name, true)
-                embed.addField('Created by:', totd.map.authordisplayname, true)
+                embed.addField('Created by:', totd.map.authorplayer.name, true)
                 embed.addField('Medals:', `Author: **${ms(totd.map.authorScore, {colonNotation: true, secondsDecimalDigits: 3})}**\nGold: ${ms(totd.map.goldScore, {colonNotation: true, secondsDecimalDigits: 3})}\nSilver: ${ms(totd.map.silverScore, {colonNotation: true, secondsDecimalDigits: 3})}\nBronze: ${ms(totd.map.bronzeScore, {colonNotation: true, secondsDecimalDigits: 3})}`)
                 embed.addField('Uploaded:', `${ms(new Date() - new Date(totd.map.timestamp), {compact: true, verbose: true})} ago`, true)
                 embed.addField('Links:', `[Download](${totd.map.fileUrl}) | [Trackmania.io](https://trackmania.io/#/totd/leaderboard/${totd.leaderboarduid}/${totd.map.mapUid})${totd.map.exchangeid != 0 ? ` | [Trackmania.exchange](https://trackmania.exchange/tracks/view/${totd.map.exchangeid})`:''}`)
@@ -49,7 +49,7 @@ module.exports = function(client, message, prefix, config, sql){
                             download(totd.map.thumbnailUrl, './data', {filename: totd.map.name+'.jpg'}).then(()=>{
                                 const attachment = new Discord.MessageAttachment('./data/'+totd.map.name+'.jpg')
                                 client.channels.fetch('761520592066707468').then(c=>{
-                                    c.send(`TOTD - ${new Date().getDate()} ${months[new Date().getMonth()]} ${new Date().getFullYear()} - ${totd.map.name} by ${totd.map.authordisplayname}`, attachment)
+                                    c.send(`TOTD - ${new Date().getDate()} ${months[new Date().getMonth()]} ${new Date().getFullYear()} - ${totd.map.name} by ${totd.map.authorplayer.name}`, attachment)
                                     .then(msg=>{
                                         if (msg.attachments.size > 0){
                                             embed.setImage(msg.attachments.array()[0].url)
@@ -90,7 +90,8 @@ module.exports = function(client, message, prefix, config, sql){
                         var i = 1
                         leader.forEach(top=>{
                             t.cell("Pos.", i)
-                            t.cell("Name", top.displayname)
+                            t.cell("Club tag", top.player.tag)
+                            t.cell("Name", top.player.name)
                             t.cell("Time", ms(top.time, {colonNotation: true, secondsDecimalDigits: 3}))
                             if (i > 1) t.cell("Diff.", `(+${ms(top.time - leader[0].time, {colonNotation: true, secondsDecimalDigits: 3})})`)
                             t.newRow()
@@ -234,7 +235,7 @@ module.exports = function(client, message, prefix, config, sql){
                         embed.setColor('#00ff00')
                         embed.setTitle(`Track Of The Day - ${Number(args[1])} ${months[monthsShort.indexOf(args[0].toLowerCase())]} ${Number(args[2])}`)
                         embed.addField('Name:', totd.map.name, true)
-                        embed.addField('Created by:', totd.map.authordisplayname, true)
+                        embed.addField('Created by:', totd.map.authorplayer.name, true)
                         embed.addField('Medals:', `Author: **${ms(totd.map.authorScore, {colonNotation: true, secondsDecimalDigits: 3})}**\nGold: ${ms(totd.map.goldScore, {colonNotation: true, secondsDecimalDigits: 3})}\nSilver: ${ms(totd.map.silverScore, {colonNotation: true, secondsDecimalDigits: 3})}\nBronze: ${ms(totd.map.bronzeScore, {colonNotation: true, secondsDecimalDigits: 3})}`)
                         embed.addField('Uploaded:', `${ms(new Date() - new Date(totd.map.timestamp), {compact: true, verbose: true})} ago`, true)
                         embed.addField('Links:', `[Download](${totd.map.fileUrl}) | [Trackmania.io](https://trackmania.io/#/totd/leaderboard/${totd.leaderboarduid}/${totd.map.mapUid})${totd.map.exchangeid != 0 ? ` | [Trackmania.exchange](https://trackmania.exchange/tracks/view/${totd.map.exchangeid})`:''}`)

@@ -14,7 +14,8 @@ async function campaignLeader(thisCampaign, client, message, prefix, args, confi
                 var i = 1
                 leader.forEach(top=>{
                     t.cell("Pos.", i)
-                    t.cell("Name", top.displayname)
+                    t.cell("Club Tag", top.player.tag)
+                    t.cell("Name", top.player.name)
                     t.cell("Points", top.points)
                     if (i > 1) t.cell("Diff.", `(+${top.points - leader[0].points})`)
                     t.newRow()

@@ -10,11 +10,11 @@ module.exports = function (client, message, prefix, config, sql){
         const players = new Trackmania.Players()
 
         players.player(args[0]).then(player=>{
-            sql.query("INSERT INTO `players` (accountId, discordId) VALUES (?, ?)", [player.accountid, message.author.id], (err) =>{
+            sql.query("INSERT INTO `players` (accountId, discordId) VALUES (?, ?)", [player.player.id, message.author.id], (err) =>{
                 if (err){
                     console.error(err)
                     if (err.code == 'ER_DUP_ENTRY'){
-                        sql.query("UPDATE `players` SET accountId = ? WHERE discordId = ?", [player.accountid, message.author.id], (err)=>{
+                        sql.query("UPDATE `players` SET accountId = ? WHERE discordId = ?", [player.player.id, message.author.id], (err)=>{
                             if (err){
                                 console.error(err)
                                 client.users.cache.find(u => u.id == config.owner_id).send(`:warning: Error on updating player on database: \`\`\`${err}\`\`\``)
@@ -37,18 +37,18 @@ module.exports = function (client, message, prefix, config, sql){
         .catch(()=>{
             players.searchPlayer(args.join(' ')).then(player=>{
                 if (player.length >= 1){
-                    sql.query("INSERT INTO `players` (accountId, discordId) VALUES (?, ?)", [player[0].accountid, message.author.id], (err) =>{
+                    sql.query("INSERT INTO `players` (accountId, discordId) VALUES (?, ?)", [player[0].player.id, message.author.id], (err) =>{
                         if (err){
                             console.error(err)
                             if (err.code == 'ER_DUP_ENTRY'){
-                                sql.query("UPDATE `players` SET accountId = ? WHERE discordId = ?", [player[0].accountid, message.author.id], (err)=>{
+                                sql.query("UPDATE `players` SET accountId = ? WHERE discordId = ?", [player[0].player.id, message.author.id], (err)=>{
                                     if (err){
                                         console.error(err)
                                         client.users.cache.find(u => u.id == config.owner_id).send(`:warning: Error on updating player on database: \`\`\`${err}\`\`\``)
                                         message.reply('Error while adding on your account, this was reported')
                                     } else {
-                                        console.log('Successfully updated ' + player[0].displayname + ' on Discord User ID ' + message.author.id)
-                                        message.reply('Successfully updated ' + player[0].displayname + ' on your account!')
+                                        console.log('Successfully updated ' + player[0].player.displayname + ' on Discord User ID ' + message.author.id)
+                                        message.reply('Successfully updated ' + player[0].player.displayname + ' on your account!')
                                     }
                                 })
                             } else {
@@ -56,8 +56,8 @@ module.exports = function (client, message, prefix, config, sql){
                                 message.reply('Error while adding on your account, this was reported')
                             }
                         } else {
-                            console.log('Successfully registered ' + player[0].displayname + ' on Discord User ID ' + message.author.id)
-                            message.reply('Successfully registered ' + player[0].displayname + ' on your account!')
+                            console.log('Successfully registered ' + player[0].player.displayname + ' on Discord User ID ' + message.author.id)
+                            message.reply('Successfully registered ' + player[0].player.displayname + ' on your account!')
                         }
                     })
                 } else {

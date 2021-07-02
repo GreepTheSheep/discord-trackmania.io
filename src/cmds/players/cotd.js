@@ -11,8 +11,8 @@ module.exports = function (client, message, prefix, config, sql){
                 client.users.cache.find(u => u.id == config.owner_id).send(`:warning: Error on getting player on database: \`\`\`${err}\`\`\``)
             } else {
                 if (res.length < 1) return message.reply('You are not registered, if you want to get your stats you can register with `'+prefix+'register`')
-                players.player(res[0].accountId).then(player=>{
-                    players.COTDResults(res[0].accountId).then(cotdRes=>{
+                players.player(res[0].player.id).then(player=>{
+                    players.COTDResults(res[0].player.id).then(cotdRes=>{
                         var cotd = cotdRes[0]
                         let embed = new Discord.MessageEmbed()
                         embed.setTitle('Cup of the day of '+ cotd.date+', results of ' + player.displayname)

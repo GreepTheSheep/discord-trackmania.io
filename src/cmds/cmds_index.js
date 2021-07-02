@@ -34,6 +34,6 @@ module.exports = function(client, message, prefix, config, sql){
 
     require('./news/news-sub.js')(client, message, prefix, config, sql)
 
-    require('./matches/mm-info')(client, message, prefix)
-    require('./matches/mm-leader')(client, message, prefix)
+    require('./matches/mm-info')(client, message, prefix, config)
+    require('./matches/mm-leader')(client, message, prefix, config)
 }

@@ -13,15 +13,15 @@ async function buildEmbed(club){
     })
 
     let embed = new Discord.MessageEmbed()
-        embed.setTitle(club.name)
+        embed.setTitle(`${club.name} [${club.tag}]`)
         .setDescription(club.description)
         .setThumbnail(club.logoUrl)
         .setImage(club.backgroundUrl)
-        .addField('Created by:', club.creatordisplayname, true)
+        .addField('Created by:', club.creatorplayer.name, true)
         .addField('Members', club.membercount, true)
         var arrayMembers = []
         club.management.forEach(member => {
-            arrayMembers.push(`${member.name} (${member.role})${member.vip && member.role != 'Creator' ? ' [VIP]' : ''}`)
+            arrayMembers.push(`${member.player.name} (${member.role})${member.vip && member.role != 'Creator' ? ' [VIP]' : ''}`)
         });
         embed.addField('Management:', '- ' + arrayMembers.join('\n- '))
         var arrayActivities = []

@@ -42,8 +42,8 @@ module.exports = function(client, sql, config){
                         let embed = new Discord.MessageEmbed
                         embed.setColor('#A2C175')
                         .setTitle('New WR on '+totd.map.name+' - Track of The Day')
-                        .setDescription(`The new World Record on ${totd.map.name} is set by **${wr.displayname}** with a time of **__${ms(wr.time, {colonNotation: true, secondsDecimalDigits: 3})}__**`)
-                        if (wr1.time != Infinity) embed.addField('Before:', `The old World Record is set by ${wr1.displayname} with a time of ${ms(wr1.time, {colonNotation: true, secondsDecimalDigits: 3})}`)
+                        .setDescription(`The new World Record on ${totd.map.name} is set by **${wr.player.name}** with a time of **__${ms(wr.time, {colonNotation: true, secondsDecimalDigits: 3})}__**`)
+                        if (wr1.time != Infinity) embed.addField('Before:', `The old World Record is set by ${wr1.player.name} with a time of ${ms(wr1.time, {colonNotation: true, secondsDecimalDigits: 3})}`)
 
                         wr1 = wr
 

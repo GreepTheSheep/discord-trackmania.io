@@ -17,7 +17,7 @@ function ordinal_suffix_of(i) {
     return i + "th";
 }
 
-module.exports = function(client, message, prefix){
+module.exports = function(client, message, prefix, config){
     if (message.content.toLowerCase().startsWith(prefix + 'mminfo')){
         let args = message.content.split(" ").slice(1)
         if (args.length < 1) return message.reply('Usage: `'+prefix+'mminfo [Match ID]`')
@@ -39,7 +39,7 @@ module.exports = function(client, message, prefix){
                         for (var i = 0; i < team.length; i++){
                             var teamstr = []
                             team[i].forEach(player=>{
-                                teamstr.push(`**${ordinal_suffix_of(player.rank)} - ${player.displayname}** - ${player.score} pts ${player.mvp ? '**(MVP)**':''}`)
+                                teamstr.push(`**${ordinal_suffix_of(player.rank)} - ${player.player.name}** - ${player.score} pts ${player.mvp ? '**(MVP)**':''}`)
                             })
                             embed.addField(`Team ${i+1}${match.status == 'COMPLETED' ? ` - ${match.teams.find(t=>t.index==i).score} pts`:''}` , teamstr.join('\n'), true)
                         }
@@ -59,7 +59,7 @@ module.exports = function(client, message, prefix){
                             // eslint-disable-next-line no-redeclare
                             var teamstr = []
                             team[i].players.forEach(player=>{
-                                teamstr.push(player.displayname)
+                                teamstr.push(player.player.name)
                             })
                             embed.addField(`${team[i].name}${match.status == 'COMPLETED' ? ` - ${ordinal_suffix_of(i+1)}`:''}` , teamstr.join('\n'), true)
                         }
@@ -67,6 +67,10 @@ module.exports = function(client, message, prefix){
                     message.channel.send(embed)
                 } else return message.reply('This match is not a matchmaking match.')
             }
+        }).catch(err=>{
+            console.error(err)
+            message.reply('An error happened, this is reported')
+            client.users.cache.find(u => u.id == config.owner_id).send(`:warning: Error on mm info command: \`\`\`${err}\`\`\``)
         })
     }
 }

@@ -16,7 +16,7 @@ module.exports = function(client, message, prefix, config, sql) {
                 let embed = new Discord.MessageEmbed()
                 embed.setColor('#9B850E')
                 embed.setTitle(map.name)
-                embed.addField('Created by:', map.authordisplayname, true)
+                embed.addField('Created by:', map.authorplayer.name, true)
                 embed.addField('Medals:', `Author: **${ms(map.authorScore, {colonNotation: true, secondsDecimalDigits: 3})}**\nGold: ${ms(map.goldScore, {colonNotation: true, secondsDecimalDigits: 3})}\nSilver: ${ms(map.silverScore, {colonNotation: true, secondsDecimalDigits: 3})}\nBronze: ${ms(map.bronzeScore, {colonNotation: true, secondsDecimalDigits: 3})}`)
                 embed.addField('Uploaded:', `${ms(new Date() - new Date(map.timestamp), {compact: true, verbose: true})} ago by ${ map.submitterdisplayname}`, true)
                 embed.addField('Links:', `[Download](${map.fileUrl}) | [Trackmania.io](https://trackmania.io/#/leaderboard/${map.mapUid})${map.exchangeid != 0 ? ` | [Trackmania.exchange](https://trackmania.exchange/tracks/view/${map.exchangeid})`:''}`)

@@ -20,7 +20,8 @@ module.exports = function(client, message, prefix, config, sql) {
                         var i = 1
                         leader.forEach(top=>{
                             t.cell("Pos.", i)
-                            t.cell("Name", top.displayname)
+                            t.cell("Club Tag", top.player.tag)
+                            t.cell("Name", top.player.name)
                             t.cell("Time", ms(top.time, {colonNotation: true, secondsDecimalDigits: 3}))
                             if (i > 1) t.cell("Diff.", `(+${ms(top.time - leader[0].time, {colonNotation: true, secondsDecimalDigits: 3})})`)
                             t.newRow()
