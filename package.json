@@ -1,6 +1,6 @@
 {
   "name": "discord-trackmania.io",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "private": true,
   "description": "A discord bot that uses node-trackmania.io",
   "main": "shard.js",
