@@ -11,8 +11,8 @@ module.exports = function (client, message, prefix, config, sql){
                 client.users.cache.find(u => u.id == config.owner_id).send(`:warning: Error on getting player on database: \`\`\`${err}\`\`\``)
             } else {
                 if (res.length < 1) return message.reply('You are not registered, if you want to get your stats you can register with `'+prefix+'register`')
-                players.player(res[0].player.id).then(player=>{
-                    players.COTDResults(res[0].player.id).then(cotdRes=>{
+                players.player(res[0].accountId).then(player=>{
+                    players.COTDResults(res[0].accountId).then(cotdRes=>{
                         var cotd = cotdRes[0]
                         let embed = new Discord.MessageEmbed()
                         embed.setTitle('Cup of the day of '+ cotd.date+', results of ' + player.displayname)
@@ -20,11 +20,11 @@ module.exports = function (client, message, prefix, config, sql){
                         embed.addField('Rank:', `Server: ${cotd.serverRank}\n\nGlobal: ${cotd.globalRank}/${cotd.totalPlayer}`)
                         var oldCotd_str = []
                         for (var i = 0; i < cotdRes.length; i++){
-                            if (i != 0){
+                            if (i != 0 && i < 10){
                                 oldCotd_str.push(`${cotdRes[i].date}: ${cotdRes[i].globalRank}/${cotdRes[i].totalPlayer}`)
                             }
                         }
-                        if (oldCotd_str.length != 0) embed.addField('Older COTDs:', oldCotd_str.join('\n'))
+                        if (oldCotd_str.length != 0) embed.addField('The 10 most recent COTDs:', oldCotd_str.join('\n'))
                         message.channel.send(embed)
                     })
                 })
