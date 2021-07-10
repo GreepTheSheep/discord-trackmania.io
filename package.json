@@ -35,6 +35,6 @@
     "trackmania.io": "^2.1.1"
   },
   "devDependencies": {
-    "eslint": "^7.28.0"
+    "eslint": "^7.30.0"
   }
 }
