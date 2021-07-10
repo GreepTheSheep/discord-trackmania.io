@@ -25,6 +25,7 @@ module.exports = function (client, message, prefix, config, sql){
                             }
                         }
                         if (oldCotd_str.length != 0) embed.addField('The 10 most recent COTDs:', oldCotd_str.join('\n'))
+                        embed.setFooter("Thanks to Flirno for giving this dataset")
                         message.channel.send(embed)
                     })
                 })
