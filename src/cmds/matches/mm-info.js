@@ -44,24 +44,32 @@ module.exports = function(client, message, prefix, config){
                             embed.addField(`Team ${i+1}${match.status == 'COMPLETED' ? ` - ${match.teams.find(t=>t.index==i).score} pts`:''}` , teamstr.join('\n'), true)
                         }
                     } else if (match.name.includes('royal')){
-                        match.players.forEach(player=>{
-                            if (!team[player.team.teamId]) team[player.team.teamId] = {
-                                name: match.teams.find(t=>t.index == player.team.teamId).name,
-                                players: [],
-                                position: match.teams.find(t=>t.index == player.team.teamId).score
-                            }
-                            team[player.team.teamId].players.push(player)
-                        })
-                        team.sort((a, b) => b.position - a.position)
-                        
-                        // eslint-disable-next-line no-redeclare
-                        for (var i = 0; i < team.length; i++){
-                            // eslint-disable-next-line no-redeclare
-                            var teamstr = []
-                            team[i].players.forEach(player=>{
-                                teamstr.push(player.player.name)
+                        if (match.teams != null){
+                            match.players.forEach(player=>{
+                                if (!team[player.team.teamId]) team[player.team.teamId] = {
+                                    name: match.teams.find(t=>t.index == player.team.teamId).name,
+                                    players: [],
+                                    position: match.teams.find(t=>t.index == player.team.teamId).score
+                                }
+                                team[player.team.teamId].players.push(player)
                             })
-                            embed.addField(`${team[i].name}${match.status == 'COMPLETED' ? ` - ${ordinal_suffix_of(i+1)}`:''}` , teamstr.join('\n'), true)
+                            team.sort((a, b) => b.position - a.position)
+                            
+                            // eslint-disable-next-line no-redeclare
+                            for (var i = 0; i < team.length; i++){
+                                // eslint-disable-next-line no-redeclare
+                                var teamstr = []
+                                team[i].players.forEach(player=>{
+                                    teamstr.push(player.player.name)
+                                })
+                                embed.addField(`${team[i].name}${match.status == 'COMPLETED' ? ` - ${ordinal_suffix_of(i+1)}`:''}` , teamstr.join('\n'), true)
+                            }
+                        } else {
+                            var playerstr = []
+                            match.players.forEach(player=>{
+                                playerstr.push(player.player.name)
+                            })
+                            embed.addField('Match is currently in progress!\n(Teams are not available while the match is in progress.)\n\nPlayers:' , playerstr.join(' - '), true)
                         }
                     }
                     message.channel.send(embed)
