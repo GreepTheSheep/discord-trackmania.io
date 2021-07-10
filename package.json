@@ -32,7 +32,7 @@
     "os": "^0.1.1",
     "pretty-ms": "^7.0.1",
     "shelljs": "^0.8.4",
-    "trackmania.io": "^2.1.1"
+    "trackmania.io": "^2.3.0"
   },
   "devDependencies": {
     "eslint": "^7.30.0"
