@@ -29,7 +29,7 @@
     "easy-table": "^1.1.1",
     "fs": "^0.0.1-security",
     "mysql": "^2.18.1",
-    "os": "^0.1.1",
+    "os": "^0.1.2",
     "pretty-ms": "^7.0.1",
     "shelljs": "^0.8.4",
     "trackmania.io": "^2.3.0"
