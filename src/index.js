@@ -1,46 +1,35 @@
 require('dotenv').config();
-const { Client, Intents } = require('discord.js'),
+const Command = require('./structures/Command'), // eslint-disable-line no-unused-vars
+    { Client, Intents } = require('discord.js'),
     client = new Client({
         intents: [Intents.FLAGS.GUILDS]
-    }),
-    fs = require('fs');
+    });
+
+/**
+ * The list of commands the bot will use
+ * @type {Command[]}
+ */
+let commands=[];
    
 
 client.on('ready', async () => {
     console.log(`Logged in as ${client.user.tag}!`);
 
+    commands = require('./fetchAllCommands')();
+
     // Register commands
     client.guilds.cache.forEach(async (guild) => {
-        await require('./registerCommandsScript')(guild.id, client.user.id);
+        await require('./registerCommandsScript')(guild.id, client.user.id, commands);
     });
 });
 
 client.on('interactionCreate', async interaction => {
     if (!interaction.isCommand()) return;
 
-    const commandFiles = await fs.readdirSync('./src/commands');
-    for (const file of commandFiles) {
-        // if file is a directory, take as category
-        if (fs.statSync(`./src/commands/${file}`).isDirectory()) {
-            const categoryCommands = await fs.readdirSync(`./src/commands/${file}`);
-            for (const categoryCommand of categoryCommands) {
-                // take only if file is a JS file
-                if (categoryCommand.endsWith('.js')) {
-                    const command = require(`./commands/${file}/${categoryCommand}`);
-                    if (interaction.commandName === command.name) {
-                        await command.execute(interaction);
-                    }
-                }
-            }
-        } else {
-            if (file.endsWith('.js')) {
-                const command = require(`./commands/${file}`);
-                if (interaction.commandName === command.name) {
-                    await command.execute(interaction);
-                }
-            }
-        }
-    }
+    const command = commands.find(c => c.name === interaction.commandName);
+    if (!command) return;
+
+    await command.execute(interaction);
 });
 
 client.on('messageCreate', async message => {
@@ -49,32 +38,13 @@ client.on('messageCreate', async message => {
     if (message.author.bot) return;
     if (!message.content.startsWith(process.env.PREFIX)) return;
     const prefix = process.env.PREFIX | 'tm!',
-        command = message.content.split(' ')[0].slice(prefix.length),
-        args = message.content.split(' ').slice(1);
+        typedCommand = message.content.split(' ')[0].slice(prefix.length),
+        args = message.content.split(' ').slice(1),
+        command = commands.find(c => c.name === typedCommand);
 
-    const commandFiles = await fs.readdirSync('./src/commands');
-    for (const file of commandFiles) {
-        // if file is a directory, take as category
-        if (fs.statSync(`./src/commands/${file}`).isDirectory()) {
-            const categoryCommands = await fs.readdirSync(`./src/commands/${file}`);
-            for (const categoryCommand of categoryCommands) {
-                // take only if file is a JS file
-                if (categoryCommand.endsWith('.js')) {
-                    const commandFile = require(`./commands/${file}/${categoryCommand}`);
-                    if (message.content.startsWith(prefix+command)) {
-                        await commandFile.executeMessage(message, args);
-                    }
-                }
-            }
-        } else {
-            if (file.endsWith('.js')) {
-                const commandFile = require(`./commands/${file}`);
-                if (message.content.startsWith(prefix+command)) {
-                    await commandFile.executeMessage(message, args);
-                }
-            }
-        }
-    }
+    if (!command) return;
+
+    await command.executeMessage(message, args);
 });
 
 client.login();
