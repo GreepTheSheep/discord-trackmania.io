@@ -17,6 +17,12 @@ class Command {
          * @type {?string}
          */
         this.category = category;
+
+        /**
+         * The arguments of the command
+         * @type {?Array<commandArgs>}
+         */
+        this.args = exports.args;
         
         /**
          * The function to execute when the command is called (through slash command)
@@ -33,3 +39,30 @@ class Command {
 }
 
 module.exports = Command;
+
+/**
+ * @typedef {Object} commandArgs The arguments of a commaand
+ * @property {string} name The name of the argument
+ * @property {?string} description The description of the argument
+ * @property {commandArgsType} type The type of the argument
+ * @property {commandArgsChoice[]} choices The choice of the argument
+ * @property {boolean} required Whether the argument is required or not
+ */
+
+/**
+ * @typedef {Object} commandArgsChoice The type of a command argument
+ * @property {string} name The name of the choice
+ * @property {string} value The value of the choice
+ */
+
+/**
+ * The type of a command argument
+ * * `string`
+ * * `bool`
+ * * `number`
+ * * `channel`
+ * * `mention`
+ * * `role`
+ * * `user`
+ * @typedef {string} commandArgsType The type of a command argument
+ */
