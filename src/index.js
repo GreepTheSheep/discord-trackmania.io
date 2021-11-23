@@ -3,7 +3,9 @@ const Command = require('./structures/Command'), // eslint-disable-line no-unuse
     { Client, Intents } = require('discord.js'),
     client = new Client({
         intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES]
-    });
+    }),
+    TrackmaniaIO = require('trackmania.io'),
+    tmio = new TrackmaniaIO.Client();
 
 /**
  * The list of commands the bot will use
@@ -14,6 +16,8 @@ let commands=[];
 
 client.on('ready', async () => {
     console.log(`🤖 Logged in as ${client.user.tag}!`);
+
+    tmio.setUserAgent('DiscordBot ' + client.user.tag + ' (' + client.user.id + ')');
 
     commands = require('./fetchAllCommands')();
 
@@ -29,7 +33,7 @@ client.on('interactionCreate', async interaction => {
     const command = commands.find(c => c.name === interaction.commandName);
     if (!command) return;
 
-    await command.execute(interaction, commands);
+    await command.execute(interaction, tmio, commands);
 });
 
 client.on('messageCreate', async message => {
@@ -43,7 +47,7 @@ client.on('messageCreate', async message => {
 
     if (!command) return;
 
-    await command.executeMessage(message, args, commands);
+    await command.executeMessage(message, args, tmio, commands);
 });
 
 client.login();

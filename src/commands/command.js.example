@@ -1,32 +1,63 @@
-// Set the command here, it's what we'll type in the message
-exports.name = 'ping';
+const Client = require('trackmania.io/typings/client/Client'), // eslint-disable-line no-unused-vars
+    Command = require('../structures/Command'), // eslint-disable-line no-unused-vars
+    {MessageEmbed, CommandInteraction, Message} = require('discord.js'); // eslint-disable-line no-unused-vars
 
-// Set the description here, this is what will show up when you need help for the command
-exports.description = 'Shows the delay between the program and the websocket';
+/**
+ * Set the command here, it's what we'll type in the message
+ * @type {string}
+ */
+exports.name = 'hey';
 
-// Set the command arguments here, this is what will show up when you type the command
+
+/**
+ * Set the description here, this is what will show up when you need help for the command
+ * @type {string}
+ */
+exports.description = 'Hey!';
+
+
+/**
+ * Set the command arguments here, this is what will show up when you type the command
+ * @type {Command.commandArgs[]}
+ */
 exports.args = [
     {
-        name: 'message',
-        description: 'The message to send',
+        name: 'questions',
+        description: 'Some questions the bot will you ask',
         type: 'string',
         required: false,
         choices: [
             {
-                name: 'Utilities',
-                value: 'utils'
+                name: 'Question 1',
+                value: 'How are you?'
+            },
+            {
+                name: 'Question 2',
+                value: 'How ya doin?'
             }
         ]
     }
 ];
 
-// Set the usage here, this is what will show up when you type the command
-// This part is executed as slash command
-exports.execute = async (interaction) => {
-    interaction.reply('Pong! ' + interaction.client.ws.ping + 'ms (Web Socket)');
+/**
+ * Set the usage here, this is what will show up when you type the command
+ * This part is executed as slash command
+ * @param {CommandInteraction} interaction
+ * @param {Client} tmio
+ * @param {Command[]} commands 
+ */
+exports.execute = async (interaction, tmio, commands) => {
+    let question = interaction.options.getString('questions');
+    interaction.reply('hey! ' + question);
 };
 
-// This part is executed as a normal message command
-exports.executeMessage = async (message) => {
-    message.reply('Pong! '  + message.client.ws.ping + 'ms (Web Socket)');
+/**
+ * This part is executed as a normal message command
+ * @param {Message} message
+ * @param {string[]} args
+ * @param {Client} tmio
+ * @param {Command[]} commands 
+ */
+exports.executeMessage = async (message, args, tmio, commands) => {
+    message.reply('hey! ' + args.join(' '));
 };

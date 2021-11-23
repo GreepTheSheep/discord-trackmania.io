@@ -1,10 +1,20 @@
-const Command = require('../../structures/Command'), // eslint-disable-line no-unused-vars
+const Client = require('trackmania.io/typings/client/Client'), // eslint-disable-line no-unused-vars
+    Command = require('../../structures/Command'), // eslint-disable-line no-unused-vars
     {MessageEmbed, CommandInteraction, Message} = require('discord.js'); // eslint-disable-line no-unused-vars
 
+/**
+ * @type {string}
+ */
 exports.name = 'help';
 
+/**
+ * @type {string}
+ */
 exports.description = 'Shows the list of commands and their description';
 
+/**
+ * @type {Command.commandArgs[]}
+ */
 exports.args = [
     {
         name: 'category',
@@ -22,9 +32,10 @@ exports.args = [
 
 /**
  * @param {CommandInteraction} interaction
+ * @param {Client} tmio
  * @param {Command[]} commands 
  */
-exports.execute = async (interaction, commands) => {
+exports.execute = async (interaction, tmio, commands) => {
 
     let embed = embedCategories(commands),
         categoryTyped = interaction.options.getString('category');
@@ -37,9 +48,10 @@ exports.execute = async (interaction, commands) => {
 /**
  * @param {Message} message
  * @param {string[]} args
+ * @param {Client} tmio
  * @param {Command[]} commands 
  */
-exports.executeMessage = async (message, args, commands) => {
+exports.executeMessage = async (message, args, tmio, commands) => {
     let embed = embedCategories(commands),
         categoryTyped = args[0];
 
