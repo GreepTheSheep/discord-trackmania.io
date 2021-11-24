@@ -28,9 +28,10 @@ exports.args = [
 /**
  * @param {CommandInteraction} interaction
  * @param {Client} tmio
- * @param {Command[]} commands 
+ * @param {Command[]} commands
+ * @param {MySQL.Connection} sql
  */
-exports.execute = async (interaction, tmio, commands) => {
+exports.execute = async (interaction, tmio, commands, sql) => {
 
     let embed, categoryTyped = interaction.options.getString('category');
 
@@ -53,8 +54,9 @@ exports.execute = async (interaction, tmio, commands) => {
  * @param {string[]} args
  * @param {Client} tmio
  * @param {Command[]} commands 
+ * @param {MySQL.Connection} sql
  */
-exports.executeMessage = async (message, args, tmio, commands) => {
+exports.executeMessage = async (message, args, tmio, commands, sql) => {
 
     let embed, categoryTyped = args[0];
 
@@ -75,6 +77,7 @@ exports.executeMessage = async (message, args, tmio, commands) => {
  * @param {ButtonInteraction} interaction
  * @param {Client} tmio
  * @param {Command[]} commands 
+ * @param {MySQL.Connection} sql
  */
 exports.executeButton = async (interaction, tmio, commands, sql) => {};
 
@@ -82,6 +85,7 @@ exports.executeButton = async (interaction, tmio, commands, sql) => {};
  * @param {SelectMenuInteraction} interaction
  * @param {Client} tmio
  * @param {Command[]} commands 
+ * @param {MySQL.Connection} sql
  */
 exports.executeSelectMenu = async (interaction, tmio, commands, sql) => {
     if (interaction.customId.substring(interaction.customId.indexOf('_')+1) == 'select-category') {

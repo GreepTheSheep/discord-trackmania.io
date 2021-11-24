@@ -46,8 +46,9 @@ exports.args = [
  * @param {CommandInteraction} interaction
  * @param {Client} tmio
  * @param {Command[]} commands 
+ * @param {MySQL.Connection} sql
  */
-exports.execute = async (interaction, tmio, commands) => {
+exports.execute = async (interaction, tmio, commands, sql) => {
     let question = interaction.options.getString('questions');
 
     // create 2 interaction rows (button or select menus)
@@ -101,8 +102,9 @@ exports.execute = async (interaction, tmio, commands) => {
  * @param {string[]} args
  * @param {Client} tmio
  * @param {Command[]} commands 
+ * @param {MySQL.Connection} sql
  */
-exports.executeMessage = async (message, args, tmio, commands) => {
+exports.executeMessage = async (message, args, tmio, commands, sql) => {
     message.reply('hey! ' + args.join(' '));
 };
 
@@ -111,8 +113,9 @@ exports.executeMessage = async (message, args, tmio, commands) => {
  * @param {ButtonInteraction} interaction
  * @param {Client} tmio
  * @param {Command[]} commands 
+ * @param {MySQL.Connection} sql
  */
-exports.executeButton = async (interaction, tmio, commands) => {
+exports.executeButton = async (interaction, tmio, commands, sql) => {
     if (interaction.customId.substring(interaction.customId.indexOf('_')+1) == 'button-primary') {
         interaction.update('Button primary!');
     }
@@ -123,8 +126,9 @@ exports.executeButton = async (interaction, tmio, commands) => {
  * @param {SelectMenuInteraction} interaction
  * @param {Client} tmio
  * @param {Command[]} commands 
+ * @param {MySQL.Connection} sql
  */
-exports.executeSelectMenu = async (interaction, tmio, commands) => {
+exports.executeSelectMenu = async (interaction, tmio, commands, sql) => {
     let interactionCustomId = interaction.customId.substring(interaction.customId.indexOf('_')+1);
     if (interactionCustomId === 'questions') {
         interaction.update('hey! ' + interaction.values[0]);

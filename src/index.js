@@ -4,8 +4,30 @@ const Command = require('./structures/Command'),
     client = new Client({
         intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES]
     }),
+    sql = require('mysql').createConnection({
+        host: process.env.DB_HOST,
+        port: process.env.DB_PORT,
+        user: process.env.DB_USER,
+        password: process.env.DB_PASS,
+        database: process.env.DB_NAME
+    }),
     TrackmaniaIO = require('trackmania.io'),
     tmio = new TrackmaniaIO.Client();
+
+sql.connect((err)=>{
+    if (err){
+        console.error('❌ Impossible to connect to MySQL server. Code: ' + err.code);
+        console.error('❌ All queries will be ignored, it can broke your bot!');
+        sql = null;
+    } else {
+        console.log('📔 Connected to the MySQL server! Connexion ID: ' + sql.threadId);
+    }
+
+    client.login().catch(err=>{
+        console.error("❌ Connexion to Discord failed: " + err);
+        process.exit(1);
+    });
+});
 
 /**
  * The list of commands the bot will use
@@ -32,17 +54,17 @@ client.on('interactionCreate', async interaction => {
         const command = commands.find(c => c.name === interaction.commandName);
         if (!command) return;
 
-        await command.execute(interaction, tmio, commands);
+        await command.execute(interaction, tmio, commands, sql);
     } else if (interaction.isSelectMenu()) {
         const command = commands.find(c => c.name === interaction.customId.split('_')[0]);
         if (!command) return;
 
-        await command.executeSelectMenu(interaction, tmio, commands);
+        await command.executeSelectMenu(interaction, tmio, commands, sql);
     } else if (interaction.isButton()) {
         const command = commands.find(c => c.name === interaction.customId.split('_')[0]);
         if (!command) return;
 
-        await command.executeButton(interaction, tmio, commands);
+        await command.executeButton(interaction, tmio, commands, sql);
     }
 });
 
@@ -57,7 +79,5 @@ client.on('messageCreate', async message => {
 
     if (!command) return;
 
-    await command.executeMessage(message, args, tmio, commands);
+    await command.executeMessage(message, args, tmio, commands, sql);
 });
-
-client.login();
