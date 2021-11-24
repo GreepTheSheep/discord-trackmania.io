@@ -1,5 +1,5 @@
 // You can run the script individually.
-// node src\registerCommands.js -g <guildId> -u <botID>
+// node registerCommands.js -g <guildId> -u <botID>
 const args = process.argv.slice(2),
     registerCommands = require('./src/registerCommandsScript'),
     commands = require('./src/fetchAllCommands')();
