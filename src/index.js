@@ -28,12 +28,22 @@ client.on('ready', async () => {
 });
 
 client.on('interactionCreate', async interaction => {
-    if (!interaction.isCommand()) return;
+    if (interaction.isCommand()) {
+        const command = commands.find(c => c.name === interaction.commandName);
+        if (!command) return;
 
-    const command = commands.find(c => c.name === interaction.commandName);
-    if (!command) return;
+        await command.execute(interaction, tmio, commands);
+    } else if (interaction.isSelectMenu()) {
+        const command = commands.find(c => c.name === interaction.customId.split('_')[0]);
+        if (!command) return;
 
-    await command.execute(interaction, tmio, commands);
+        await command.executeSelectMenu(interaction, tmio, commands);
+    } else if (interaction.isButton()) {
+        const command = commands.find(c => c.name === interaction.customId.split('_')[0]);
+        if (!command) return;
+
+        await command.executeButton(interaction, tmio, commands);
+    }
 });
 
 client.on('messageCreate', async message => {

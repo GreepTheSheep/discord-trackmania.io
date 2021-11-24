@@ -4,7 +4,7 @@ class Command {
          * The name of the command
          * @type {string}
          */
-        this.name = exports.name;
+        this.name = exports.name.toLowerCase();
 
         /**
          * The description of the command
@@ -35,6 +35,18 @@ class Command {
          * @type {function}
          */
         this.executeMessage = exports.executeMessage;
+
+        /**
+         * The function to execute when the a button is selected in a message
+         * @type {function}
+         */
+        this.executeButton = exports.executeButton;
+
+        /**
+         * The function to execute when the a item is selected in the select menu
+         * @type {function}
+         */
+        this.executeSelectMenu = exports.executeSelectMenu;
     }
 }
 
@@ -45,7 +57,7 @@ module.exports = Command;
  * @property {string} name The name of the argument
  * @property {?string} description The description of the argument
  * @property {commandArgsType} type The type of the argument
- * @property {commandArgsChoice[]} choices The choice of the argument
+ * @property {?commandArgsChoice[]} choices The choice of the argument
  * @property {boolean} required Whether the argument is required or not
  */
 
