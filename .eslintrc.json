@@ -9,6 +9,12 @@
         "ecmaVersion": 12
     },
     "rules": {
+        "no-unused-vars": [
+            "ignore",
+            {
+                "args": "none"
+            }
+        ],
         "indent": [
             "error",
             4

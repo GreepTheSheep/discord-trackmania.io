@@ -1,5 +1,5 @@
 require('dotenv').config();
-const Command = require('./structures/Command'), // eslint-disable-line no-unused-vars
+const Command = require('./structures/Command'),
     { Client, Intents } = require('discord.js'),
     client = new Client({
         intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES]

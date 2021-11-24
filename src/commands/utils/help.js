@@ -1,6 +1,7 @@
-const {Client} = require('trackmania.io'), // eslint-disable-line no-unused-vars
-    Command = require('../../structures/Command'), // eslint-disable-line no-unused-vars
-    {MessageEmbed, MessageButton, CommandInteraction, SelectMenuInteraction, ButtonInteraction, Message, MessageActionRow, MessageSelectMenu} = require('discord.js'); // eslint-disable-line no-unused-vars
+const {Client} = require('trackmania.io'),
+    Command = require('../../structures/Command'),
+    {MessageEmbed, MessageButton, CommandInteraction, SelectMenuInteraction, ButtonInteraction, Message, MessageActionRow, MessageSelectMenu} = require('discord.js'),
+    MySQL = require('mysql');
 
 /**
  * @type {string}
@@ -75,16 +76,14 @@ exports.executeMessage = async (message, args, tmio, commands) => {
  * @param {Client} tmio
  * @param {Command[]} commands 
  */
-// eslint-disable-next-line no-unused-vars
-exports.executeButton = async (interaction, tmio, commands) => {};
+exports.executeButton = async (interaction, tmio, commands, sql) => {};
 
 /**
  * @param {SelectMenuInteraction} interaction
  * @param {Client} tmio
  * @param {Command[]} commands 
  */
-// eslint-disable-next-line no-unused-vars
-exports.executeSelectMenu = async (interaction, tmio, commands) => {
+exports.executeSelectMenu = async (interaction, tmio, commands, sql) => {
     if (interaction.customId.substring(interaction.customId.indexOf('_')+1) == 'select-category') {
         let embed = embedCommands(interaction.values[0].toLowerCase(), commands);
         interaction.update({embeds: [embed]});

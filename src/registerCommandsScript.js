@@ -3,7 +3,7 @@ const { REST } = require('@discordjs/rest'),
     Builder = require('@discordjs/builders'),
     { Routes } = require('discord-api-types/v9'),
     rest = new REST({ version: '9' }).setToken(process.env.DISCORD_TOKEN),
-    Command = require('./structures/Command'); // eslint-disable-line no-unused-vars
+    Command = require('./structures/Command');
 
 /**
  * Register all commands for a guild
