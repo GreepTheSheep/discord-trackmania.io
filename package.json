@@ -29,10 +29,10 @@
     "discord-api-types": "^0.24.0",
     "discord.js": "^13.3.1",
     "dotenv": "^10.0.0",
+    "form-data": "^4.0.0",
     "mysql": "^2.18.1",
+    "node-fetch": "^2.6.6",
     "pretty-ms": "^7.0.1",
-    "request": "^2.65.0",
-    "request-promise": "^4.2.6",
     "trackmania.io": "^3.0.3-dev.251121.13bfe3b"
   },
   "devDependencies": {

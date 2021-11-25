@@ -1,5 +1,6 @@
 const Command = require('../../structures/Command'),
-    request = require('request-promise'),
+    FormData = require('form-data'),
+    fetch = require('node-fetch'),
     {MessageEmbed, MessageActionRow, MessageButton, CommandInteraction, SelectMenuInteraction, Message, MessageAttachment} = require('discord.js'),
     MySQL = require('mysql'),
     ms = require('pretty-ms');
@@ -80,24 +81,8 @@ exports.execute = async (interaction, tmio, commands, sql) => {
 
     if (process.env.IMGUR_CLIENT_ID){
         // download map thumbnail and send it to Discord (because Nadeo Services can't serve thumbnails directly, so we need to dl)
-        const options = {
-            'method': 'POST',
-            'url': 'https://api.imgur.com/3/image',
-            'headers': {
-                'Authorization': `Client-ID ${process.env.IMGUR_CLIENT_ID}`
-            },
-            formData: {
-                'image': map.thumbnail,
-                'title': tmio.formatTMText(map.name),
-                'description': `Map created by ${author.name} - Used for discord-trackmania.io bot (https://github.com/GreepTheSheep/discord-trackmania.io)`
-            },
-            json: true
-        };
-
         try{
-            const resJson = await request(options)
-
-            embed.setImage(resJson.data.link);
+            embed.setImage(await require('../../utils').getMapThumbnailEmbed(tmio, map, sql));
         } catch (err) {
             console.error(err);
         }
