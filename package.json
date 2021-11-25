@@ -30,7 +30,7 @@
     "discord.js": "^13.3.1",
     "dotenv": "^10.0.0",
     "mysql": "^2.18.1",
-    "trackmania.io": "^3.0.1"
+    "trackmania.io": "^3.0.2"
   },
   "devDependencies": {
     "eslint": "^7.32.0"
