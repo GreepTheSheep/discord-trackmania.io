@@ -4,15 +4,15 @@ const Command = require('./structures/Command'),
     client = new Client({
         intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES]
     }),
-    sql = require('mysql').createConnection({
-        host: process.env.DB_HOST,
-        port: process.env.DB_PORT,
-        user: process.env.DB_USER,
-        password: process.env.DB_PASS,
-        database: process.env.DB_NAME
-    }),
     TrackmaniaIO = require('trackmania.io'),
     tmio = new TrackmaniaIO.Client();
+let sql = require('mysql').createConnection({
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASS,
+    database: process.env.DB_NAME
+});
 
 sql.connect((err)=>{
     if (err){
