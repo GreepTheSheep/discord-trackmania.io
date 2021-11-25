@@ -109,9 +109,10 @@ function generateCategorySelectMenu(commands){
 
     categories.forEach(category => {
         selectOptions.push({
-            label: category.charAt(0).toUpperCase() + category.slice(1).toLowerCase(),
-            description: '',
-            value: category.toLowerCase()
+            label: category.name,
+            description: category.description ? category.description : "",
+            value: category.dir ? category.dir : category.name.toLowerCase(),
+            emoji: category.emoji ? category.emoji : ""
         });
     });
 
@@ -131,7 +132,7 @@ function embedCategories(commands){
         categories = commandsCategories(commands);
 
     categories.forEach(category => {
-        embed.addField(category.charAt(0).toUpperCase() + category.slice(1).toLowerCase(), `\`/help ${category.toLowerCase()}\``, true);
+        embed.addField((category.emoji ? category.emoji+" " : "") + category.name, `${category.description}\n\`/help ${category.dir}\``, true);
     });
 
     return embed;
@@ -143,9 +144,8 @@ function embedCategories(commands){
  * @param {Command[]} commands The full list of commands
  */
 function embedCommands(category, commands){
-    const embed = new MessageEmbed().setColor('RANDOM').setTitle(category.charAt(0).toUpperCase() + category.slice(1).toLowerCase());
-
-    const commandsInCategory = commands.filter(command => command.category.toLowerCase() === category.toLowerCase());
+    const commandsInCategory = commands.filter(command => command.category.dir.toLowerCase() === category.toLowerCase()),
+        embed = new MessageEmbed().setColor('RANDOM').setTitle(category.charAt(0).toUpperCase() + category.slice(1).toLowerCase());
 
     if (commandsInCategory.length === 0) embed.setColor("#FF0000").setTitle('No commands found');
     else {
@@ -160,7 +160,7 @@ function embedCommands(category, commands){
 /**
  * Generate an array of command categories
  * @param {Command[]} commands The list of commands
- * @returns {string[]} The list of categories
+ * @returns {Command.categoryInfo[]} The list of categories
  */
 function commandsCategories(commands){
     //split array into multiple arrays for categories
@@ -178,7 +178,9 @@ function commandsCategories(commands){
     }
 
     if (nullCommands) {
-        categories.push('other');
+        categories.push({
+            name: "Others"
+        });
     }
 
     return categories;

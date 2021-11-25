@@ -1,3 +1,6 @@
+/** @type {categoryInfo[]} */
+const categoryInfos = require('../commands/categoryInfo.json');
+
 class Command {
     constructor(exports, category = null) {
         /**
@@ -14,9 +17,9 @@ class Command {
 
         /**
          * The category of the command
-         * @type {?string}
+         * @type {?categoryInfo}
          */
-        this.category = category;
+        this.category = category != null ? categoryInfos.find(c=>c.dir.toLowerCase() == category.toLowerCase()) : null;
 
         /**
          * The arguments of the command
@@ -65,6 +68,14 @@ module.exports = Command;
  * @typedef {Object} commandArgsChoice The type of a command argument
  * @property {string} name The name of the choice
  * @property {string} value The value of the choice
+ */
+
+/**
+ * @typedef {Object} categoryInfo The information of a category command
+ * @property {string} name The full name of the category
+ * @property {?string} dir The directory name of this categoty
+ * @property {?string} description The description of the category
+ * @property {?string} emoji The defined emoji of this category
  */
 
 /**
