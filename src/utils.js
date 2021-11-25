@@ -20,19 +20,32 @@ exports.getMapThumbnailEmbed = async (tmio, map, sql)=>{
         const res = await fetch('https://api.imgur.com/3/image', { method: 'POST', headers: headers, body: form }).then(res=>res.json());
         return res.data.link;
     } else {
-        return sql.query("SELECT * FROM `map_thumbnails` WHERE mapUid = ?", map.uid, async (err,res)=>{
-            if (err){
+        return this.query(sql, "SELECT * FROM `map_thumbnails` WHERE mapUid = ?", map.uid).then(async res=>{
+            if (!res[0]){
                 const resImgur = await fetch('https://api.imgur.com/3/image', { method: 'POST', headers: headers, body: form }).then(res=>res.json());
+                this.query(sql, "INSERT INTO `map_thumbnails` (mapUid, link) VALUES (?,?)", [map.uid, resImgur.data.link]);
                 return resImgur.data.link;
             } else {
-                if (!res[0]){
-                    const resImgur = await fetch('https://api.imgur.com/3/image', { method: 'POST', headers: headers, body: form }).then(res=>res.json());
-                    sql.query("INSERT INTO `map_thumbnails` (mapUid, link) VALUES (?,?)", [map.uid, resImgur.data.link]);
-                    return resImgur.data.link;
-                } else {
-                    return res[0].link;
-                }
+                return res[0].link;
             }
+        }).catch(async ()=>{
+            const resImgur = await fetch('https://api.imgur.com/3/image', { method: 'POST', headers: headers, body: form }).then(res=>res.json());
+            return resImgur.data.link;
         });
     }
+}
+
+/**
+ * @param {import('mysql').Connection} sql
+ * @param {string} query
+ * @param {any} params
+ * @returns {any} 
+ */
+exports.query = (sql, query, params)=>{
+    return new Promise((resolve, reject)=>{
+        sql.query(query, params, (err,res)=>{
+            if (err) return reject(err);
+            else resolve(res);
+        });
+    });
 }
