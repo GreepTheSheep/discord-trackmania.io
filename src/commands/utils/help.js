@@ -1,5 +1,4 @@
-const {Client} = require('trackmania.io'),
-    Command = require('../../structures/Command'),
+const Command = require('../../structures/Command'),
     {MessageEmbed, MessageButton, CommandInteraction, SelectMenuInteraction, ButtonInteraction, Message, MessageActionRow, MessageSelectMenu} = require('discord.js'),
     MySQL = require('mysql');
 
@@ -27,7 +26,7 @@ exports.args = [
 
 /**
  * @param {CommandInteraction} interaction
- * @param {Client} tmio
+ * @param {import('trackmania.io').Client} tmio
  * @param {Command[]} commands
  * @param {MySQL.Connection} sql
  */
@@ -52,7 +51,7 @@ exports.execute = async (interaction, tmio, commands, sql) => {
 /**
  * @param {Message} message
  * @param {string[]} args
- * @param {Client} tmio
+ * @param {import('trackmania.io').Client} tmio
  * @param {Command[]} commands 
  * @param {MySQL.Connection} sql
  */
@@ -75,7 +74,7 @@ exports.executeMessage = async (message, args, tmio, commands, sql) => {
 
 /**
  * @param {ButtonInteraction} interaction
- * @param {Client} tmio
+ * @param {import('trackmania.io').Client} tmio
  * @param {Command[]} commands 
  * @param {MySQL.Connection} sql
  */
@@ -83,7 +82,7 @@ exports.executeButton = async (interaction, tmio, commands, sql) => {};
 
 /**
  * @param {SelectMenuInteraction} interaction
- * @param {Client} tmio
+ * @param {import('trackmania.io').Client} tmio
  * @param {Command[]} commands 
  * @param {MySQL.Connection} sql
  */
@@ -140,12 +139,13 @@ function embedCategories(commands){
 
 /**
  * Generates an embed of commands in a category
- * @param {string} category The category of commands
+ * @param {string} categoryDir The category dirctory name of commands
  * @param {Command[]} commands The full list of commands
  */
-function embedCommands(category, commands){
-    const commandsInCategory = commands.filter(command => command.category.dir.toLowerCase() === category.toLowerCase()),
-        embed = new MessageEmbed().setColor('RANDOM').setTitle(category.charAt(0).toUpperCase() + category.slice(1).toLowerCase());
+function embedCommands(categoryDir, commands){
+    const category = commands.find(c=>c.category.dir.toLowerCase() === categoryDir.toLowerCase()).category,
+        commandsInCategory = commands.filter(command => command.category === category),
+        embed = new MessageEmbed().setColor('RANDOM').setTitle((category.emoji ? category.emoji + " ": "") + category.name);
 
     if (commandsInCategory.length === 0) embed.setColor("#FF0000").setTitle('No commands found');
     else {
