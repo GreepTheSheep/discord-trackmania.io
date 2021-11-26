@@ -39,7 +39,7 @@ exports.getMapThumbnailEmbed = async (tmio, map, sql)=>{
  * @param {import('mysql').Connection} sql
  * @param {string} query
  * @param {any} params
- * @returns {any} 
+ * @returns {Promise<any>} 
  */
 exports.query = (sql, query, params)=>{
     return new Promise((resolve, reject)=>{
