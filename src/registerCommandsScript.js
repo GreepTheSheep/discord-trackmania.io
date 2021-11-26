@@ -19,7 +19,7 @@ async function registerCommands(guildId, userId, commands) {
         for (const command of commands) {
             let slashCommand = new Builder.SlashCommandBuilder()
                 .setName(command.name)
-                .setDescription(command.description ? (command.category ? command.category + ": " : "") + command.description : 'No description for this command');
+                .setDescription(command.description ? (command.category ? command.category.name + ": " : "") + command.description : 'No description for this command');
 
             if (command.args && command.args.length > 0) {
                 command.args.forEach(arg => {
