@@ -1,5 +1,17 @@
 [
     {
+        "name": "TOTDs",
+        "dir": "totd",
+        "description": "Track Of The Day Commands",
+        "emoji": "🏎"
+    },
+    {
+        "name": "Player",
+        "dir": "player",
+        "description": "Player Commands",
+        "emoji": "🎮"
+    },
+    {
         "name": "Utilities",
         "dir": "utils",
         "description": "Utilities commands",
