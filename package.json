@@ -33,7 +33,7 @@
     "mysql": "^2.18.1",
     "node-fetch": "^2.6.6",
     "pretty-ms": "^7.0.1",
-    "trackmania.io": "^3.0.3-dev.291121.1c6eff8"
+    "trackmania.io": "github:GreepTheSheep/node-trackmania.io#develop"
   },
   "devDependencies": {
     "eslint": "^7.32.0"
