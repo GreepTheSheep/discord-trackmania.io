@@ -42,7 +42,7 @@ exports.execute = async (interaction, tmio, commands, sql) => {
 
     if (!typedPlayer) return interaction.reply({content: "Please enter a player.", ephemeral: true});
 
-    interaction.deferReply();
+    await interaction.deferReply();
 
     const interactionComponentRows = [new MessageActionRow()];
 
@@ -103,12 +103,13 @@ exports.executeMessage = async (message, args, tmio, commands, sql) => {
 exports.executeButton = async (interaction, tmio, commands, sql) => {
     if (interaction.customId.substring(interaction.customId.indexOf('_')+1, interaction.customId.lastIndexOf('_')) == 'cotd') {
         const playerId = interaction.customId.substring(interaction.customId.lastIndexOf('_')+1);
-        interaction.deferReply({ephemeral:true});
+        await interaction.deferReply({ephemeral: true})
         try {
-            const player = await tmio.players.get(playerId),
-                embed = renderPlayerCOTDStats(tmio, player);
-            interaction.editReply({
-                embeds: [embed]
+            const player = await tmio.players.get(playerId);
+            renderPlayerCOTDStats(tmio, player).then(embed=>{
+                interaction.editReply({
+                    embeds: [embed]
+                });
             });
         } catch (err) {
             interaction.editReply("This interaction failed");
@@ -167,8 +168,15 @@ function renderPlayerInfoEmbed(tmio, player){
  * @returns {MessageEmbed}
  */
 function renderPlayerCOTDStats(tmio, player){
-    const embed = new MessageEmbed()
-        .setTitle('Cup Of The Day stats of ' + player.name)
-        .setDescription('coming soon (WIP)');
-    return embed;
+    return player.cotd().then(cotd=>{
+        return new MessageEmbed()
+            .setTitle('Cup Of The Day stats of ' + player.name)
+            .addField('Total played', ''+cotd.count, true)
+            .addField('Total Wins', `${cotd.stats.totalWins != 0 ? `**In division 1**: ${cotd.stats.totalWins}\n`: ''}**In any division**: ${cotd.stats.totalDivWins}`, true)
+            .addField('Win streak', `${cotd.stats.winStreak != 0 ? `**In division 1**: ${cotd.stats.winStreak}\n`: ''}**In any division**: ${cotd.stats.divWinStreak}`, true)
+            .addField('Average Rank', `**Average Div Rank**: ${Math.round(cotd.stats.averageDivRank * 64)} ||*(the position, with a base of 64 players in a div.)*||\n**Overall**: ${(cotd.stats.averageRank * 100).toFixed(0)}% ||*('top percentage', lower is better)*||`)
+            .addField('Average Division', ''+Math.round(cotd.stats.averageDiv), true)
+            .addField('Primary COTD', `**Best rank** (position): ${cotd.stats.bestPrimary.rank} (<t:${cotd.stats.bestPrimary.rankDate.getTime() / 1000}:R>)\n**Best division**: ${cotd.stats.bestPrimary.division} (Rank: ${cotd.stats.bestPrimary.divRank}, <t:${cotd.stats.bestPrimary.divisionDate.getTime() / 1000}:R>)\n**Best Div Rank**: ${cotd.stats.bestPrimary.rankInDivision} (Division ${cotd.stats.bestPrimary.divisionOfRankInDivision}, <t:${cotd.stats.bestPrimary.rankDate.getTime() / 1000}:R>)`)
+            .addField('Overall COTD', `**Best rank** (position): ${cotd.stats.bestOverall.rank} (<t:${cotd.stats.bestOverall.rankDate.getTime() / 1000}:R>)\n**Best division**: ${cotd.stats.bestOverall.division} (Rank: ${cotd.stats.bestOverall.divRank}, <t:${cotd.stats.bestOverall.divisionDate.getTime() / 1000}:R>)\n**Best Div Rank**: ${cotd.stats.bestOverall.rankInDivision} (Division ${cotd.stats.bestOverall.divisionOfRankInDivision}, <t:${cotd.stats.bestOverall.rankDate.getTime() / 1000}:R>)`)
+    });
 }
