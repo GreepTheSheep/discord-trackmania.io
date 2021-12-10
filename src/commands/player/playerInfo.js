@@ -137,12 +137,17 @@ function renderPlayerInfoEmbed(tmio, player){
     let trophiesStr = "";
     let trophiesTotal = 0;
     for (var i = 0; i < player.trophies.trophies.length; i++){
-        trophiesStr += `\n${i+1}: ${player.trophies.trophies[i]}`
-        trophiesTotal += player.trophies.trophies[i];
+        if (player.trophies.trophies[i] != 0){
+            trophiesStr += `\n${i+1}: ${player.trophies.trophies[i]}`
+            trophiesTotal += player.trophies.trophies[i];
+        }
     }
+
+    const embedColor = ["#1aa468", "#6b3511", "#c77e49", "#e89b6b", "#454545", "#6b6d6b", "#bebbbe", "#8a6100", "#d19500", "#ffd802"][player.trophies.echelon.number];
 
     embed = new MessageEmbed()
         .setTitle((player.clubTag ? `[${tmio.formatTMText(player.clubTag)}] `:"") + player.name)
+        .setColor(embedColor)
         .setThumbnail(player.trophies.echelon.image)
         .addField("Zone", player.zone.map(p=>p.name).join(', '))
         .addField("Trophies Ranking", `${player.trophies.points} points (${player.trophies.echelon.name})\n__Number of trophies:__${trophiesStr}\nTotal: ${trophiesTotal}`, true)
