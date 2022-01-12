@@ -1,5 +1,5 @@
 const Command = require('../../structures/Command'),
-    {MessageEmbed, MessageActionRow, MessageButton, CommandInteraction, SelectMenuInteraction, Message, MessageAttachment} = require('discord.js'),
+    {ButtonInteraction, MessageEmbed, MessageActionRow, MessageButton, CommandInteraction, SelectMenuInteraction, Message, MessageAttachment} = require('discord.js'),
     MySQL = require('mysql');
 
 /**
@@ -44,18 +44,23 @@ exports.args = [
  * @param {MySQL.Connection} sql
  */
 exports.execute = async (interaction, tmio, commands, sql) => {
-    interaction.deferReply();
+    try {
+        const clubID = interaction.options.getNumber('club-id'),
+            campaignID = interaction.options.getNumber('campaign-id'),
+            RenderEmbeds = await renderCampaignEmbed(clubID, campaignID, tmio),
+            embed = RenderEmbeds.embed,
+            interactionComponentRows = RenderEmbeds.interactionComponentRows;
 
-    const clubID = interaction.options.getNumber('club-id'),
-        campaignID = interaction.options.getNumber('campaign-id'),
-        RenderEmbeds = await renderCampaignEmbed(clubID, campaignID, tmio),
-        embed = RenderEmbeds.embed,
-        interactionComponentRows = RenderEmbeds.interactionComponentRows;
-
-    interaction.reply({
-        embeds: [embed],
-        components: interactionComponentRows
-    });
+        interaction.reply({
+            embeds: [embed],
+            components: interactionComponentRows
+        });
+    } catch (e) {
+        interaction.reply({
+            content: 'Error: ' + e,
+            ephemeral: true
+        });
+    }
 };
 
 /**
@@ -74,14 +79,18 @@ exports.executeMessage = async (message, args, tmio, commands, sql) => {
 
     if (isNaN(clubID) || isNaN(campaignID)) return message.reply('Club ID or Campaign ID is not numbers. Check your syntax and retry');
 
-    const RenderEmbeds = await renderCampaignEmbed(clubID, campaignID, tmio),
-        embed = RenderEmbeds.embed,
-        interactionComponentRows = RenderEmbeds.interactionComponentRows;
+    try {
+        const RenderEmbeds = await renderCampaignEmbed(clubID, campaignID, tmio),
+            embed = RenderEmbeds.embed,
+            interactionComponentRows = RenderEmbeds.interactionComponentRows;
 
-    message.reply({
-        embeds: [embed],
-        components: interactionComponentRows
-    })
+        message.reply({
+            embeds: [embed],
+            components: interactionComponentRows
+        })
+    } catch (e) {
+        message.reply('Error: ' + e);
+    }
 };
 
 /**
@@ -93,10 +102,10 @@ exports.executeMessage = async (message, args, tmio, commands, sql) => {
  */
 exports.executeButton = async (interaction, tmio, commands, sql) => {
     if (interaction.customId.substring(interaction.customId.indexOf('_')+1) == 'leaderboard') {
-        interaction.update('Button primary!');
-    }
-    if (interaction.customId.substring(interaction.customId.indexOf('_')+1) == 'maps') {
-        interaction.update('Button primary!');
+        interaction.reply({
+            content: 'leaderboard coming soon!',
+            ephemeral: true
+        });
     }
 };
 
@@ -120,50 +129,51 @@ exports.executeSelectMenu = async (interaction, tmio, commands, sql) => {
  */
 async function renderCampaignEmbed(clubID, campaignID, tmio){
 
-    let embed = new MessageEmbed(),
-        campaign = await tmio.campaigns.get(clubID, campaignID),
-        maps = await campaign.maps().catch(err=>{
-            console.error(err);
-            maps = [];
-        });
+    try {
+        let embed = new MessageEmbed(),
+            campaign = await tmio.campaigns.get(clubID, campaignID);
 
-    if (clubID != 0) {
-        let club = await campaign.club();
-        embed.addField('Club:', club.name, true);
-    }
+        if (clubID != 0) {
+            let club = await campaign.club();
+            embed.addField('Club:', tmio.formatTMText(club.name), true)
+                .setImage(campaign.image);
+        } else {
+            embed.addField('Created by:', 'Nadeo', true);
+        }
 
-    embed.setColor('#9B850E')
-    .setTitle(campaign.name)
-    .addField('Maps number:', `${maps.length} maps`, true)
-    .setImage(clubID != 0 ? campaign.image : campaign.media.decal)
-    .setFooter({text: `Leaderboard UID: ${campaign.leaderboardId}`});
+        embed.setColor('#9B850E')
+        .setTitle(campaign.name)
+        .addField('Maps number:', `${campaign.mapCount} maps`, true)
+        .setFooter({text: `Leaderboard UID: ${campaign.leaderboardId}`});
 
-    // create 2 interaction rows (button or select menus)
-    const interactionComponentRows = [];
-    interactionComponentRows.push(new MessageActionRow());
+        const interactionComponentRows = [];
+        interactionComponentRows.push(new MessageActionRow());
 
-    // Add 2 button to the message in the first row
-    interactionComponentRows[0].addComponents(
-        new MessageButton()
-            .setCustomId(this.name+'_'+'leaderboard')
-            .setLabel('Campaign leaderboard')
-            .setStyle('PRIMARY')
-        );
-    interactionComponentRows[0].addComponents(
-        new MessageButton()
-            .setCustomId(this.name+'_'+'maps')
-            .setLabel('Map list')
-            .setStyle('PRIMARY')
-        );
-    interactionComponentRows[0].addComponents(
-        new MessageButton()
-            .setURL(`https://trackmania.io/#/campaigns/${campaign.clubid}/${campaign.id}`)
-            .setLabel('View on Trackmania.io')
-            .setStyle('LINK')
-        );
 
-    return {
-        embed,
-        interactionComponentRows
+        interactionComponentRows[0].addComponents(
+            new MessageButton()
+                .setCustomId('campaign_leaderboard')
+                .setLabel('Campaign leaderboard')
+                .setStyle('PRIMARY')
+            );
+        // interactionComponentRows[0].addComponents(
+        //     new MessageButton()
+        //         .setCustomId('campaign_maps')
+        //         .setLabel('Map list')
+        //         .setStyle('PRIMARY')
+        //     );
+        interactionComponentRows[0].addComponents(
+            new MessageButton()
+                .setURL(`https://trackmania.io/#/campaigns/${clubID}/${campaign.id}`)
+                .setLabel('View on Trackmania.io')
+                .setStyle('LINK')
+            );
+
+        return {
+            embed,
+            interactionComponentRows
+        }
+    } catch (e) {
+        throw e;
     }
 }

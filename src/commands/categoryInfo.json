@@ -12,6 +12,12 @@
         "emoji": "🎮"
     },
     {
+        "name": "Campaign",
+        "dir": "campaign",
+        "description": "Campaign commands",
+        "emoji": "📜"
+    },
+    {
         "name": "Utilities",
         "dir": "utils",
         "description": "Utilities commands",
