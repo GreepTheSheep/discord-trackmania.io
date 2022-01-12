@@ -183,5 +183,7 @@ function renderPlayerCOTDStats(tmio, player){
             .addField('Average Division', ''+Math.round(cotd.stats.averageDiv), true)
             .addField('Primary COTD', `**Best rank** (position): ${cotd.stats.bestPrimary.rank} (<t:${cotd.stats.bestPrimary.rankDate.getTime() / 1000}:R>)\n**Best division**: ${cotd.stats.bestPrimary.division} (Rank: ${cotd.stats.bestPrimary.divRank}, <t:${cotd.stats.bestPrimary.divisionDate.getTime() / 1000}:R>)\n**Best Div Rank**: ${cotd.stats.bestPrimary.rankInDivision} (Division ${cotd.stats.bestPrimary.divisionOfRankInDivision}, <t:${cotd.stats.bestPrimary.rankDate.getTime() / 1000}:R>)`)
             .addField('Overall COTD', `**Best rank** (position): ${cotd.stats.bestOverall.rank} (<t:${cotd.stats.bestOverall.rankDate.getTime() / 1000}:R>)\n**Best division**: ${cotd.stats.bestOverall.division} (Rank: ${cotd.stats.bestOverall.divRank}, <t:${cotd.stats.bestOverall.divisionDate.getTime() / 1000}:R>)\n**Best Div Rank**: ${cotd.stats.bestOverall.rankInDivision} (Division ${cotd.stats.bestOverall.divisionOfRankInDivision}, <t:${cotd.stats.bestOverall.rankDate.getTime() / 1000}:R>)`)
+    }).catch(err=>{
+        throw err
     });
 }

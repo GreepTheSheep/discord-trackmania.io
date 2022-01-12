@@ -52,18 +52,22 @@ exports.args = [
  */
 exports.execute = async (interaction, tmio, commands, sql) => {
     interaction.deferReply();
-    
-    const month = interaction.options.getNumber('month'),
-        day = interaction.options.getNumber('day'),
-        year = interaction.options.getNumber('year'),
-        TOTDRenders = await renderTOTDEmbed(month, day, year, tmio),
-        embed = TOTDRenders.embed,
-        interactionComponentRows = TOTDRenders.interactionComponentRows;
-    
-    interaction.editReply({
-        embeds: [embed],
-        components: interactionComponentRows
-    });
+
+    try {
+        const month = interaction.options.getNumber('month'),
+            day = interaction.options.getNumber('day'),
+            year = interaction.options.getNumber('year'),
+            TOTDRenders = await renderTOTDEmbed(month, day, year, tmio),
+            embed = TOTDRenders.embed,
+            interactionComponentRows = TOTDRenders.interactionComponentRows;
+        
+        interaction.editReply({
+            embeds: [embed],
+            components: interactionComponentRows
+        });
+    } catch (e) {
+        interaction.editReply('Error: ' + e);
+    }
 };
 
 /**
@@ -75,18 +79,22 @@ exports.execute = async (interaction, tmio, commands, sql) => {
  * @param {MySQL.Connection} sql
  */
 exports.executeMessage = async (message, args, tmio, commands, sql) => {
-    const month = Number(args[1]),
-        day = Number(args[0]),
-        year = Number(args[2]),
-        TOTDRenders = await renderTOTDEmbed(month, day, year, tmio),
-        embed = TOTDRenders.embed,
-        interactionComponentRows = TOTDRenders.interactionComponentRows;
+    try {
+        const month = Number(args[1]),
+            day = Number(args[0]),
+            year = Number(args[2]),
+            TOTDRenders = await renderTOTDEmbed(month, day, year, tmio),
+            embed = TOTDRenders.embed,
+            interactionComponentRows = TOTDRenders.interactionComponentRows;
 
-    message.reply({
-        content: month && day ? '' : `Tip: You can set a specific TOTD day with \`/${this.name} [date-of-the-month] [month] <year>\`. Example \`/${this.name} 12 7\` to get the TOTD of July, 12, ${new Date().getFullYear()}`,
-        embeds: [embed],
-        components: interactionComponentRows
-    });
+        message.reply({
+            content: month && day ? '' : `Tip: You can set a specific TOTD day with \`/${this.name} [date-of-the-month] [month] <year>\`. Example \`/${this.name} 12 7\` to get the TOTD of July, 12, ${new Date().getFullYear()}`,
+            embeds: [embed],
+            components: interactionComponentRows
+        });
+    } catch (e) {
+        message.reply('Error: ' + e);
+    }
 };
 
 /**
@@ -126,47 +134,52 @@ async function renderTOTDEmbed(month, day, year, tmio){
         if (year) date = new Date(date.setFullYear(year));
     }
 
-    const totd = await tmio.totd.get(date),
-        map = await totd.map(),
-        author = await map.author();
+    try {
+        const totd = await tmio.totd.get(date),
+            map = await totd.map(),
+            author = await map.author();
+    
+        embed.setColor('GREEN').setAuthor({name: `Track of The Day - ${date.getDate()} ${monthsArray[date.getMonth()]} ${date.getFullYear()}`})
+            .setTitle(tmio.formatTMText(map.name))
+            .addField('Created by:', author.name, true)
+            .addField('Medals:', `Author: **${ms(map.medalTimes.author, {colonNotation: true, secondsDecimalDigits: 3})}**\nGold: ${ms(map.medalTimes.gold, {colonNotation: true, secondsDecimalDigits: 3})}\nSilver: ${ms(map.medalTimes.silver, {colonNotation: true, secondsDecimalDigits: 3})}\nBronze: ${ms(map.medalTimes.bronze, {colonNotation: true, secondsDecimalDigits: 3})}`)
+            .addField('Uploaded:', `<t:${map.uploaded.getTime() / 1000}:R>`, true)
+            .setFooter({text: `Map UID: ${map.uid}`})
+            .setImage(map.thumbnailCached);
 
-    embed.setColor('GREEN').setAuthor({name: `Track of The Day - ${date.getDate()} ${monthsArray[date.getMonth()]} ${date.getFullYear()}`})
-        .setTitle(tmio.formatTMText(map.name))
-        .addField('Created by:', author.name, true)
-        .addField('Medals:', `Author: **${ms(map.medalTimes.author, {colonNotation: true, secondsDecimalDigits: 3})}**\nGold: ${ms(map.medalTimes.gold, {colonNotation: true, secondsDecimalDigits: 3})}\nSilver: ${ms(map.medalTimes.silver, {colonNotation: true, secondsDecimalDigits: 3})}\nBronze: ${ms(map.medalTimes.bronze, {colonNotation: true, secondsDecimalDigits: 3})}`)
-        .addField('Uploaded:', `<t:${map.uploaded.getTime() / 1000}:R>`, true)
-        .setFooter({text: `Map UID: ${map.uid}`})
-        .setImage(map.thumbnailCached);
+        // create 2 interaction rows (button or select menus)
+        const interactionComponentRows = [];
+        for (let i = 0; i < 1; i++) {
+            interactionComponentRows.push(new MessageActionRow());
+        }
 
-    // create 2 interaction rows (button or select menus)
-    const interactionComponentRows = [];
-    for (let i = 0; i < 1; i++) {
-        interactionComponentRows.push(new MessageActionRow());
-    }
-
-    interactionComponentRows[0].addComponents(
-        new MessageButton()
-            .setURL(map.url)
-            .setLabel('Download Map')
-            .setStyle('LINK')
-        );
-    interactionComponentRows[0].addComponents(
-        new MessageButton()
-            .setURL(`https://trackmania.io/#/totd/leaderboard/${totd.leaderboardId}/${map.uid}`)
-            .setLabel('Trackmania.io')
-            .setStyle('LINK')
-        );
-    if (map.exchangeId) {
         interactionComponentRows[0].addComponents(
             new MessageButton()
-                .setURL(`https://trackmania.exchange/tracks/view/${map.exchangeId}`)
-                .setLabel('Trackmania.exchange')
+                .setURL(map.url)
+                .setLabel('Download Map')
                 .setStyle('LINK')
             );
-    }
+        interactionComponentRows[0].addComponents(
+            new MessageButton()
+                .setURL(`https://trackmania.io/#/totd/leaderboard/${totd.leaderboardId}/${map.uid}`)
+                .setLabel('Trackmania.io')
+                .setStyle('LINK')
+            );
+        if (map.exchangeId) {
+            interactionComponentRows[0].addComponents(
+                new MessageButton()
+                    .setURL(`https://trackmania.exchange/tracks/view/${map.exchangeId}`)
+                    .setLabel('Trackmania.exchange')
+                    .setStyle('LINK')
+                );
+        }
 
-    return {
-        embed,
-        interactionComponentRows
-    };
+        return {
+            embed,
+            interactionComponentRows
+        };
+
+    } catch (e) {
+        throw e;
+    }
 }
