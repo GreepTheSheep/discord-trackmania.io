@@ -15,7 +15,7 @@ async function registerCommands(guildId, userId, commands) {
     try {
         console.log(`🔃 Started refreshing slash commands for guild ${guildId}.`);
         const bodyCommands = [];
-        
+
         for (const command of commands) {
             let slashCommand = new Builder.SlashCommandBuilder()
                 .setName(command.name)
@@ -50,7 +50,7 @@ async function registerCommands(guildId, userId, commands) {
                         if (arg.choices && arg.choices.length > 0) {
                             arg.choices.forEach(choice => slashCommandOption.addChoice(choice.name, choice.value));
                         }
-                        
+
                         slashCommand.addNumberOption(slashCommandOption);
                     } else if (arg.type == 'channel') {
                         let slashCommandOption = new Builder.SlashCommandChannelOption()

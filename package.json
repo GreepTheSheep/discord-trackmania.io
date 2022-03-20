@@ -5,7 +5,7 @@
   "description": "A discord bot that uses node-trackmania.io",
   "main": "shard.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node ."
   },
   "repository": {
     "type": "git",
