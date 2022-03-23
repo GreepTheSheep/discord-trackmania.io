@@ -2,7 +2,7 @@ module.exports = {
     apps : [{
       name: 'Trackmania.io Discord',
       script: require('./data/config.json').dev.enable ? 'src/index.js' : 'shard.js',
-  
+
       // Options reference: https://pm2.io/doc/en/runtime/reference/ecosystem-file/
       autorestart: true,
       watch: true,
