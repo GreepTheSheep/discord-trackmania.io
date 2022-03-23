@@ -23,7 +23,7 @@ exports.description = 'Informations and stats about a player';
 exports.args = [
     {
         name: 'player',
-        description: "Player's account ID or its TM.io vanity name",
+        description: "Your Ubisoft Connect account name.",
         type: 'string',
         required: false
     }
@@ -34,33 +34,60 @@ exports.args = [
  * This part is executed as slash command
  * @param {CommandInteraction} interaction
  * @param {import('trackmania.io').Client} tmio
- * @param {Command[]} commands 
+ * @param {Command[]} commands
  * @param {MySQL.Connection} sql
  */
 exports.execute = async (interaction, tmio, commands, sql) => {
     let typedPlayer = interaction.options.getString('player');
 
-    if (!typedPlayer) return interaction.reply({
-        content: "Please enter a player.",
-        ephemeral: true
-    });
-
     await interaction.deferReply({
         ephemeral: true
     });
 
-    const interactionComponentRows = [new MessageActionRow()];
+    if (!typedPlayer) {
+        typedPlayer = await new Promise(async (resolve, reject) => {
+            sql.query("SELECT * FROM `players` WHERE `discordId` = ?", [interaction.user.id], async (err, result) => {
+                if (err) {
+                    console.error(err);
+                    return reject("An error occured while querying the database.");
+                }
+                if (result.length < 1) {
+                    return reject("You are not registered. Please use `/register` to register yourself.");
+                }
+                return resolve(result[0].accountId);
+            });
+        }).catch(err=>{
+            return interaction.editReply({
+                content: err
+            });
+        });
+    }
 
-    // Add 2 button to the message in the first row
-    interactionComponentRows[0].addComponents(
+    try {
+        const players = await tmio.players.search(typedPlayer);
+
+        if (players.length < 1) {
+            return interaction.editReply({
+                content: "No player found with that name.",
+            });
+        }
+
+        const player = await players[0].player(),
+            embed = renderPlayerInfoEmbed(tmio, player),
+            interactionComponentRows = [new MessageActionRow()];
+
+        interactionComponentRows[0].addComponents(
             new MessageButton()
                 .setCustomId(this.name+'_'+'cotd_'+typedPlayer)
                 .setLabel('COTD stats')
                 .setStyle('PRIMARY')
-        );
-    try {
-        const player = await tmio.players.get(typedPlayer),
-            embed = renderPlayerInfoEmbed(tmio, player);
+            );
+        interactionComponentRows[0].addComponents(
+            new MessageButton()
+                .setURL(player.meta.displayURL)
+                .setLabel('View on Trackmania.io')
+                .setStyle('LINK')
+            );
 
         interaction.editReply({
             embeds: [embed],
@@ -78,7 +105,7 @@ exports.execute = async (interaction, tmio, commands, sql) => {
  * @param {string} buttonId
  * @param {string} argument
  * @param {import('trackmania.io').Client} tmio
- * @param {Command[]} commands 
+ * @param {Command[]} commands
  * @param {MySQL.Connection} sql
  */
 exports.executeButton = async (interaction, buttonId, argument, tmio, commands, sql) => {
@@ -106,7 +133,7 @@ exports.executeButton = async (interaction, buttonId, argument, tmio, commands, 
  * @param {string} categoryId
  * @param {string} argument
  * @param {import('trackmania.io').Client} tmio
- * @param {Command[]} commands 
+ * @param {Command[]} commands
  * @param {MySQL.Connection} sql
  */
 exports.executeSelectMenu = async (interaction, categoryId, argument, tmio, commands, sql) => {};
