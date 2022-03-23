@@ -5,6 +5,8 @@ const Command = require('../../structures/Command'),
     ms = require('pretty-ms'),
     Table = require('easy-table');
 
+let leaderboardPosFromMapUID = {};
+
 /**
  * Set the command here, it's what we'll type in the message
  * @type {string}
@@ -90,25 +92,59 @@ exports.execute = async (interaction, tmio, commands, sql) => {
  * @param {MySQL.Connection} sql
  */
 exports.executeButton = async (interaction, buttonId, argument, tmio, commands, sql) => {
-    if (buttonId == 'totd-leaderboard') {
-        await interaction.deferReply({
-            ephemeral: true,
-        });
-        const map = await tmio.maps.get(argument),
-            table = new Table();
+    if (buttonId.startsWith('totd-leaderboard')) {
+        leaderboardPosFromMapUID[argument] = leaderboardPosFromMapUID[argument] || 0;
 
-        for (let i = 0; i < 5; i++) {
-            const leader = map.leaderboard[i],
-                player = await leader.player();
+        let table = new Table(),
+            rows = 15;
+
+        if (buttonId == 'totd-leaderboard') {
+            leaderboardPosFromMapUID[argument] = 0;
+            await interaction.deferReply({ephemeral:true});
+        } else {
+            if (buttonId == 'totd-leaderboard-up') leaderboardPosFromMapUID[argument] -= rows;
+            else if (buttonId == 'totd-leaderboard-down') leaderboardPosFromMapUID[argument] += rows;
+            await interaction.deferUpdate();
+        }
+
+        const map = await tmio.maps.get(argument);
+
+        if (leaderboardPosFromMapUID[argument] < 0) leaderboardPosFromMapUID[argument] = 0;
+
+        for (let i = leaderboardPosFromMapUID[argument]; i < leaderboardPosFromMapUID[argument]+rows; i++) {
+            if (i >= map.leaderboard.length) break;
+            const leader = map.leaderboard[i];
             table.cell('Rank', i + 1);
-            table.cell('Club tag', tmio.formatTMText(player.clubTag));
-            table.cell('Player', player.name);
+            table.cell('Club tag', leader.playerClubTag ? tmio.formatTMText(leader.playerClubTag) : '');
+            table.cell('Player', leader.playerName);
             table.cell('Time', ms(leader.time, {colonNotation: true, secondsDecimalDigits: 3}));
             if (i > 0) table.cell("Delta (from WR)", `(+${ms(leader.time - map.leaderboard[0].time, {colonNotation: true, secondsDecimalDigits: 3})})`)
             table.newRow();
         }
 
-        interaction.editReply('Top 5 of ' + tmio.formatTMText(map.name) +`\`\`\`${table.toString()}\`\`\``)
+        const interactionComponentRows = [];
+        interactionComponentRows.push(new MessageActionRow());
+
+        interactionComponentRows[0].addComponents(
+            new MessageButton()
+                .setCustomId(this.name+'_totd-leaderboard-up_'+map.uid)
+                .setLabel('⬆')
+                .setStyle('PRIMARY')
+                .setDisabled(leaderboardPosFromMapUID[argument] == 0)
+            );
+
+        interactionComponentRows[0].addComponents(
+            new MessageButton()
+                .setCustomId(this.name+'_totd-leaderboard-down_'+map.uid)
+                .setLabel('⬇')
+                .setStyle('PRIMARY')
+                .setDisabled(leaderboardPosFromMapUID[argument] + rows >= map.leaderboard.length)
+            );
+
+        interaction.editReply({
+            content: 'Top '+map.leaderboard.length+' on "' + tmio.formatTMText(map.name) +`" (page ${Math.floor(leaderboardPosFromMapUID[argument] / rows) + 1} / ${Math.ceil(map.leaderboard.length / rows)}) \`\`\`${table.toString()}\`\`\``,
+            components: interactionComponentRows
+        });
     }
 };
 
@@ -125,10 +161,10 @@ exports.executeSelectMenu = async (interaction, categoryId, argument, tmio, comm
 
 /**
  * Generate the Embed and the Actions for the TOTD
+ * @param {import('trackmania.io').Client} tmio
  * @param {?Number} month The Month of the TOTD
  * @param {?Number} day The day of the TOTD
  * @param {?Number} year The year of the TOTD
- * @param {import('trackmania.io').Client} tmio
  * @returns {Promise<Object<MessageEmbed, MessageActionRow>>}
  */
 async function renderTOTDEmbed(tmio, month, day, year){
