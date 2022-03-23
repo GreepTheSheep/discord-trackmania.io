@@ -1,6 +1,7 @@
 const Command = require('../../structures/Command'),
     {MessageEmbed, MessageButton, CommandInteraction, SelectMenuInteraction, ButtonInteraction, Message, MessageActionRow, MessageSelectMenu} = require('discord.js'),
-    MySQL = require('mysql');
+    MySQL = require('mysql'),
+    categoryInfos = require('../categoryInfo.json');
 
 /**
  * @type {string}
@@ -20,7 +21,13 @@ exports.args = [
         name: 'category',
         description: 'The category of commands',
         type: 'string',
-        required: false
+        required: false,
+        choices: categoryInfos.map(c=>{
+            return {
+                name: c.name,
+                value: c.dir
+            };
+        })
     }
 ];
 
@@ -79,7 +86,6 @@ exports.executeSelectMenu = async (interaction, categoryId, argument, tmio, comm
         interaction.update({embeds: [embed]});
     }
 };
-
 
 
 // INTERNAL COMMAND METHODS
