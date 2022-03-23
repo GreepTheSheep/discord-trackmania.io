@@ -65,7 +65,7 @@ client.on('interactionCreate', async interaction => {
             categoryId = interaction.customId.substring(idIndexOf, interaction.customId.indexOf('_', idIndexOf)),
             argument = null;
 
-        if (categoryId === '_') categoryId = interaction.customId.substring(idIndexOf);
+        if (categoryId === command.name+'_') categoryId = interaction.customId.substring(idIndexOf);
         else argument = interaction.customId.substring(interaction.customId.indexOf('_', idIndexOf)+1);
 
         await command.executeSelectMenu(interaction, categoryId, argument, tmio, commands, sql);
@@ -79,7 +79,7 @@ client.on('interactionCreate', async interaction => {
             buttonId = interaction.customId.substring(idIndexOf, interaction.customId.indexOf('_', idIndexOf)),
             argument = null;
 
-        if (buttonId === '_') buttonId = interaction.customId.substring(idIndexOf);
+        if (buttonId === command.name+'_') buttonId = interaction.customId.substring(idIndexOf);
         else argument = interaction.customId.substring(interaction.customId.indexOf('_', idIndexOf)+1);
 
         await command.executeButton(interaction, buttonId, argument, tmio, commands, sql);
