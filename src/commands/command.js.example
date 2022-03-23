@@ -98,12 +98,14 @@ exports.execute = async (interaction, tmio, commands, sql) => {
 /**
  * This method is executed when an a button is clicked in the message
  * @param {ButtonInteraction} interaction
+ * @param {string} buttonId
+ * @param {string} argument
  * @param {import('trackmania.io').Client} tmio
  * @param {Command[]} commands 
  * @param {MySQL.Connection} sql
  */
-exports.executeButton = async (interaction, tmio, commands, sql) => {
-    if (interaction.customId.substring(interaction.customId.indexOf('_')+1) == 'button-primary') {
+exports.executeButton = async (interaction, buttonId, argument, tmio, commands, sql) => {
+    if (buttonId == 'button-primary') {
         interaction.update('Button primary!');
     }
 };
@@ -111,13 +113,14 @@ exports.executeButton = async (interaction, tmio, commands, sql) => {
 /**
  * This method is executed when an update is made in a selectMenu
  * @param {SelectMenuInteraction} interaction
+ * @param {string} categoryId
+ * @param {string} argument
  * @param {import('trackmania.io').Client} tmio
  * @param {Command[]} commands 
  * @param {MySQL.Connection} sql
  */
-exports.executeSelectMenu = async (interaction, tmio, commands, sql) => {
-    let interactionCustomId = interaction.customId.substring(interaction.customId.indexOf('_')+1);
-    if (interactionCustomId === 'questions') {
+exports.executeSelectMenu = async (interaction, categoryId, argument, tmio, commands, sql) => {
+    if (categoryId === 'questions') {
         interaction.update('hey! ' + interaction.values[0]);
     }
 };

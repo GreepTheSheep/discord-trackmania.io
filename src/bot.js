@@ -55,15 +55,34 @@ client.on('interactionCreate', async interaction => {
         if (!command) return;
 
         await command.execute(interaction, tmio, commands, sql);
+
     } else if (interaction.isSelectMenu()) {
+
         const command = commands.find(c => c.name === interaction.customId.split('_')[0]);
         if (!command) return;
 
-        await command.executeSelectMenu(interaction, tmio, commands, sql);
+        let idIndexOf = interaction.customId.indexOf('_')+1,
+            categoryId = interaction.customId.substring(idIndexOf, interaction.customId.indexOf('_', idIndexOf)),
+            argument = null;
+
+        if (categoryId === '_') categoryId = interaction.customId.substring(idIndexOf);
+        else argument = interaction.customId.substring(interaction.customId.indexOf('_', idIndexOf)+1);
+
+        await command.executeSelectMenu(interaction, categoryId, argument, tmio, commands, sql);
+
     } else if (interaction.isButton()) {
+
         const command = commands.find(c => c.name === interaction.customId.split('_')[0]);
         if (!command) return;
 
-        await command.executeButton(interaction, tmio, commands, sql);
+        let idIndexOf = interaction.customId.indexOf('_')+1,
+            buttonId = interaction.customId.substring(idIndexOf, interaction.customId.indexOf('_', idIndexOf)),
+            argument = null;
+
+        if (buttonId === '_') buttonId = interaction.customId.substring(idIndexOf);
+        else argument = interaction.customId.substring(interaction.customId.indexOf('_', idIndexOf)+1);
+
+        await command.executeButton(interaction, buttonId, argument, tmio, commands, sql);
+
     }
 });

@@ -75,18 +75,19 @@ exports.execute = async (interaction, tmio, commands, sql) => {
 /**
  * This method is executed when an a button is clicked in the message
  * @param {ButtonInteraction} interaction
+ * @param {string} buttonId
+ * @param {string} argument
  * @param {import('trackmania.io').Client} tmio
  * @param {Command[]} commands 
  * @param {MySQL.Connection} sql
  */
-exports.executeButton = async (interaction, tmio, commands, sql) => {
-    if (interaction.customId.substring(interaction.customId.indexOf('_')+1, interaction.customId.lastIndexOf('_')) == 'cotd') {
-        const playerId = interaction.customId.substring(interaction.customId.lastIndexOf('_')+1);
+exports.executeButton = async (interaction, buttonId, argument, tmio, commands, sql) => {
+    if (buttonId == 'cotd') {
         await interaction.deferReply({
             ephemeral: true
         });
         try {
-            const player = await tmio.players.get(playerId);
+            const player = await tmio.players.get(argument);
             renderPlayerCOTDStats(tmio, player).then(embed=>{
                 interaction.editReply({
                     embeds: [embed]
@@ -102,11 +103,13 @@ exports.executeButton = async (interaction, tmio, commands, sql) => {
 /**
  * This method is executed when an update is made in a selectMenu
  * @param {SelectMenuInteraction} interaction
+ * @param {string} categoryId
+ * @param {string} argument
  * @param {import('trackmania.io').Client} tmio
  * @param {Command[]} commands 
  * @param {MySQL.Connection} sql
  */
-exports.executeSelectMenu = async (interaction, tmio, commands, sql) => {};
+exports.executeSelectMenu = async (interaction, categoryId, argument, tmio, commands, sql) => {};
 
 /**
  * Generates an Embed of the Player Info

@@ -57,20 +57,24 @@ exports.execute = async (interaction, tmio, commands, sql) => {
 
 /**
  * @param {ButtonInteraction} interaction
+ * @param {string} buttonId
+ * @param {string} argument
  * @param {import('trackmania.io').Client} tmio
  * @param {Command[]} commands 
  * @param {MySQL.Connection} sql
  */
-exports.executeButton = async (interaction, tmio, commands, sql) => {};
+exports.executeButton = async (interaction, buttonId, argument, tmio, commands, sql) => {};
 
 /**
  * @param {SelectMenuInteraction} interaction
+ * @param {string} categoryId
+ * @param {string} argument
  * @param {import('trackmania.io').Client} tmio
  * @param {Command[]} commands 
  * @param {MySQL.Connection} sql
  */
-exports.executeSelectMenu = async (interaction, tmio, commands, sql) => {
-    if (interaction.customId.substring(interaction.customId.indexOf('_')+1) == 'select-category') {
+exports.executeSelectMenu = async (interaction, categoryId, argument, tmio, commands, sql) => {
+    if (categoryId == 'select-category') {
         let embed = embedCommands(interaction.values[0].toLowerCase(), commands);
         interaction.update({embeds: [embed]});
     }
