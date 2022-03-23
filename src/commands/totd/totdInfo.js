@@ -1,8 +1,9 @@
 const Command = require('../../structures/Command'),
-    {MessageEmbed, MessageActionRow, MessageButton, CommandInteraction, SelectMenuInteraction, Message, MessageAttachment} = require('discord.js'),
+    {MessageEmbed, MessageActionRow, MessageButton, CommandInteraction, SelectMenuInteraction, ButtonInteraction, Message, MessageAttachment} = require('discord.js'),
     MySQL = require('mysql'),
     monthsArray = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-    ms = require('pretty-ms');
+    ms = require('pretty-ms'),
+    Table = require('easy-table');
 
 /**
  * Set the command here, it's what we'll type in the message
@@ -82,20 +83,45 @@ exports.execute = async (interaction, tmio, commands, sql) => {
 /**
  * This method is executed when an a button is clicked in the message
  * @param {ButtonInteraction} interaction
+ * @param {string} buttonId
+ * @param {string} argument
  * @param {import('trackmania.io').Client} tmio
  * @param {Command[]} commands
  * @param {MySQL.Connection} sql
  */
-exports.executeButton = async (interaction, tmio, commands, sql) => {};
+exports.executeButton = async (interaction, buttonId, argument, tmio, commands, sql) => {
+    if (buttonId == 'totd-leaderboard') {
+        await interaction.deferReply({
+            ephemeral: true,
+        });
+        const map = await tmio.maps.get(argument),
+            table = new Table();
+
+        for (let i = 0; i < 5; i++) {
+            const leader = map.leaderboard[i],
+                player = await leader.player();
+            table.cell('Rank', i + 1);
+            table.cell('Club tag', tmio.formatTMText(player.clubTag));
+            table.cell('Player', player.name);
+            table.cell('Time', ms(leader.time, {colonNotation: true, secondsDecimalDigits: 3}));
+            if (i > 0) table.cell("Delta (from WR)", `(+${ms(leader.time - map.leaderboard[0].time, {colonNotation: true, secondsDecimalDigits: 3})})`)
+            table.newRow();
+        }
+
+        interaction.editReply('Top 5 of ' + tmio.formatTMText(map.name) +`\`\`\`${table.toString()}\`\`\``)
+    }
+};
 
 /**
  * This method is executed when an update is made in a selectMenu
  * @param {SelectMenuInteraction} interaction
+ * @param {string} categoryId
+ * @param {string} argument
  * @param {import('trackmania.io').Client} tmio
  * @param {Command[]} commands
  * @param {MySQL.Connection} sql
  */
-exports.executeSelectMenu = async (interaction, tmio, commands, sql) => {};
+exports.executeSelectMenu = async (interaction, categoryId, argument, tmio, commands, sql) => {};
 
 /**
  * Generate the Embed and the Actions for the TOTD
@@ -133,6 +159,13 @@ async function renderTOTDEmbed(tmio, month, day, year){
             for (let i = 0; i < 1; i++) {
                 interactionComponentRows.push(new MessageActionRow());
             }
+
+            interactionComponentRows[0].addComponents(
+                new MessageButton()
+                    .setCustomId('totd_totd-leaderboard_'+map.uid)
+                    .setLabel('Leaderboard')
+                    .setStyle('PRIMARY')
+                );
 
             interactionComponentRows[0].addComponents(
                 new MessageButton()
