@@ -39,36 +39,19 @@ exports.execute = async (interaction, tmio, commands, sql) => {
 
         const categoriesSelectMenu = new MessageActionRow().addComponents(generateCategorySelectMenu(commands));
 
-        interaction.reply({embeds: [embed], ephemeral: true, components: [categoriesSelectMenu]});
+        interaction.reply({
+            embeds: [embed],
+            ephemeral: true,
+            components: [categoriesSelectMenu]
+        });
 
     } else {
         embed = embedCommands(categoryTyped, commands);
 
-        interaction.reply({embeds: [embed], ephemeral: true});
-    }
-};
-
-/**
- * @param {Message} message
- * @param {string[]} args
- * @param {import('trackmania.io').Client} tmio
- * @param {Command[]} commands 
- * @param {MySQL.Connection} sql
- */
-exports.executeMessage = async (message, args, tmio, commands, sql) => {
-
-    let embed, categoryTyped = args[0];
-
-    if (categoryTyped == null){
-        embed = embedCategories(commands);
-
-        const categoriesSelectMenu = new MessageActionRow().addComponents(generateCategorySelectMenu(commands));
-
-        message.reply({embeds: [embed], components: [categoriesSelectMenu]});
-    } else {
-        embed = embedCommands(categoryTyped, commands);
-
-        message.reply({embeds: [embed]});
+        interaction.reply({
+            embeds: [embed],
+            ephemeral: true
+        });
     }
 };
 

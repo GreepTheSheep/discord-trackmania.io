@@ -40,9 +40,14 @@ exports.args = [
 exports.execute = async (interaction, tmio, commands, sql) => {
     let typedPlayer = interaction.options.getString('player');
 
-    if (!typedPlayer) return interaction.reply({content: "Please enter a player.", ephemeral: true});
+    if (!typedPlayer) return interaction.reply({
+        content: "Please enter a player.",
+        ephemeral: true
+    });
 
-    await interaction.deferReply();
+    await interaction.deferReply({
+        ephemeral: true
+    });
 
     const interactionComponentRows = [new MessageActionRow()];
 
@@ -68,32 +73,6 @@ exports.execute = async (interaction, tmio, commands, sql) => {
 };
 
 /**
- * This part is executed as a normal message command
- * @param {Message} message
- * @param {string[]} args
- * @param {import('trackmania.io').Client} tmio
- * @param {Command[]} commands 
- * @param {MySQL.Connection} sql
- */
-exports.executeMessage = async (message, args, tmio, commands, sql) => {
-    let typedPlayer = args[0];
-
-    if (!typedPlayer) return message.reply("Please enter a player.");
-
-    try {
-        const player = await tmio.players.get(typedPlayer),
-            embed = renderPlayerInfoEmbed(tmio, player);
-
-        message.reply({
-            embeds: [embed]
-        });
-    } catch(err) {
-        interaction.reply("This interaction failed");
-        console.error(err)
-    }
-};
-
-/**
  * This method is executed when an a button is clicked in the message
  * @param {ButtonInteraction} interaction
  * @param {import('trackmania.io').Client} tmio
@@ -103,7 +82,9 @@ exports.executeMessage = async (message, args, tmio, commands, sql) => {
 exports.executeButton = async (interaction, tmio, commands, sql) => {
     if (interaction.customId.substring(interaction.customId.indexOf('_')+1, interaction.customId.lastIndexOf('_')) == 'cotd') {
         const playerId = interaction.customId.substring(interaction.customId.lastIndexOf('_')+1);
-        await interaction.deferReply({ephemeral: true})
+        await interaction.deferReply({
+            ephemeral: true
+        });
         try {
             const player = await tmio.players.get(playerId);
             renderPlayerCOTDStats(tmio, player).then(embed=>{

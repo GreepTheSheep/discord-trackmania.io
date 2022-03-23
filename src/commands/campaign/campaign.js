@@ -52,6 +52,7 @@ exports.execute = async (interaction, tmio, commands, sql) => {
             interactionComponentRows = RenderEmbeds.interactionComponentRows;
 
         interaction.reply({
+            ephemeral: true,
             embeds: [embed],
             components: interactionComponentRows
         });
@@ -60,36 +61,6 @@ exports.execute = async (interaction, tmio, commands, sql) => {
             content: 'Error: ' + e,
             ephemeral: true
         });
-    }
-};
-
-/**
- * This part is executed as a normal message command
- * @param {Message} message
- * @param {string[]} args
- * @param {import('trackmania.io').Client} tmio
- * @param {Command[]} commands 
- * @param {MySQL.Connection} sql
- */
-exports.executeMessage = async (message, args, tmio, commands, sql) => {
-    if (args.length < 2) return message.reply('Usage: `/campaign [Club ID] [campaign ID]`');
-
-    const clubID = Number(args[0]),
-        campaignID = Number(args[1]);
-
-    if (isNaN(clubID) || isNaN(campaignID)) return message.reply('Club ID or Campaign ID is not numbers. Check your syntax and retry');
-
-    try {
-        const RenderEmbeds = await renderCampaignEmbed(clubID, campaignID, tmio),
-            embed = RenderEmbeds.embed,
-            interactionComponentRows = RenderEmbeds.interactionComponentRows;
-
-        message.reply({
-            embeds: [embed],
-            components: interactionComponentRows
-        })
-    } catch (e) {
-        message.reply('Error: ' + e);
     }
 };
 

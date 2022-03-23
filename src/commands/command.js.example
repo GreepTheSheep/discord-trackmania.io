@@ -96,18 +96,6 @@ exports.execute = async (interaction, tmio, commands, sql) => {
 };
 
 /**
- * This part is executed as a normal message command
- * @param {Message} message
- * @param {string[]} args
- * @param {import('trackmania.io').Client} tmio
- * @param {Command[]} commands 
- * @param {MySQL.Connection} sql
- */
-exports.executeMessage = async (message, args, tmio, commands, sql) => {
-    message.reply('hey! ' + args.join(' '));
-};
-
-/**
  * This method is executed when an a button is clicked in the message
  * @param {ButtonInteraction} interaction
  * @param {import('trackmania.io').Client} tmio

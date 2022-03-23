@@ -67,17 +67,3 @@ client.on('interactionCreate', async interaction => {
         await command.executeButton(interaction, tmio, commands, sql);
     }
 });
-
-client.on('messageCreate', async message => {
-    if (message.author.bot) return;
-    let prefix = process.env.PREFIX;
-    if (!prefix) prefix = 'tm!'; 
-    if (!message.content.startsWith(prefix)) return;
-    const typedCommand = message.content.split(' ')[0].slice(prefix.length),
-        args = message.content.split(' ').slice(1),
-        command = commands.find(c => c.name === typedCommand);
-
-    if (!command) return;
-
-    await command.executeMessage(message, args, tmio, commands, sql);
-});

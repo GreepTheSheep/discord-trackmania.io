@@ -26,18 +26,12 @@ class Command {
          * @type {?Array<commandArgs>}
          */
         this.args = exports.args;
-        
+
         /**
          * The function to execute when the command is called (through slash command)
          * @type {function}
          */
         this.execute = exports.execute;
-
-        /**
-         * The function to execute when the command is called (through message)
-         * @type {function}
-         */
-        this.executeMessage = exports.executeMessage;
 
         /**
          * The function to execute when the a button is selected in a message

@@ -47,11 +47,13 @@ exports.args = [
  * This part is executed as slash command
  * @param {CommandInteraction} interaction
  * @param {import('trackmania.io').Client} tmio
- * @param {Command[]} commands 
+ * @param {Command[]} commands
  * @param {MySQL.Connection} sql
  */
 exports.execute = async (interaction, tmio, commands, sql) => {
-    interaction.deferReply();
+    interaction.deferReply({
+        ephemeral: true,
+    });
 
     try {
         const month = interaction.options.getNumber('month'),
@@ -60,7 +62,7 @@ exports.execute = async (interaction, tmio, commands, sql) => {
             TOTDRenders = await renderTOTDEmbed(month, day, year, tmio),
             embed = TOTDRenders.embed,
             interactionComponentRows = TOTDRenders.interactionComponentRows;
-        
+
         interaction.editReply({
             embeds: [embed],
             components: interactionComponentRows
@@ -71,37 +73,10 @@ exports.execute = async (interaction, tmio, commands, sql) => {
 };
 
 /**
- * This part is executed as a normal message command
- * @param {Message} message
- * @param {string[]} args
- * @param {import('trackmania.io').Client} tmio
- * @param {Command[]} commands 
- * @param {MySQL.Connection} sql
- */
-exports.executeMessage = async (message, args, tmio, commands, sql) => {
-    try {
-        const month = Number(args[1]),
-            day = Number(args[0]),
-            year = Number(args[2]),
-            TOTDRenders = await renderTOTDEmbed(month, day, year, tmio),
-            embed = TOTDRenders.embed,
-            interactionComponentRows = TOTDRenders.interactionComponentRows;
-
-        message.reply({
-            content: month && day ? '' : `Tip: You can set a specific TOTD day with \`/${this.name} [date-of-the-month] [month] <year>\`. Example \`/${this.name} 12 7\` to get the TOTD of July, 12, ${new Date().getFullYear()}`,
-            embeds: [embed],
-            components: interactionComponentRows
-        });
-    } catch (e) {
-        message.reply('Error: ' + e);
-    }
-};
-
-/**
  * This method is executed when an a button is clicked in the message
  * @param {ButtonInteraction} interaction
  * @param {import('trackmania.io').Client} tmio
- * @param {Command[]} commands 
+ * @param {Command[]} commands
  * @param {MySQL.Connection} sql
  */
 exports.executeButton = async (interaction, tmio, commands, sql) => {};
@@ -110,7 +85,7 @@ exports.executeButton = async (interaction, tmio, commands, sql) => {};
  * This method is executed when an update is made in a selectMenu
  * @param {SelectMenuInteraction} interaction
  * @param {import('trackmania.io').Client} tmio
- * @param {Command[]} commands 
+ * @param {Command[]} commands
  * @param {MySQL.Connection} sql
  */
 exports.executeSelectMenu = async (interaction, tmio, commands, sql) => {};
@@ -120,7 +95,7 @@ exports.executeSelectMenu = async (interaction, tmio, commands, sql) => {};
  * @param {?Number} month The Month of the TOTD
  * @param {?Number} day The dqy of the TOTD
  * @param {?Number} year The year of the TOTD
- * @param {import('trackmania.io').Client} tmio 
+ * @param {import('trackmania.io').Client} tmio
  * @returns {Object<MessageEmbed, MessageActionRow>}
  */
 async function renderTOTDEmbed(month, day, year, tmio){
@@ -138,7 +113,7 @@ async function renderTOTDEmbed(month, day, year, tmio){
         const totd = await tmio.totd.get(date),
             map = await totd.map(),
             author = await map.author();
-    
+
         embed.setColor('GREEN').setAuthor({name: `Track of The Day - ${date.getDate()} ${monthsArray[date.getMonth()]} ${date.getFullYear()}`})
             .setTitle(tmio.formatTMText(map.name))
             .addField('Created by:', author.name, true)
