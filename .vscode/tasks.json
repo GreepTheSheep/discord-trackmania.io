@@ -14,7 +14,7 @@
             "script": "dev",
             "problemMatcher": [],
             "label": "Run Dev Bot",
-            "detail": "nodemon --delay 30 .",
+            "detail": "nodemon --delay 10 .",
             "isBackground": true,
             "group": {
                 "kind": "test",
