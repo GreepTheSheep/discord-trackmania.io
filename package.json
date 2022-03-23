@@ -3,9 +3,10 @@
   "version": "2.0.0",
   "private": true,
   "description": "A discord bot that uses node-trackmania.io",
-  "main": "shard.js",
+  "main": "src/index.js",
   "scripts": {
-    "start": "node ."
+    "start": "node .",
+    "dev": "nodemon --delay 30 ."
   },
   "repository": {
     "type": "git",
@@ -34,6 +35,7 @@
     "trackmania.io": "^3.0.6"
   },
   "devDependencies": {
-    "eslint": "^7.32.0"
+    "eslint": "^7.32.0",
+    "nodemon": "^2.0.15"
   }
 }
