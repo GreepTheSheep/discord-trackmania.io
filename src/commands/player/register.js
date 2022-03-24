@@ -66,17 +66,21 @@ exports.execute = async (interaction, tmio, commands, sql) => {
             });
         });
 
-    sql.query("INSERT INTO `players` (accountId, discordId) VALUES (?, ?) ON DUPLICATE KEY UPDATE accountId = ?", [player.login, interaction.user.id, player.login], (err, result) => {
-        if (err) {
-            console.error(err);
-            return interaction.editReply({
-                content: "An error occurred.",
-            });
-        }
+    if (sql != null) {
+        sql.query("INSERT INTO `players` (accountId, discordId) VALUES (?, ?) ON DUPLICATE KEY UPDATE accountId = ?", [player.login, interaction.user.id, player.login], (err, result) => {
+            if (err) {
+                console.error(err);
+                return interaction.editReply({
+                    content: "An error occurred.",
+                });
+            }
 
-        interaction.editReply({
-            content: "✅ You have been registered.",
+            interaction.editReply({
+                content: "✅ You have been registered.",
+            });
         });
+    } else return interaction.editReply({
+        content: "No database connection.",
     });
 };
 

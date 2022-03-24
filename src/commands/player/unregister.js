@@ -35,23 +35,27 @@ exports.execute = async (interaction, tmio, commands, sql) => {
         ephemeral: true
     });
 
-    sql.query("DELETE FROM `players` WHERE discordId = ?", interaction.user.id, (err, result) => {
-        if (err) {
-            console.error(err);
-            return interaction.editReply({
-                content: "An error occurred.",
-            });
-        } else {
-            if (result.affectedRows == 0) {
-                interaction.editReply({
-                    content: "You have not registered on here.",
+    if (sql != null) {
+        sql.query("DELETE FROM `players` WHERE discordId = ?", interaction.user.id, (err, result) => {
+            if (err) {
+                console.error(err);
+                return interaction.editReply({
+                    content: "An error occurred.",
                 });
             } else {
-                interaction.editReply({
-                    content: "✅ Successfully unregistered!",
-                });
+                if (result.affectedRows == 0) {
+                    interaction.editReply({
+                        content: "You have not registered on here.",
+                    });
+                } else {
+                    interaction.editReply({
+                        content: "✅ Successfully unregistered!",
+                    });
+                }
             }
-        }
+        });
+    } else return interaction.editReply({
+        content: "No database connection.",
     });
 };
 
