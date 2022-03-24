@@ -1,7 +1,6 @@
 const Command = require('../../structures/Command'),
     {MessageEmbed, MessageActionRow, MessageButton, CommandInteraction, SelectMenuInteraction, ButtonInteraction, Message, MessageAttachment} = require('discord.js'),
     MySQL = require('mysql'),
-    monthsArray = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
     ms = require('pretty-ms'),
     Table = require('easy-table');
 
