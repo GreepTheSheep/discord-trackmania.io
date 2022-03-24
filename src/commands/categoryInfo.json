@@ -18,6 +18,12 @@
         "emoji": "📜"
     },
     {
+        "name": "Map",
+        "dir": "map",
+        "description": "Informations about a map",
+        "emoji": "🗺️"
+    },
+    {
         "name": "Utilities",
         "dir": "utils",
         "description": "Utilities commands",
