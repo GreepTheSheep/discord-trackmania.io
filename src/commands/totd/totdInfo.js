@@ -115,7 +115,7 @@ exports.executeButton = async (interaction, buttonId, argument, tmio, commands, 
             if (i >= map.leaderboard.length) break;
             const leader = map.leaderboard[i];
             table.cell('Rank', i + 1);
-            table.cell('Club tag', leader.playerClubTag ? tmio.formatTMText(leader.playerClubTag) : '');
+            if (leader.playerClubTag) table.cell('Club tag', tmio.formatTMText(leader.playerClubTag));
             table.cell('Player', leader.playerName);
             table.cell('Time', ms(leader.time, {colonNotation: true, secondsDecimalDigits: 3}));
             if (i > 0) table.cell("Delta (from WR)", `(+${ms(leader.time - map.leaderboard[0].time, {colonNotation: true, secondsDecimalDigits: 3})})`)
@@ -141,8 +141,23 @@ exports.executeButton = async (interaction, buttonId, argument, tmio, commands, 
                 .setDisabled(leaderboardPosFromMapUID[argument] + rows >= map.leaderboard.length)
             );
 
+        if (leaderboardPosFromMapUID[argument] + rows >= map.leaderboard.length) {
+            interactionComponentRows[0].addComponents(
+                new MessageButton()
+                    .setURL('https://trackmania.io/#/leaderboard/'+map.uid)
+                    .setLabel('View on Trackmania.io')
+                    .setStyle('LINK')
+                );
+        }
+
         interaction.editReply({
-            content: 'Top '+map.leaderboard.length+' on "' + tmio.formatTMText(map.name) +`" (page ${Math.floor(leaderboardPosFromMapUID[argument] / rows) + 1} / ${Math.ceil(map.leaderboard.length / rows)}) \`\`\`${table.toString()}\`\`\``,
+            content: 'Top '+map.leaderboard.length+
+                ' on "' + tmio.formatTMText(map.name) + '"' +
+                '(page '+(Math.floor(leaderboardPosFromMapUID[argument] / rows) +1) +'/'+Math.ceil(map.leaderboard.length / rows)+')'+
+                '\`\`\`'+table.toString()+
+                ((Math.floor(leaderboardPosFromMapUID[argument] / rows) + 1) == Math.ceil(map.leaderboard.length / rows) ?
+                '\nTo view more, open the leaderboard on Trackmania.io website': '')+
+                '\`\`\`',
             components: interactionComponentRows
         });
     }
@@ -179,12 +194,11 @@ async function renderTOTDEmbed(tmio, month, day, year){
         }
         try {
             const totd = await tmio.totd.get(date),
-                map = await totd.map(),
-                author = await map.author();
+                map = await totd.map();
 
             embed.setColor('GREEN').setAuthor({name: `Track of The Day - ${date.getDate()} ${monthsArray[date.getMonth()]} ${date.getFullYear()}`})
                 .setTitle(tmio.formatTMText(map.name))
-                .addField('Created by:', author.name, true)
+                .addField('Created by:', map.authorName, true)
                 .addField('Medals:', `Author: **${ms(map.medalTimes.author, {colonNotation: true, secondsDecimalDigits: 3})}**\nGold: ${ms(map.medalTimes.gold, {colonNotation: true, secondsDecimalDigits: 3})}\nSilver: ${ms(map.medalTimes.silver, {colonNotation: true, secondsDecimalDigits: 3})}\nBronze: ${ms(map.medalTimes.bronze, {colonNotation: true, secondsDecimalDigits: 3})}`)
                 .addField('Uploaded:', `<t:${map.uploaded.getTime() / 1000}:R>`, true)
                 .setFooter({text: `Map UID: ${map.uid}`})
