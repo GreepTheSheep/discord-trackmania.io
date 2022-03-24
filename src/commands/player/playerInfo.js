@@ -45,24 +45,26 @@ exports.execute = async (interaction, tmio, commands, sql) => {
     });
 
     if (!typedPlayer) {
-        typedPlayer = await new Promise(async (resolve, reject) => {
-            if (sql != null) {
-                sql.query("SELECT * FROM `players` WHERE `discordId` = ?", [interaction.user.id], async (err, result) => {
-                    if (err) {
-                        console.error(err);
-                        return reject("An error occured while querying the database.");
-                    }
-                    if (result.length < 1) {
-                        return reject("You are not registered. Please use `/register` to register yourself.");
-                    }
-                    return resolve(result[0].accountId);
-                });
-            } else return reject("No database connection.");
-        }).catch(err=>{
+        try {
+            typedPlayer = await new Promise(async (resolve, reject) => {
+                if (sql != null) {
+                    sql.query("SELECT * FROM `players` WHERE `discordId` = ?", [interaction.user.id], async (err, result) => {
+                        if (err) {
+                            console.error(err);
+                            return reject("An error occured while querying the database.");
+                        }
+                        if (result.length < 1) {
+                            return reject("You are not registered. Please use `/register` to register yourself.");
+                        }
+                        return resolve(result[0].accountId);
+                    });
+                } else return reject("No database connection.");
+            })
+        } catch (err) {
             return interaction.editReply({
                 content: err
             });
-        });
+        }
     }
 
     try {
