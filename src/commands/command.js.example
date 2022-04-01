@@ -44,7 +44,7 @@ exports.args = [
  * This part is executed as slash command
  * @param {CommandInteraction} interaction
  * @param {import('trackmania.io').Client} tmio
- * @param {Command[]} commands 
+ * @param {Command[]} commands
  * @param {MySQL.Connection} sql
  */
 exports.execute = async (interaction, tmio, commands, sql) => {
@@ -101,7 +101,7 @@ exports.execute = async (interaction, tmio, commands, sql) => {
  * @param {string} buttonId
  * @param {string} argument
  * @param {import('trackmania.io').Client} tmio
- * @param {Command[]} commands 
+ * @param {Command[]} commands
  * @param {MySQL.Connection} sql
  */
 exports.executeButton = async (interaction, buttonId, argument, tmio, commands, sql) => {
@@ -116,7 +116,7 @@ exports.executeButton = async (interaction, buttonId, argument, tmio, commands, 
  * @param {string} categoryId
  * @param {string} argument
  * @param {import('trackmania.io').Client} tmio
- * @param {Command[]} commands 
+ * @param {Command[]} commands
  * @param {MySQL.Connection} sql
  */
 exports.executeSelectMenu = async (interaction, categoryId, argument, tmio, commands, sql) => {
