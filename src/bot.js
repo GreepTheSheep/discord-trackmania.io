@@ -38,6 +38,7 @@ let commands=[];
 
 client.on('ready', async () => {
     console.log(`🤖 Logged in as ${client.user.tag}!`);
+    client.user.setActivity('Bot is starting up...', {type: 'WATCHING'});
 
     tmio.setUserAgent('DiscordBot ' + client.user.tag + ' (' + client.user.id + ')');
 
@@ -47,6 +48,8 @@ client.on('ready', async () => {
     client.guilds.cache.forEach(async (guild) => {
         await require('./registerCommandsScript')(guild.id, client.user.id, commands);
     });
+
+    require('./botStatus')(client, tmio, commands);
 });
 
 client.on('interactionCreate', async interaction => {
