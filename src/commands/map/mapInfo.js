@@ -87,6 +87,7 @@ exports.executeButton = async (interaction, buttonId, argument, tmio, commands, 
         }
 
         const map = await tmio.maps.get(argument);
+        if (map.leaderboard.length == 0) await map.leaderboardLoadMore();
 
         if (leaderboardPosFromMapUID[argument] < 0) leaderboardPosFromMapUID[argument] = 0;
 
@@ -131,7 +132,7 @@ exports.executeButton = async (interaction, buttonId, argument, tmio, commands, 
 
         interaction.editReply({
             content: 'Top '+map.leaderboard.length+
-                ' on "' + tmio.formatTMText(map.name) + '"' +
+                ' on "' + tmio.formatTMText(map.name) + '" ' +
                 '(page '+(Math.floor(leaderboardPosFromMapUID[argument] / rows) +1) +'/'+Math.ceil(map.leaderboard.length / rows)+')'+
                 '\`\`\`'+table.toString()+
                 ((Math.floor(leaderboardPosFromMapUID[argument] / rows) + 1) == Math.ceil(map.leaderboard.length / rows) ?
@@ -178,9 +179,7 @@ async function renderMapEmbed(tmio, uid){
 
             // create 2 interaction rows (button or select menus)
             const interactionComponentRows = [];
-            for (let i = 0; i < 1; i++) {
-                interactionComponentRows.push(new MessageActionRow());
-            }
+            interactionComponentRows.push(new MessageActionRow());
 
             interactionComponentRows[0].addComponents(
                 new MessageButton()

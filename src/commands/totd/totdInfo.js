@@ -108,6 +108,7 @@ exports.executeButton = async (interaction, buttonId, argument, tmio, commands, 
         }
 
         const map = await tmio.maps.get(argument);
+        if (map.leaderboard.length == 0) await map.leaderboardLoadMore();
 
         if (leaderboardPosFromMapUID[argument] < 0) leaderboardPosFromMapUID[argument] = 0;
 
@@ -152,7 +153,7 @@ exports.executeButton = async (interaction, buttonId, argument, tmio, commands, 
 
         interaction.editReply({
             content: 'Top '+map.leaderboard.length+
-                ' on "' + tmio.formatTMText(map.name) + '"' +
+                ' on "' + tmio.formatTMText(map.name) + '" ' +
                 '(page '+(Math.floor(leaderboardPosFromMapUID[argument] / rows) +1) +'/'+Math.ceil(map.leaderboard.length / rows)+')'+
                 '\`\`\`'+table.toString()+
                 ((Math.floor(leaderboardPosFromMapUID[argument] / rows) + 1) == Math.ceil(map.leaderboard.length / rows) ?
