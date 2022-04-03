@@ -50,7 +50,8 @@ exports.execute = async (interaction, tmio, commands, sql) => {
     try {
         const clubID = interaction.options.getNumber('club-id'),
             campaignID = interaction.options.getNumber('campaign-id'),
-            RenderEmbeds = await renderCampaignEmbed(clubID, campaignID, tmio),
+            Campaign = tmio.campaigns.get(clubID, campaignID),
+            RenderEmbeds = await renderCampaignEmbed(Campaign, tmio),
             embed = RenderEmbeds.embed,
             interactionComponentRows = RenderEmbeds.interactionComponentRows;
 
@@ -97,7 +98,7 @@ exports.executeButton = async (interaction, buttonId, argument, tmio, commands, 
         }
 
         const campaign = await tmio.campaigns.get(clubId, campaignId);
-        await campaign.leaderboardLoadMore();
+        if (campaign.leaderboard.length == 0) await campaign.leaderboardLoadMore();
 
         if (leaderboardPosFromCampaignID[campaignId] < 0) leaderboardPosFromCampaignID[campaignId] = 0;
 
@@ -165,18 +166,17 @@ exports.executeSelectMenu = async (interaction, categoryId, argument, tmio, comm
 
 /**
  * Render the embeds
- * @param {number} clubID
- * @param {number} campaignID
+ * @param {import('trackmania.io/typings/structures/Campaign')} campaign
  * @param {import('trackmania.io').Client} tmio
  * @returns {Object<MessageEmbed, MessageActionRow>}
  */
-async function renderCampaignEmbed(clubID, campaignID, tmio){
+async function renderCampaignEmbed(campaign, tmio){
 
     try {
         let embed = new MessageEmbed(),
-            campaign = await tmio.campaigns.get(clubID, campaignID);
+            clubID = campaign.isOfficial ? 0 : campaign.club().then(c=>c.id);
 
-        if (clubID != 0) {
+        if (!campaign.isOfficial) {
             let club = await campaign.club();
             embed.addField('Club:', tmio.formatTMText(club.name), true)
                 .setImage(campaign.image);
@@ -220,3 +220,5 @@ async function renderCampaignEmbed(clubID, campaignID, tmio){
         throw e;
     }
 }
+
+exports.renderCampaignEmbed = renderCampaignEmbed;
