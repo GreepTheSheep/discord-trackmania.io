@@ -1,4 +1,5 @@
-const Command = require('./structures/Command');
+const Command = require('./structures/Command'),
+    ms = require('pretty-ms');
 function randomItem(array) {
     return array[Math.floor(Math.random()*array.length)];
 }
