@@ -96,18 +96,18 @@ exports.executeButton = async (interaction, buttonId, argument, tmio, commands, 
             await interaction.deferUpdate();
         }
 
-        const campaign = await tmio.campaigns.get(clubId, campaignId),
-            campLeader = await campaign.leaderboard();
+        const campaign = await tmio.campaigns.get(clubId, campaignId);
+        await campaign.leaderboardLoadMore();
 
         if (leaderboardPosFromCampaignID[campaignId] < 0) leaderboardPosFromCampaignID[campaignId] = 0;
 
         for (let i = leaderboardPosFromCampaignID[campaignId]; i < leaderboardPosFromCampaignID[campaignId]+rows; i++) {
-            if (i >= campLeader.length) break;
-            const leader = campLeader[i];
+            if (i >= campaign.leaderboard.length) break;
+            const leader = campaign.leaderboard[i];
             table.cell('Rank', leader.position);
             table.cell('Player', leader.playerName);
             table.cell('Points', leader.points);
-            if (i > 0) table.cell("Delta (from first)", `(+${campLeader[0].points - leader.points})`);
+            if (i > 0) table.cell("Delta (from first)", `(+${campaign.leaderboard[0].points - leader.points})`);
             table.newRow();
         }
 
@@ -127,10 +127,10 @@ exports.executeButton = async (interaction, buttonId, argument, tmio, commands, 
                 .setCustomId(this.name+'_leaderboard-down_'+clubId+'-'+campaignId)
                 .setLabel('⬇')
                 .setStyle('PRIMARY')
-                .setDisabled(leaderboardPosFromCampaignID[campaignId] + rows >= campLeader.length)
+                .setDisabled(leaderboardPosFromCampaignID[campaignId] + rows >= campaign.leaderboard.length)
             );
 
-        if (leaderboardPosFromCampaignID[campaignId] + rows >= campLeader.length) {
+        if (leaderboardPosFromCampaignID[campaignId] + rows >= campaign.leaderboard.length) {
             interactionComponentRows[0].addComponents(
                 new MessageButton()
                     .setURL('https://trackmania.io/#/campaigns/'+clubId+'/'+campaignId)
@@ -140,11 +140,11 @@ exports.executeButton = async (interaction, buttonId, argument, tmio, commands, 
         }
 
         interaction.editReply({
-            content: 'Top '+campLeader.length+
-                ' on "' + campaign.name + '"' +
-                '(page '+(Math.floor(leaderboardPosFromCampaignID[campaignId] / rows) +1) +'/'+Math.ceil(campLeader.length / rows)+')'+
+            content: 'Top '+campaign.leaderboard.length+
+                ' on "' + campaign.name + '" ' +
+                '(page '+(Math.floor(leaderboardPosFromCampaignID[campaignId] / rows) +1) +'/'+Math.ceil(campaign.leaderboard.length / rows)+')'+
                 '\`\`\`'+table.toString()+
-                ((Math.floor(leaderboardPosFromCampaignID[campaignId] / rows) + 1) == Math.ceil(campLeader.length / rows) ?
+                ((Math.floor(leaderboardPosFromCampaignID[campaignId] / rows) + 1) == Math.ceil(campaign.leaderboard.length / rows) ?
                 '\nTo view more, open the leaderboard on Trackmania.io website': '')+
                 '\`\`\`',
             components: interactionComponentRows
