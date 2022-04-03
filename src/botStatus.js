@@ -26,7 +26,7 @@ module.exports = function(client, tmio, commands) {
             tmio.totd.get(new Date()).then(async totd=>{
                 const map = await totd.map();
                 if (status == 'totd name'){
-                    client.user.setActivity(`Today's TOTD is called ${map.name} and it's made by ${map.authorName}`, {type: 'WATCHING'});
+                    client.user.setActivity(`Today's TOTD is called ${tmio.formatTMText(map.name)} and it's made by ${map.authorName}`, {type: 'WATCHING'});
                 } else if (status == 'totd wr'){
                     let leader = await map.leaderboardGet(1);
                     client.user.setActivity(`TOTD WR is at ${ms(leader.time, {colonNotation: true, secondsDecimalDigits: 3})} by ${leader.playerName}`, {type: 'WATCHING'});
