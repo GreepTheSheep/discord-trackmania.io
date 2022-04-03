@@ -53,39 +53,60 @@ client.on('ready', async () => {
 });
 
 client.on('interactionCreate', async interaction => {
-    if (interaction.isCommand()) {
-        const command = commands.find(c => c.name === interaction.commandName);
-        if (!command) return;
+    try {
+        if (interaction.isCommand()) {
+            const command = commands.find(c => c.name === interaction.commandName);
+            if (!command) return;
 
-        await command.execute(interaction, tmio, commands, sql);
+            await command.execute(interaction, tmio, commands, sql);
 
-    } else if (interaction.isSelectMenu()) {
+        } else if (interaction.isSelectMenu()) {
 
-        const command = commands.find(c => c.name === interaction.customId.split('_')[0]);
-        if (!command) return;
+            const command = commands.find(c => c.name === interaction.customId.split('_')[0]);
+            if (!command) return;
 
-        let idIndexOf = interaction.customId.indexOf('_')+1,
-            categoryId = interaction.customId.substring(idIndexOf, interaction.customId.indexOf('_', idIndexOf)),
-            argument = null;
+            let idIndexOf = interaction.customId.indexOf('_')+1,
+                categoryId = interaction.customId.substring(idIndexOf, interaction.customId.indexOf('_', idIndexOf)),
+                argument = null;
 
-        if (categoryId === command.name+'_') categoryId = interaction.customId.substring(idIndexOf);
-        else argument = interaction.customId.substring(interaction.customId.indexOf('_', idIndexOf)+1);
+            if (categoryId === command.name+'_') categoryId = interaction.customId.substring(idIndexOf);
+            else argument = interaction.customId.substring(interaction.customId.indexOf('_', idIndexOf)+1);
 
-        await command.executeSelectMenu(interaction, categoryId, argument, tmio, commands, sql);
+            await command.executeSelectMenu(interaction, categoryId, argument, tmio, commands, sql);
 
-    } else if (interaction.isButton()) {
+        } else if (interaction.isButton()) {
 
-        const command = commands.find(c => c.name === interaction.customId.split('_')[0]);
-        if (!command) return;
+            const command = commands.find(c => c.name === interaction.customId.split('_')[0]);
+            if (!command) return;
 
-        let idIndexOf = interaction.customId.indexOf('_')+1,
-            buttonId = interaction.customId.substring(idIndexOf, interaction.customId.indexOf('_', idIndexOf)),
-            argument = null;
+            let idIndexOf = interaction.customId.indexOf('_')+1,
+                buttonId = interaction.customId.substring(idIndexOf, interaction.customId.indexOf('_', idIndexOf)),
+                argument = null;
 
-        if (buttonId === command.name+'_') buttonId = interaction.customId.substring(idIndexOf);
-        else argument = interaction.customId.substring(interaction.customId.indexOf('_', idIndexOf)+1);
+            if (buttonId === command.name+'_') buttonId = interaction.customId.substring(idIndexOf);
+            else argument = interaction.customId.substring(interaction.customId.indexOf('_', idIndexOf)+1);
 
-        await command.executeButton(interaction, buttonId, argument, tmio, commands, sql);
+            await command.executeButton(interaction, buttonId, argument, tmio, commands, sql);
 
+        }
+    } catch (err) {
+        interaction.reply('❌ An error occurred while executing the command: ' + err);
+        console.error(err);
     }
+});
+
+tmio.on('apiRequest', request=>{
+    console.log('Request to: ' + request.url);
+});
+
+tmio.on('apiResponse', ()=>{
+    console.log(tmio.ratelimit.remaining + ' requests remaining, reset in ' + (tmio.ratelimit.reset - Date.now()) + 'ms');
+});
+
+tmio.on('debug', (instance, message)=>{
+    console.log('[TMIO DEBUG ('+instance+')] ' + message);
+});
+
+tmio.on('error', message=>{
+    console.log('[TMIO ERROR] ' + message);
 });
