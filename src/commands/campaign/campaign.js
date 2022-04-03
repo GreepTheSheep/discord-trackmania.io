@@ -50,7 +50,8 @@ exports.execute = async (interaction, tmio, commands, sql) => {
     try {
         const clubID = interaction.options.getNumber('club-id'),
             campaignID = interaction.options.getNumber('campaign-id'),
-            RenderEmbeds = await renderCampaignEmbed(clubID, campaignID, tmio),
+            campaign = await tmio.campaigns.get(clubID, campaignID),
+            RenderEmbeds = await renderCampaignEmbed(campaign, tmio),
             embed = RenderEmbeds.embed,
             interactionComponentRows = RenderEmbeds.interactionComponentRows;
 
@@ -165,16 +166,13 @@ exports.executeSelectMenu = async (interaction, categoryId, argument, tmio, comm
 
 /**
  * Render the embeds
- * @param {number} clubID
- * @param {number} campaignID
+ * @param {import('trackmania.io/typings/structures/Campaign')} campaign
  * @param {import('trackmania.io').Client} tmio
  * @returns {Object<MessageEmbed, MessageActionRow>}
  */
-async function renderCampaignEmbed(clubID, campaignID, tmio){
-
+async function renderCampaignEmbed(campaign, tmio){
     try {
-        let embed = new MessageEmbed(),
-            campaign = await tmio.campaigns.get(clubID, campaignID);
+        let embed = new MessageEmbed();
 
         if (clubID != 0) {
             let club = await campaign.club();
@@ -219,4 +217,8 @@ async function renderCampaignEmbed(clubID, campaignID, tmio){
     } catch (e) {
         throw e;
     }
+}
+
+module.exports = {
+    renderCampaignEmbed
 }
