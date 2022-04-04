@@ -41,15 +41,20 @@ exports.args = [
  * @param {Command[]} commands
  * @param {MySQL.Connection} sql
  */
-exports.execute = async (interaction, tmio, commands, sql) => {
+exports.execute = async (interaction, tmio, commands, sql, mapUid) => {
     await interaction.deferReply({
         ephemeral: true,
     });
 
     try {
-        const typedUid = interaction.options.getString('uid'),
-            MapRenders = await renderMapEmbed(tmio, typedUid),
-            embed = MapRenders.embed,
+        let MapRenders;
+        if (mapUid || !interaction.options) {
+            MapRenders = await renderMapEmbed(tmio, mapUid)
+        } else {
+            MapRenders = await renderMapEmbed(tmio, interaction.options.getString('uid'));
+        }
+
+        const embed = MapRenders.embed,
             interactionComponentRows = MapRenders.interactionComponentRows;
 
         interaction.editReply({

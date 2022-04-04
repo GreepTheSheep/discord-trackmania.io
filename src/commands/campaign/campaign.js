@@ -1,9 +1,10 @@
 const Command = require('../../structures/Command'),
-    {ButtonInteraction, MessageEmbed, MessageActionRow, MessageButton, CommandInteraction, SelectMenuInteraction, Message, MessageAttachment} = require('discord.js'),
+    {ButtonInteraction, MessageEmbed, MessageActionRow, MessageButton, CommandInteraction, SelectMenuInteraction, Message, MessageAttachment, MessageSelectMenu} = require('discord.js'),
     MySQL = require('mysql'),
     Table = require('easy-table');
 
-let leaderboardPosFromCampaignID = {};
+let leaderboardPosFromCampaignID = {},
+    leaderboardPosFromMapUID = {};
 
 /**
  * Set the command here, it's what we'll type in the message
@@ -47,23 +48,22 @@ exports.args = [
  * @param {MySQL.Connection} sql
  */
 exports.execute = async (interaction, tmio, commands, sql) => {
+    await interaction.deferReply({ephemeral:true});
     try {
         const clubID = interaction.options.getNumber('club-id'),
             campaignID = interaction.options.getNumber('campaign-id'),
-            Campaign = tmio.campaigns.get(clubID, campaignID),
+            Campaign = await tmio.campaigns.get(clubID, campaignID),
             RenderEmbeds = await renderCampaignEmbed(Campaign, tmio),
             embed = RenderEmbeds.embed,
             interactionComponentRows = RenderEmbeds.interactionComponentRows;
 
-        interaction.reply({
-            ephemeral: true,
+        interaction.editReply({
             embeds: [embed],
             components: interactionComponentRows
         });
     } catch (e) {
-        interaction.reply({
-            content: 'Error: ' + e,
-            ephemeral: true
+        interaction.editReply({
+            content: 'Error: ' + e
         });
     }
 };
@@ -162,26 +162,43 @@ exports.executeButton = async (interaction, buttonId, argument, tmio, commands, 
  * @param {Command[]} commands
  * @param {MySQL.Connection} sql
  */
-exports.executeSelectMenu = async (interaction, categoryId, argument, tmio, commands, sql) => {};
+exports.executeSelectMenu = async (interaction, categoryId, argument, tmio, commands, sql) => {
+    if (categoryId === 'selectMap') {
+        let mapUid = interaction.values[0];
+        commands.find(c=>c.name == 'map').execute(interaction, tmio, commands, sql, mapUid);
+    }
+};
 
 /**
  * Render the embeds
  * @param {import('trackmania.io/typings/structures/Campaign')} campaign
  * @param {import('trackmania.io').Client} tmio
- * @returns {Object<MessageEmbed, MessageActionRow>}
+ * @returns {Promise<Object<MessageEmbed, MessageActionRow>>}
  */
 async function renderCampaignEmbed(campaign, tmio){
 
     try {
         let embed = new MessageEmbed(),
-            clubID = campaign.isOfficial ? 0 : campaign.club().then(c=>c.id);
+            clubID = 0;
 
         if (!campaign.isOfficial) {
             let club = await campaign.club();
+            clubID = club.id;
             embed.addField('Club:', tmio.formatTMText(club.name), true)
                 .setImage(campaign.image);
         } else {
             embed.addField('Created by:', 'Nadeo', true);
+            const imageSeasons = {
+                "fall": "https://i.imgur.com/DX5XnQD.png",
+                "spring": "https://i.imgur.com/iQfwDqd.png",
+                "summer": "https://i.imgur.com/qmzR2zO.png",
+                "winter": "https://i.imgur.com/pSLKNwU.png"
+            };
+            Object.keys(imageSeasons).forEach(season => {
+                if (campaign.name.toLowerCase().includes(season)) {
+                    embed.setThumbnail(imageSeasons[season]);
+                }
+            });
         }
 
         embed.setColor('#9B850E')
@@ -190,27 +207,38 @@ async function renderCampaignEmbed(campaign, tmio){
         .setFooter({text: `Leaderboard UID: ${campaign.leaderboardId}`});
 
         const interactionComponentRows = [];
-        interactionComponentRows.push(new MessageActionRow());
-
+        for (let i = 0; i < 2; i++) {
+            interactionComponentRows.push(new MessageActionRow());
+        }
 
         interactionComponentRows[0].addComponents(
             new MessageButton()
                 .setCustomId('campaign_leaderboard_'+clubID+'-'+campaign.id)
                 .setLabel('Campaign leaderboard')
                 .setStyle('PRIMARY')
-            );
-        // interactionComponentRows[0].addComponents(
-        //     new MessageButton()
-        //         .setCustomId('campaign_maps_'+clubID+'-'+campaign.id)
-        //         .setLabel('Map list')
-        //         .setStyle('PRIMARY')
-        //     );
+        );
         interactionComponentRows[0].addComponents(
             new MessageButton()
                 .setURL(`https://trackmania.io/#/campaigns/${clubID}/${campaign.id}`)
                 .setLabel('View on Trackmania.io')
                 .setStyle('LINK')
-            );
+        );
+
+        const selectOptions = [];
+        for (let i = 0; i < campaign.mapCount; i++) {
+            let mapFromCampaign = campaign._data.playlist[i];
+            selectOptions.push({
+                label: mapFromCampaign.name,
+                value: mapFromCampaign.mapUid
+            });
+        }
+
+        interactionComponentRows[1].addComponents(
+            new MessageSelectMenu()
+                .setCustomId('campaign_selectMap')
+                .setPlaceholder('Select a map')
+                .addOptions(selectOptions)
+        );
 
         return {
             embed,
