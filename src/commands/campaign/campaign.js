@@ -202,7 +202,7 @@ async function renderCampaignEmbed(campaign, tmio){
         }
 
         embed.setColor('#9B850E')
-        .setTitle(campaign.name)
+        .setTitle(tmio.formatTMText(campaign.name))
         .addField('Maps number:', `${campaign.mapCount} maps`, true)
         .setFooter({text: `Leaderboard UID: ${campaign.leaderboardId}`});
 
@@ -228,7 +228,7 @@ async function renderCampaignEmbed(campaign, tmio){
         for (let i = 0; i < campaign.mapCount; i++) {
             let mapFromCampaign = campaign._data.playlist[i];
             selectOptions.push({
-                label: mapFromCampaign.name,
+                label: tmio.formatTMText(mapFromCampaign.name),
                 value: mapFromCampaign.mapUid
             });
         }
