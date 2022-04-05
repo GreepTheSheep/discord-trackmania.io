@@ -49,7 +49,7 @@ client.on('ready', async () => {
         await require('./registerCommandsScript')(guild.id, client.user.id, commands);
     });
 
-    require('./botStatus')(client, tmio, commands);
+    require('./events/botStatus')(client, tmio, commands);
 });
 
 client.on('interactionCreate', async interaction => {
@@ -90,7 +90,10 @@ client.on('interactionCreate', async interaction => {
 
         }
     } catch (err) {
-        interaction.reply('❌ An error occurred while executing the command: ' + err);
+        interaction.reply({
+            content: '❌ An error occurred while executing the command: ' + err,
+            ephemeral: true
+        });
         console.error(err);
     }
 });

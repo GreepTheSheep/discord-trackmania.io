@@ -1,4 +1,4 @@
-const Command = require('./structures/Command'),
+const Command = require('../structures/Command'),
     ms = require('pretty-ms');
 function randomItem(array) {
     return array[Math.floor(Math.random()*array.length)];
@@ -34,10 +34,10 @@ module.exports = function(client, tmio, commands) {
                 }
             })
         } else if (status == 'version') {
-            const pkg = require('../package.json');
+            const pkg = require('../../package.json');
             client.user.setActivity(`Version ${pkg.version} (lib: ${pkg.dependencies['trackmania.io'].replace('^', '')})`);
         } else client.user.setActivity(status, {type: 'LISTENING'});
 
         activityIndex = (activityIndex+1)%activities.length;
-    }, tmio.options.cache.ttl*60*1000);
+    }, tmio.options.cache.roomttl*60*1000);
 }
