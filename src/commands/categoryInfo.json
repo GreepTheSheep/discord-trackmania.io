@@ -1,0 +1,32 @@
+[
+    {
+        "name": "TOTDs",
+        "dir": "totd",
+        "description": "Track Of The Day Commands",
+        "emoji": "🏎"
+    },
+    {
+        "name": "Player",
+        "dir": "player",
+        "description": "Player Commands",
+        "emoji": "🎮"
+    },
+    {
+        "name": "Campaign",
+        "dir": "campaign",
+        "description": "Campaign commands",
+        "emoji": "📜"
+    },
+    {
+        "name": "Map",
+        "dir": "map",
+        "description": "Informations about a map",
+        "emoji": "🗺️"
+    },
+    {
+        "name": "Utilities",
+        "dir": "utils",
+        "description": "Bot utilities commands",
+        "emoji": "🔧"
+    }
+]
