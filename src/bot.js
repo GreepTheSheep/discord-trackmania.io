@@ -95,6 +95,10 @@ client.on('interactionCreate', async interaction => {
     }
 });
 
+tmio.on('totd', totd=>{
+    require('./events/totd')(client, totd, tmio, sql);
+});
+
 tmio.on('apiRequest', request=>{
     console.log('Request to: ' + request.url);
 });
