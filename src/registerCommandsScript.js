@@ -98,7 +98,14 @@ async function registerCommands(guildId, userId, commands) {
         await rest.put(
             Routes.applicationGuildCommands(userId, guildId),
             { body: bodyCommands },
-        );
+        ).catch(err => {
+            if (err.code == 50013) {
+                console.log(`Guild ${guildId} does not exist.`);
+            }
+            if (err.code == 50001) {
+                console.log(`Missing access for guild ${guildId}.`);
+            }
+        });
 
         console.log(`✔️  Done.`);
     } catch (error) {
