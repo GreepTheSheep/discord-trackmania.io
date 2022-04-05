@@ -33,7 +33,7 @@
     "easy-table": "^1.2.0",
     "mysql": "^2.18.1",
     "pretty-ms": "^7.0.1",
-    "trackmania.io": "^3.1.0"
+    "trackmania.io": "^3.1.0-dev.50422.deaa186"
   },
   "devDependencies": {
     "eslint": "^7.32.0",
