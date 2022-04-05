@@ -34,13 +34,12 @@ module.exports = async function(client, totd, tmio, sql) {
             if (!channel) return console.log(`❌ Impossible to fetch channel ${dataChannel.channelId} from guild ${dataChannel.guildId}`);
 
             let date = new Date(),
-                embed = new MessageEmbed({
-                    color: "GREEN",
-                    author: `Track of The Day - ${date.getDate()} ${monthsArray[date.getMonth()]} ${date.getFullYear()}`,
-                    name: tmio.formatTMText(map.name),
-                });
+                embed = new MessageEmbed();
 
-            embed.addField('Created by:', map.authorName, true)
+            embed.setColor('GREEN')
+                .setAuthor({name: `Track of The Day - ${date.getDate()} ${monthsArray[date.getMonth()]} ${date.getFullYear()}`})
+                .setTitle(tmio.formatTMText(map.name))
+                .addField('Created by:', map.authorName, true)
                 .addField('Medals:', `Author: **${ms(map.medalTimes.author, {colonNotation: true, secondsDecimalDigits: 3})}**\nGold: ${ms(map.medalTimes.gold, {colonNotation: true, secondsDecimalDigits: 3})}\nSilver: ${ms(map.medalTimes.silver, {colonNotation: true, secondsDecimalDigits: 3})}\nBronze: ${ms(map.medalTimes.bronze, {colonNotation: true, secondsDecimalDigits: 3})}`)
                 .addField('Uploaded:', `<t:${map.uploaded.getTime() / 1000}:R>`, true)
                 .setFooter({text: `Map UID: ${map.uid}`})
