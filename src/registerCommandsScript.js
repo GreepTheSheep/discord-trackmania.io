@@ -1,7 +1,7 @@
 require('dotenv').config();
 const { REST } = require('@discordjs/rest'),
     Builder = require('@discordjs/builders'),
-    { Routes } = require('discord-api-types/v9'),
+    { Routes, ChannelType } = require('discord-api-types/v9'),
     rest = new REST({ version: '9' }).setToken(process.env.DISCORD_TOKEN),
     Command = require('./structures/Command');
 
@@ -57,6 +57,10 @@ async function registerCommands(guildId, userId, commands) {
                             .setName(arg.name)
                             .setDescription(arg.description ? arg.description : 'No description for this argument')
                             .setRequired(arg.required);
+
+                        if (arg.channelTypes && arg.channelTypes.length > 0) {
+                            arg.channelTypes.forEach(channelType => slashCommandOption.addChannelType(typeof channelType == 'string' ? ChannelType[channelType] : channelType));
+                        }
 
                         if (arg.choices && arg.choices.length > 0) {
                             arg.choices.forEach(choice => slashCommandOption.addChannelType(choice.value));

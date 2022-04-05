@@ -1,4 +1,5 @@
 /** @type {categoryInfo[]} */
+const { ChannelType } = require('discord-api-types/v9');
 const categoryInfos = require('../commands/categoryInfo.json');
 
 class Command {
@@ -56,6 +57,7 @@ module.exports = Command;
  * @property {commandArgsType} type The type of the argument
  * @property {?commandArgsChoice[]} choices The choice of the argument
  * @property {boolean} required Whether the argument is required or not
+ * @property {?Array<string | ChannelType>} channelTypes The channel types of the argument (if argument type is channel)
  */
 
 /**
