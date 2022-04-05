@@ -38,46 +38,49 @@ exports.args = [
  * @param {MySQL.Connection} sql
  */
 exports.execute = async (interaction, tmio, commands, sql) => {
-    let typedPlayer = interaction.options.getString('player');
+    let typedPlayer = interaction.options.getString('player'),
+        player;
 
     await interaction.deferReply({
         ephemeral: true
     });
 
-    if (!typedPlayer) {
-        try {
-            typedPlayer = await new Promise(async (resolve, reject) => {
-                if (sql != null) {
-                    sql.query("SELECT * FROM `players` WHERE `discordId` = ?", [interaction.user.id], async (err, result) => {
-                        if (err) {
-                            console.error(err);
-                            return reject("An error occured while querying the database.");
-                        }
-                        if (result.length < 1) {
-                            return reject("You are not registered. Please use `/register` to register yourself.");
-                        }
-                        return resolve(result[0].accountId);
-                    });
-                } else return reject("No database connection.");
-            })
-        } catch (err) {
-            return interaction.editReply({
-                content: err
-            });
-        }
-    }
-
     try {
-        const players = await tmio.players.search(typedPlayer);
+        if (!typedPlayer) {
+            try {
+                let playerIdFromDb = await new Promise(async (resolve, reject) => {
+                    if (sql != null) {
+                        sql.query("SELECT * FROM `players` WHERE `discordId` = ?", [interaction.user.id], async (err, result) => {
+                            if (err) {
+                                console.error(err);
+                                return reject("An error occured while querying the database.");
+                            }
+                            if (result.length < 1) {
+                                return reject("You are not registered. Please use `/register` to register yourself.");
+                            }
+                            return resolve(result[0].accountId);
+                        });
+                    } else return reject("No database connection.");
+                });
+                player = await tmio.players.get(playerIdFromDb);
+            } catch (err) {
+                return interaction.editReply({
+                    content: err
+                });
+            }
+        } else {
+            const players = await tmio.players.search(typedPlayer);
 
-        if (players.length < 1) {
-            return interaction.editReply({
-                content: "No player found with that name.",
-            });
+            if (players.length < 1) {
+                return interaction.editReply({
+                    content: "No player found with that name.",
+                });
+            }
+
+            player = await players[0].player();
         }
 
-        const player = await players[0].player(),
-            embed = renderPlayerInfoEmbed(tmio, player),
+        const embed = renderPlayerInfoEmbed(tmio, player),
             interactionComponentRows = [new MessageActionRow()];
 
         interactionComponentRows[0].addComponents(
