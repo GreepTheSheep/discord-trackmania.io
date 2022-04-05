@@ -35,19 +35,20 @@ exports.args = [];
  * @param {MySQL.Connection} sql
  */
 exports.execute = async (interaction, tmio, commands, sql) => {
+    await interaction.deferReply({ephemeral:true});
     try {
         const Campaign = await tmio.campaigns.currentSeason(),
             RenderEmbeds = await campaignCmd.renderCampaignEmbed(Campaign, tmio),
             embed = RenderEmbeds.embed,
             interactionComponentRows = RenderEmbeds.interactionComponentRows;
 
-        interaction.reply({
+        interaction.editReply({
             ephemeral: true,
             embeds: [embed],
             components: interactionComponentRows
         });
     } catch (e) {
-        interaction.reply({
+        interaction.editReply({
             content: 'Error: ' + e,
             ephemeral: true
         });
