@@ -98,6 +98,15 @@ client.on('interactionCreate', async interaction => {
     }
 });
 
+client.on('guildCreate', guild=>{
+    console.log('📌 New guild joined: ' + guild.name);
+    require('./registerCommandsScript')(guild.id, client.user.id, commands);
+});
+
+client.on('guildDelete', guild=>{
+    console.log('📌 Guild left: ' + guild.name);
+});
+
 tmio.on('totd', totd=>{
     require('./events/totd')(client, totd, tmio, sql);
 });
