@@ -46,7 +46,9 @@ exports.execute = async (interaction, tmio, commands, sql) => {
     let embed = new MessageEmbed()
         .setTitle(ad.name)
         .setDescription(ad.url)
-        .setImage(ad.image);
+        .setImage(ad.image)
+        .setThumbnail(ad.verticalImage)
+        .setFooter({text: ad.uid});
 
     // create 2 interaction rows (button or select menus)
     const interactionComponentRows = [];
@@ -91,7 +93,9 @@ exports.executeButton = async (interaction, buttonId, argument, tmio, commands, 
         let embed = new MessageEmbed()
             .setTitle(ad.name)
             .setDescription(ad.url)
-            .setImage(ad.image);
+            .setImage(ad.image)
+            .setThumbnail(ad.verticalImage)
+            .setFooter({text: ad.uid});
         interaction.update({
             embeds: [embed]
         });
@@ -103,7 +107,9 @@ exports.executeButton = async (interaction, buttonId, argument, tmio, commands, 
         let embed = new MessageEmbed()
             .setTitle(ad.name)
             .setDescription(ad.url)
-            .setImage(ad.image);
+            .setImage(ad.image)
+            .setThumbnail(ad.verticalImage)
+            .setFooter({text: ad.uid});
         interaction.update({
             embeds: [embed]
         });
