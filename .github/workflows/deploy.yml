@@ -14,6 +14,7 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           password: ${{ secrets.SERVER_PASS }}
           port: ${{ secrets.SERVER_PORT }}
+          script_stop: true
           script: |
             cd ${{ secrets.SERVER_PATH }}
             git pull
