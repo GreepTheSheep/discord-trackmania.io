@@ -24,12 +24,12 @@ module.exports = async function(client, totd, tmio, sql) {
                 resolve(res);
             }
         });
-    }).catch(err=>{return console.error});
+    }).catch(err=>{return console.error;});
 
     dataChannels.forEach(async dataChannel=>{
         try {
             let guild = await client.guilds.fetch(dataChannel.guildId);
-            if (!guild) return
+            if (!guild) return;
             let channel = await guild.channels.fetch(dataChannel.channelId);
             if (!channel) return console.log(`❌ Impossible to fetch channel ${dataChannel.channelId} from guild ${dataChannel.guildId}`);
 
@@ -55,27 +55,27 @@ module.exports = async function(client, totd, tmio, sql) {
                     .setCustomId('totd_totd-leaderboard_'+map.uid)
                     .setLabel('Leaderboard')
                     .setStyle('PRIMARY')
-                );
+            );
 
             interactionComponentRows[0].addComponents(
                 new MessageButton()
                     .setURL(map.url)
                     .setLabel('Download Map')
                     .setStyle('LINK')
-                );
+            );
             interactionComponentRows[0].addComponents(
                 new MessageButton()
                     .setURL(`https://trackmania.io/#/totd/leaderboard/${totd.leaderboardId}/${map.uid}`)
                     .setLabel('Trackmania.io')
                     .setStyle('LINK')
-                );
+            );
             if (map.exchangeId) {
                 interactionComponentRows[0].addComponents(
                     new MessageButton()
                         .setURL(`https://trackmania.exchange/tracks/view/${map.exchangeId}`)
                         .setLabel('Trackmania.exchange')
                         .setStyle('LINK')
-                    );
+                );
             }
 
             if (channel.isText()) {
@@ -97,7 +97,7 @@ module.exports = async function(client, totd, tmio, sql) {
         }
     });
 
-}
+};
 
 /**
  * @typedef {Object} fetchedChannels

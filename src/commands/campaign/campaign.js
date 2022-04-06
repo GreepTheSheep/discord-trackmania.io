@@ -121,7 +121,7 @@ exports.executeButton = async (interaction, buttonId, argument, tmio, commands, 
                 .setLabel('⬆')
                 .setStyle('PRIMARY')
                 .setDisabled(leaderboardPosFromCampaignID[campaignId] == 0)
-            );
+        );
 
         interactionComponentRows[0].addComponents(
             new MessageButton()
@@ -129,7 +129,7 @@ exports.executeButton = async (interaction, buttonId, argument, tmio, commands, 
                 .setLabel('⬇')
                 .setStyle('PRIMARY')
                 .setDisabled(leaderboardPosFromCampaignID[campaignId] + rows >= campaign.leaderboard.length)
-            );
+        );
 
         if (leaderboardPosFromCampaignID[campaignId] + rows >= campaign.leaderboard.length) {
             interactionComponentRows[0].addComponents(
@@ -137,17 +137,17 @@ exports.executeButton = async (interaction, buttonId, argument, tmio, commands, 
                     .setURL('https://trackmania.io/#/campaigns/'+clubId+'/'+campaignId)
                     .setLabel('View on Trackmania.io')
                     .setStyle('LINK')
-                );
+            );
         }
 
         interaction.editReply({
             content: 'Top '+campaign.leaderboard.length+
                 ' on "' + campaign.name + '" ' +
                 '(page '+(Math.floor(leaderboardPosFromCampaignID[campaignId] / rows) +1) +'/'+Math.ceil(campaign.leaderboard.length / rows)+')'+
-                '\`\`\`'+table.toString()+
+                '```'+table.toString()+
                 ((Math.floor(leaderboardPosFromCampaignID[campaignId] / rows) + 1) == Math.ceil(campaign.leaderboard.length / rows) ?
-                '\nTo view more, open the leaderboard on Trackmania.io website': '')+
-                '\`\`\`',
+                    '\nTo view more, open the leaderboard on Trackmania.io website': '')+
+                '```',
             components: interactionComponentRows
         });
     }
@@ -177,76 +177,72 @@ exports.executeSelectMenu = async (interaction, categoryId, argument, tmio, comm
  */
 async function renderCampaignEmbed(campaign, tmio){
 
-    try {
-        let embed = new MessageEmbed(),
-            clubID = 0;
+    let embed = new MessageEmbed(),
+        clubID = 0;
 
-        if (!campaign.isOfficial) {
-            let club = await campaign.club();
-            clubID = club.id;
-            embed.addField('Club:', tmio.formatTMText(club.name), true)
-                .setImage(campaign.image);
-        } else {
-            embed.addField('Created by:', 'Nadeo', true);
-            const imageSeasons = {
-                "fall": "https://i.imgur.com/DX5XnQD.png",
-                "spring": "https://i.imgur.com/iQfwDqd.png",
-                "summer": "https://i.imgur.com/qmzR2zO.png",
-                "winter": "https://i.imgur.com/pSLKNwU.png"
-            };
-            Object.keys(imageSeasons).forEach(season => {
-                if (campaign.name.toLowerCase().includes(season)) {
-                    embed.setThumbnail(imageSeasons[season]);
-                }
-            });
-        }
+    if (!campaign.isOfficial) {
+        let club = await campaign.club();
+        clubID = club.id;
+        embed.addField('Club:', tmio.formatTMText(club.name), true)
+            .setImage(campaign.image);
+    } else {
+        embed.addField('Created by:', 'Nadeo', true);
+        const imageSeasons = {
+            "fall": "https://i.imgur.com/DX5XnQD.png",
+            "spring": "https://i.imgur.com/iQfwDqd.png",
+            "summer": "https://i.imgur.com/qmzR2zO.png",
+            "winter": "https://i.imgur.com/pSLKNwU.png"
+        };
+        Object.keys(imageSeasons).forEach(season => {
+            if (campaign.name.toLowerCase().includes(season)) {
+                embed.setThumbnail(imageSeasons[season]);
+            }
+        });
+    }
 
-        embed.setColor('#9B850E')
+    embed.setColor('#9B850E')
         .setTitle(tmio.formatTMText(campaign.name))
         .addField('Maps number:', `${campaign.mapCount} maps`, true)
         .setFooter({text: `Leaderboard UID: ${campaign.leaderboardId}`});
 
-        const interactionComponentRows = [];
-        for (let i = 0; i < 2; i++) {
-            interactionComponentRows.push(new MessageActionRow());
-        }
-
-        interactionComponentRows[0].addComponents(
-            new MessageButton()
-                .setCustomId('campaign_leaderboard_'+clubID+'-'+campaign.id)
-                .setLabel('Campaign leaderboard')
-                .setStyle('PRIMARY')
-        );
-        interactionComponentRows[0].addComponents(
-            new MessageButton()
-                .setURL(`https://trackmania.io/#/campaigns/${clubID}/${campaign.id}`)
-                .setLabel('View on Trackmania.io')
-                .setStyle('LINK')
-        );
-
-        const selectOptions = [];
-        for (let i = 0; i < campaign.mapCount; i++) {
-            let mapFromCampaign = campaign._data.playlist[i];
-            selectOptions.push({
-                label: tmio.formatTMText(mapFromCampaign.name),
-                value: mapFromCampaign.mapUid
-            });
-        }
-
-        interactionComponentRows[1].addComponents(
-            new MessageSelectMenu()
-                .setCustomId('campaign_selectMap')
-                .setPlaceholder('Select a map')
-                .addOptions(selectOptions)
-        );
-
-        return {
-            embed,
-            interactionComponentRows
-        }
-    } catch (e) {
-        throw e;
+    const interactionComponentRows = [];
+    for (let i = 0; i < 2; i++) {
+        interactionComponentRows.push(new MessageActionRow());
     }
+
+    interactionComponentRows[0].addComponents(
+        new MessageButton()
+            .setCustomId('campaign_leaderboard_'+clubID+'-'+campaign.id)
+            .setLabel('Campaign leaderboard')
+            .setStyle('PRIMARY')
+    );
+    interactionComponentRows[0].addComponents(
+        new MessageButton()
+            .setURL(`https://trackmania.io/#/campaigns/${clubID}/${campaign.id}`)
+            .setLabel('View on Trackmania.io')
+            .setStyle('LINK')
+    );
+
+    const selectOptions = [];
+    for (let i = 0; i < campaign.mapCount; i++) {
+        let mapFromCampaign = campaign._data.playlist[i];
+        selectOptions.push({
+            label: tmio.formatTMText(mapFromCampaign.name),
+            value: mapFromCampaign.mapUid
+        });
+    }
+
+    interactionComponentRows[1].addComponents(
+        new MessageSelectMenu()
+            .setCustomId('campaign_selectMap')
+            .setPlaceholder('Select a map')
+            .addOptions(selectOptions)
+    );
+
+    return {
+        embed,
+        interactionComponentRows
+    };
 }
 
 exports.renderCampaignEmbed = renderCampaignEmbed;

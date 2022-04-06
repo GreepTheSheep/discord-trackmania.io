@@ -1,13 +1,16 @@
-name: Lint and Deploy to Hosted server
+name: Lint
 on:
   push:
-    branches: [ main ]
+    branches-ignore:
+      - 'main'
+    tags:
+      - '*'
   workflow_dispatch:
 
 permissions: write-all
 
 jobs:
-  deploy:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - name: Declare commit sha variables
@@ -50,18 +53,3 @@ jobs:
         with:
           github_token: ${{ secrets.gh_token }}
           branch: ${{ github.ref }}
-
-      - name: Deploy
-        if: steps.check-changes.outputs.changed == 'false'
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SERVER_IP }}
-          username: ${{ secrets.SERVER_USER }}
-          password: ${{ secrets.SERVER_PASS }}
-          port: ${{ secrets.SERVER_PORT }}
-          script_stop: true
-          script: |
-            cd ${{ secrets.SERVER_PATH }}
-            git pull
-            npm i
-            pm2 restart pm2.config.js > /dev/null

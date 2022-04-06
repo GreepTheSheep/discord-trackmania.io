@@ -10,7 +10,7 @@
     },
     "rules": {
         "no-unused-vars": [
-            "ignore",
+            0,
             {
                 "args": "none"
             }

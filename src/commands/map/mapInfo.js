@@ -49,7 +49,7 @@ exports.execute = async (interaction, tmio, commands, sql, mapUid) => {
     try {
         let MapRenders;
         if (mapUid || !interaction.options) {
-            MapRenders = await renderMapEmbed(tmio, mapUid)
+            MapRenders = await renderMapEmbed(tmio, mapUid);
         } else {
             MapRenders = await renderMapEmbed(tmio, interaction.options.getString('uid'));
         }
@@ -103,7 +103,7 @@ exports.executeButton = async (interaction, buttonId, argument, tmio, commands, 
             if (leader.playerClubTag) table.cell('Club tag', tmio.formatTMText(leader.playerClubTag));
             table.cell('Player', leader.playerName);
             table.cell('Time', ms(leader.time, {colonNotation: true, secondsDecimalDigits: 3}));
-            if (i > 0) table.cell("Delta (from WR)", `(+${ms(leader.time - map.leaderboard[0].time, {colonNotation: true, secondsDecimalDigits: 3})})`)
+            if (i > 0) table.cell("Delta (from WR)", `(+${ms(leader.time - map.leaderboard[0].time, {colonNotation: true, secondsDecimalDigits: 3})})`);
             table.newRow();
         }
 
@@ -116,7 +116,7 @@ exports.executeButton = async (interaction, buttonId, argument, tmio, commands, 
                 .setLabel('⬆')
                 .setStyle('PRIMARY')
                 .setDisabled(leaderboardPosFromMapUID[argument] == 0)
-            );
+        );
 
         interactionComponentRows[0].addComponents(
             new MessageButton()
@@ -124,7 +124,7 @@ exports.executeButton = async (interaction, buttonId, argument, tmio, commands, 
                 .setLabel('⬇')
                 .setStyle('PRIMARY')
                 .setDisabled(leaderboardPosFromMapUID[argument] + rows >= map.leaderboard.length)
-            );
+        );
 
         if (leaderboardPosFromMapUID[argument] + rows >= map.leaderboard.length) {
             interactionComponentRows[0].addComponents(
@@ -132,17 +132,17 @@ exports.executeButton = async (interaction, buttonId, argument, tmio, commands, 
                     .setURL('https://trackmania.io/#/leaderboard/'+map.uid)
                     .setLabel('View on Trackmania.io')
                     .setStyle('LINK')
-                );
+            );
         }
 
         interaction.editReply({
             content: 'Top '+map.leaderboard.length+
                 ' on "' + tmio.formatTMText(map.name) + '" ' +
                 '(page '+(Math.floor(leaderboardPosFromMapUID[argument] / rows) +1) +'/'+Math.ceil(map.leaderboard.length / rows)+')'+
-                '\`\`\`'+table.toString()+
+                '```'+table.toString()+
                 ((Math.floor(leaderboardPosFromMapUID[argument] / rows) + 1) == Math.ceil(map.leaderboard.length / rows) ?
-                '\nTo view more, open the leaderboard on Trackmania.io website': '')+
-                '\`\`\`',
+                    '\nTo view more, open the leaderboard on Trackmania.io website': '')+
+                '```',
             components: interactionComponentRows
         });
     }
@@ -168,55 +168,55 @@ exports.executeSelectMenu = async (interaction, categoryId, argument, tmio, comm
  * @returns {Promise<Object<MessageEmbed, MessageActionRow>>}
  */
 async function renderMapEmbed(tmio, uid){
-    return new Promise(async (resolve, reject) => {
+    return new Promise((resolve, reject) => {
         let embed = new MessageEmbed();
 
         try {
-            const map = await tmio.maps.get(uid);
+            tmio.maps.get(uid).then(map => {
+                embed.setColor('GREEN')
+                    .setTitle(tmio.formatTMText(map.name))
+                    .addField('Created by:', map.authorName, true)
+                    .addField('Medals:', `Author: **${ms(map.medalTimes.author, {colonNotation: true, secondsDecimalDigits: 3})}**\nGold: ${ms(map.medalTimes.gold, {colonNotation: true, secondsDecimalDigits: 3})}\nSilver: ${ms(map.medalTimes.silver, {colonNotation: true, secondsDecimalDigits: 3})}\nBronze: ${ms(map.medalTimes.bronze, {colonNotation: true, secondsDecimalDigits: 3})}`)
+                    .addField('Uploaded:', `<t:${map.uploaded.getTime() / 1000}:R>`, true)
+                    .setFooter({text: `Map UID: ${map.uid}`})
+                    .setImage(map.thumbnailCached);
 
-            embed.setColor('GREEN')
-                .setTitle(tmio.formatTMText(map.name))
-                .addField('Created by:', map.authorName, true)
-                .addField('Medals:', `Author: **${ms(map.medalTimes.author, {colonNotation: true, secondsDecimalDigits: 3})}**\nGold: ${ms(map.medalTimes.gold, {colonNotation: true, secondsDecimalDigits: 3})}\nSilver: ${ms(map.medalTimes.silver, {colonNotation: true, secondsDecimalDigits: 3})}\nBronze: ${ms(map.medalTimes.bronze, {colonNotation: true, secondsDecimalDigits: 3})}`)
-                .addField('Uploaded:', `<t:${map.uploaded.getTime() / 1000}:R>`, true)
-                .setFooter({text: `Map UID: ${map.uid}`})
-                .setImage(map.thumbnailCached);
+                // create 2 interaction rows (button or select menus)
+                const interactionComponentRows = [];
+                interactionComponentRows.push(new MessageActionRow());
 
-            // create 2 interaction rows (button or select menus)
-            const interactionComponentRows = [];
-            interactionComponentRows.push(new MessageActionRow());
-
-            interactionComponentRows[0].addComponents(
-                new MessageButton()
-                    .setCustomId('map_map-leaderboard_'+map.uid)
-                    .setLabel('Leaderboard')
-                    .setStyle('PRIMARY')
-                );
-
-            interactionComponentRows[0].addComponents(
-                new MessageButton()
-                    .setURL(map.url)
-                    .setLabel('Download Map')
-                    .setStyle('LINK')
-                );
-            interactionComponentRows[0].addComponents(
-                new MessageButton()
-                    .setURL(`https://trackmania.io/#/leaderboard/${map.uid}`)
-                    .setLabel('Trackmania.io')
-                    .setStyle('LINK')
-                );
-            if (map.exchangeId) {
                 interactionComponentRows[0].addComponents(
                     new MessageButton()
-                        .setURL(`https://trackmania.exchange/tracks/view/${map.exchangeId}`)
-                        .setLabel('Trackmania.exchange')
-                        .setStyle('LINK')
-                    );
-            }
+                        .setCustomId('map_map-leaderboard_'+map.uid)
+                        .setLabel('Leaderboard')
+                        .setStyle('PRIMARY')
+                );
 
-            resolve({
-                embed,
-                interactionComponentRows
+                interactionComponentRows[0].addComponents(
+                    new MessageButton()
+                        .setURL(map.url)
+                        .setLabel('Download Map')
+                        .setStyle('LINK')
+                );
+                interactionComponentRows[0].addComponents(
+                    new MessageButton()
+                        .setURL(`https://trackmania.io/#/leaderboard/${map.uid}`)
+                        .setLabel('Trackmania.io')
+                        .setStyle('LINK')
+                );
+                if (map.exchangeId) {
+                    interactionComponentRows[0].addComponents(
+                        new MessageButton()
+                            .setURL(`https://trackmania.exchange/tracks/view/${map.exchangeId}`)
+                            .setLabel('Trackmania.exchange')
+                            .setStyle('LINK')
+                    );
+                }
+
+                resolve({
+                    embed,
+                    interactionComponentRows
+                });
             });
 
         } catch (e) {
