@@ -17,6 +17,7 @@ module.exports = {
         production: {
             user: process.env.SERVER_USER,
             host: process.env.SERVER_IP,
+            ssh_options: `-p ${process.env.SERVER_PORT}`,
             key: 'deploy.key',
             ref: 'origin/main',
             repo: package.repository.url,
