@@ -32,7 +32,7 @@ module.exports = function(client, tmio, commands) {
                     let leader = await map.leaderboardGet(1);
                     client.user.setActivity(`TOTD WR is at ${ms(leader.time, {colonNotation: true, secondsDecimalDigits: 3})} by ${leader.playerName}`, {type: 'WATCHING'});
                 }
-            })
+            });
         } else if (status == 'version') {
             const pkg = require('../../package.json');
             client.user.setActivity(`Version ${pkg.version} (lib: ${pkg.dependencies['trackmania.io'].replace('^', '')})`);
@@ -40,4 +40,4 @@ module.exports = function(client, tmio, commands) {
 
         activityIndex = (activityIndex+1)%activities.length;
     }, tmio.options.cache.roomttl*60*1000);
-}
+};

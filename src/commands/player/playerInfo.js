@@ -48,7 +48,7 @@ exports.execute = async (interaction, tmio, commands, sql) => {
     try {
         if (!typedPlayer) {
             try {
-                let playerIdFromDb = await new Promise(async (resolve, reject) => {
+                let playerIdFromDb = await new Promise((resolve, reject) => {
                     if (sql != null) {
                         sql.query("SELECT * FROM `players` WHERE `discordId` = ?", [interaction.user.id], async (err, result) => {
                             if (err) {
@@ -88,13 +88,13 @@ exports.execute = async (interaction, tmio, commands, sql) => {
                 .setCustomId(this.name+'_'+'cotd_'+player.login)
                 .setLabel('COTD stats')
                 .setStyle('PRIMARY')
-            );
+        );
         interactionComponentRows[0].addComponents(
             new MessageButton()
                 .setURL(player.meta.displayURL)
                 .setLabel('View on Trackmania.io')
                 .setStyle('LINK')
-            );
+        );
 
         interaction.editReply({
             embeds: [embed],
@@ -102,7 +102,7 @@ exports.execute = async (interaction, tmio, commands, sql) => {
         });
     } catch(err) {
         interaction.editReply("This interaction failed");
-        console.error(err)
+        console.error(err);
     }
 };
 
@@ -155,15 +155,15 @@ function renderPlayerInfoEmbed(tmio, player){
     let trophiesStr = "";
     let trophiesTotal = 0;
     for (var i = 0; i < player.trophies.trophies.length; i++){
-        if (player.trophies.trophies[i] != 0){
-            trophiesStr += `\n${i+1}: ${player.trophies.trophies[i]}`
+        if (player.trophies.trophies[i] != 0) {
+            trophiesStr += `\n${i+1}: ${player.trophies.trophies[i]}`;
             trophiesTotal += player.trophies.trophies[i];
         }
     }
 
     const embedColor = ["#1aa468", "#6b3511", "#c77e49", "#e89b6b", "#454545", "#6b6d6b", "#bebbbe", "#8a6100", "#d19500", "#ffd802"][player.trophies.echelon.number];
 
-    embed = new MessageEmbed()
+    let embed = new MessageEmbed()
         .setTitle((player.clubTag ? `[${tmio.formatTMText(player.clubTag)}] `:"") + player.name)
         .setColor(embedColor)
         .setThumbnail(player.trophies.echelon.image)
@@ -177,7 +177,7 @@ function renderPlayerInfoEmbed(tmio, player){
         .setFooter({text:player.id});
 
     if (player.meta.inNadeo || player.meta.inTMGL || player.meta.inTMIOTeam || player.meta.isSponsor || player.id == "26d9a7de-4067-4926-9d93-2fe62cd869fc")
-        embed.addField("Part of:", `${player.meta.inNadeo ? '- Nadeo Team\n' : ''}${player.meta.inTMGL ? '- Trackmania Grand League\n' : ''}${player.meta.inTMIOTeam ? '- Openplanet Team\n' : ''}${player.id == "26d9a7de-4067-4926-9d93-2fe62cd869fc" ? '- Trackmania.io Discord bot developer\n' : ''}${player.meta.isSponsor ? '- Trackmania.io / Openplanet Sponsor\n' : ''}`)
+        embed.addField("Part of:", `${player.meta.inNadeo ? '- Nadeo Team\n' : ''}${player.meta.inTMGL ? '- Trackmania Grand League\n' : ''}${player.meta.inTMIOTeam ? '- Openplanet Team\n' : ''}${player.id == "26d9a7de-4067-4926-9d93-2fe62cd869fc" ? '- Trackmania.io Discord bot developer\n' : ''}${player.meta.isSponsor ? '- Trackmania.io / Openplanet Sponsor\n' : ''}`);
 
     if (player.meta.twitch || player.meta.youtube || player.meta.twitter)
         embed.addField("Links:", (player.meta.twitch?`- [Twitch](${player.meta.twitch})\n`:"")+(player.meta.youtube?`- [Youtube](${player.meta.youtube})\n`:"")+(player.meta.twitter?`- [Twitter](${player.meta.twitter})`:""));
@@ -201,8 +201,8 @@ function renderPlayerCOTDStats(tmio, player){
             .addField('Average Rank', `**Average Div Rank**: ${Math.round(cotd.stats.averageDivRank * 64)} ||*(the position, with a base of 64 players in a div.)*||\n**Overall**: ${(cotd.stats.averageRank * 100).toFixed(0)}% ||*('top percentage', lower is better)*||`)
             .addField('Average Division', ''+Math.round(cotd.stats.averageDiv), true)
             .addField('Primary COTD', `**Best rank** (position): ${cotd.stats.bestPrimary.rank} (<t:${cotd.stats.bestPrimary.rankDate.getTime() / 1000}:R>)\n**Best division**: ${cotd.stats.bestPrimary.division} (Rank: ${cotd.stats.bestPrimary.divRank}, <t:${cotd.stats.bestPrimary.divisionDate.getTime() / 1000}:R>)\n**Best Div Rank**: ${cotd.stats.bestPrimary.rankInDivision} (Division ${cotd.stats.bestPrimary.divisionOfRankInDivision}, <t:${cotd.stats.bestPrimary.rankDate.getTime() / 1000}:R>)`)
-            .addField('Overall COTD', `**Best rank** (position): ${cotd.stats.bestOverall.rank} (<t:${cotd.stats.bestOverall.rankDate.getTime() / 1000}:R>)\n**Best division**: ${cotd.stats.bestOverall.division} (Rank: ${cotd.stats.bestOverall.divRank}, <t:${cotd.stats.bestOverall.divisionDate.getTime() / 1000}:R>)\n**Best Div Rank**: ${cotd.stats.bestOverall.rankInDivision} (Division ${cotd.stats.bestOverall.divisionOfRankInDivision}, <t:${cotd.stats.bestOverall.rankDate.getTime() / 1000}:R>)`)
+            .addField('Overall COTD', `**Best rank** (position): ${cotd.stats.bestOverall.rank} (<t:${cotd.stats.bestOverall.rankDate.getTime() / 1000}:R>)\n**Best division**: ${cotd.stats.bestOverall.division} (Rank: ${cotd.stats.bestOverall.divRank}, <t:${cotd.stats.bestOverall.divisionDate.getTime() / 1000}:R>)\n**Best Div Rank**: ${cotd.stats.bestOverall.rankInDivision} (Division ${cotd.stats.bestOverall.divisionOfRankInDivision}, <t:${cotd.stats.bestOverall.rankDate.getTime() / 1000}:R>)`);
     }).catch(err=>{
-        throw err
+        throw err;
     });
 }

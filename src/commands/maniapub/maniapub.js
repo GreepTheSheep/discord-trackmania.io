@@ -58,17 +58,17 @@ exports.execute = async (interaction, tmio, commands, sql) => {
 
     // Add 2 button to the message in the first row
     interactionComponentRows[0].addComponents(
-            new MessageButton()
-                .setCustomId(this.name+'_'+'button-prev')
-                .setLabel('⬅')
-                .setStyle('PRIMARY')
-        );
+        new MessageButton()
+            .setCustomId(this.name+'_'+'button-prev')
+            .setLabel('⬅')
+            .setStyle('PRIMARY')
+    );
     interactionComponentRows[0].addComponents(
-            new MessageButton()
-                .setCustomId(this.name+'_'+'button-next')
-                .setLabel('➡')
-                .setStyle('PRIMARY')
-        );
+        new MessageButton()
+            .setCustomId(this.name+'_'+'button-next')
+            .setLabel('➡')
+            .setStyle('PRIMARY')
+    );
 
     interaction.editReply({
         embeds: [embed],

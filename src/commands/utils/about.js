@@ -64,13 +64,13 @@ exports.execute = async (interaction, tmio, commands, sql) => {
             .setURL(`https://discord.com/api/oauth2/authorize?client_id=${interaction.client.user.id}&permissions=397888841808&scope=bot%20applications.commands`)
             .setLabel('Invite the bot to your server!')
             .setStyle('LINK')
-        );
+    );
     interactionComponentRows[0].addComponents(
         new MessageButton()
             .setURL('https://github.com/GreepTheSheep/discord-trackmania.io')
             .setLabel('See the repository')
             .setStyle('LINK')
-        );
+    );
 
     interaction.reply({
         embeds: [embed],
