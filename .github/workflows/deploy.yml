@@ -7,15 +7,15 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
       - name: Deploy
-        uses: Techie-Pi/node-vps-deployment@main
+        uses: appleboy/ssh-action@master
         with:
-          remote-path: ${{ secrets.SERVER_PATH }}
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USER }}
-          port: ${{ secrets.SERVER_PORT }}
           password: ${{ secrets.SERVER_PASS }}
-          pm2-id: "pm2.config.js"
+          port: ${{ secrets.SERVER_PORT }}
+          script: |
+            cd ${{ secrets.SERVER_PATH }}
+            git pull
+            npm i
+            pm2 restart pm2.config.js
