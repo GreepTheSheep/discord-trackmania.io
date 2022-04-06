@@ -6,8 +6,7 @@
   "main": "src/index.js",
   "scripts": {
     "start": "node .",
-    "dev": "nodemon --delay 10 .",
-    "deploy": "pm2 deploy pm2.config.js staging"
+    "dev": "nodemon --delay 10 ."
   },
   "repository": {
     "type": "git",
@@ -33,7 +32,6 @@
     "dotenv": "^10.0.0",
     "easy-table": "^1.2.0",
     "mysql": "^2.18.1",
-    "pm2": "^5.2.0",
     "pretty-ms": "^7.0.1",
     "trackmania.io": "^3.1.0-dev.50422.deaa186"
   },
