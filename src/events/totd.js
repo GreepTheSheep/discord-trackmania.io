@@ -79,11 +79,18 @@ module.exports = async function(client, totd, tmio, sql) {
             }
 
             if (channel.isText()) {
-                channel.send({
-                    embeds: [embed],
-                    content: dataChannel.roleId ? `<@&${dataChannel.roleId}>` : '',
-                    components: interactionComponentRows
-                })
+                if (dataChannel.roleId){
+                    channel.send({
+                        embeds: [embed],
+                        content: `<@&${dataChannel.roleId}>`,
+                        components: interactionComponentRows
+                    });
+                } else {
+                    channel.send({
+                        embeds: [embed],
+                        components: interactionComponentRows
+                    });
+                }
             }
         } catch (err) {
             console.error(err);
