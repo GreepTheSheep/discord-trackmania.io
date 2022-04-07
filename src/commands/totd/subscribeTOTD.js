@@ -67,7 +67,18 @@ exports.execute = async (interaction, tmio, commands, sql) => {
 
     let roleId = role ? role.id : null;
 
-    sql.query("UPSERT INTO `totd_channels` (userId, guildId, channelId, roleId, threads) VALUES (?, ?, ?, ?, ?)", [interaction.member.id, interaction.guild.id, channel.id, roleId, threads], (err, result) => {
+    sql.query(`INSERT INTO totd_channels (userId, guildId, channelId, roleId, threads) VALUES (?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE channelId = ?, roleId = ?, threads = ?`, [
+        interaction.member.id,
+        interaction.guild.id,
+        channel.id,
+        roleId,
+        threads,
+
+        // Duplicate key
+        channel.id,
+        roleId,
+        threads
+    ], (err, result) => {
         if (err) {
             console.error(err);
             return interaction.editReply({
@@ -80,7 +91,7 @@ exports.execute = async (interaction, tmio, commands, sql) => {
             });
         } else {
             interaction.editReply({
-                content: `✅ Channel has been registered to <#${channel.id}> ${roleId ? `with role mention <@&${roleId}>` : 'with no role mention'}.`,
+                content: `✅ Channel has been registered to <#${channel.id}> ${roleId ? `with role mention <@&${roleId}>` : 'with no role mention'}. ${threads ? 'Threads will be created for each TOTD.' : ''}`,
             });
         }
     });
