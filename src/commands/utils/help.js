@@ -99,13 +99,22 @@ function generateCategorySelectMenu(commands){
     const categories = commandsCategories(commands),
         selectOptions = [];
 
+    let hasUncategorized = false;
+
     categories.forEach(category => {
-        selectOptions.push({
+        if (category) selectOptions.push({
             label: category.name,
             description: category.description ? category.description : "",
             value: category.dir ? category.dir : category.name.toLowerCase(),
             emoji: category.emoji ? category.emoji : ""
         });
+        else hasUncategorized = true;
+    });
+
+    if (hasUncategorized) selectOptions.push({
+        label: "Uncategorized",
+        value: "uncategorized",
+        emoji: "❔"
     });
 
     return new MessageSelectMenu()
@@ -124,7 +133,7 @@ function embedCategories(commands){
         categories = commandsCategories(commands);
 
     categories.forEach(category => {
-        embed.addField((category.emoji ? category.emoji+" " : "") + category.name, `${category.description}\n\`/help ${category.dir}\``, true);
+        if (category) embed.addField((category.emoji ? category.emoji+" " : "") + category.name, `${category.description}\n\`/help ${category.dir}\``, true);
     });
 
     return embed;
@@ -136,18 +145,32 @@ function embedCategories(commands){
  * @param {Command[]} commands The full list of commands
  */
 function embedCommands(categoryDir, commands){
-    const category = commands.find(c=>c.category.dir.toLowerCase() === categoryDir.toLowerCase()).category,
-        commandsInCategory = commands.filter(command => command.category === category),
-        embed = new MessageEmbed().setColor('RANDOM').setTitle((category.emoji ? category.emoji + " ": "") + category.name);
+    if (categoryDir == 'uncategorized') {
+        const commandsInCategory = commands.filter(c => c.category == undefined),
+            embed = new MessageEmbed().setColor('RANDOM').setTitle('Uncategorized commands');
 
-    if (commandsInCategory.length === 0) embed.setColor("#FF0000").setTitle('No commands found');
-    else {
-        for (const command of commandsInCategory) {
-            embed.addField(`\`/${command.name}\``, command.description, true);
+        if (commandsInCategory.length === 0) embed.setColor("#FF0000").setTitle('No commands found');
+        else {
+            for (const command of commandsInCategory) {
+                embed.addField(`\`/${command.name}\``, command.description, true);
+            }
         }
-    }
 
-    return embed;
+        return embed;
+    } else {
+        const category = commands.find(c=>c.category.dir.toLowerCase() === categoryDir.toLowerCase()).category,
+            commandsInCategory = commands.filter(command => command.category === category),
+            embed = new MessageEmbed().setColor('RANDOM').setTitle((category.emoji ? category.emoji + " ": "") + category.name);
+
+        if (commandsInCategory.length === 0) embed.setColor("#FF0000").setTitle('No commands found');
+        else {
+            for (const command of commandsInCategory) {
+                embed.addField(`\`/${command.name}\``, command.description, true);
+            }
+        }
+
+        return embed;
+    }
 }
 
 /**
