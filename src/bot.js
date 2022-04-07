@@ -108,7 +108,7 @@ client.on('guildDelete', guild=>{
 });
 
 tmio.on('totd', totd=>{
-    require('./events/totd')(client, totd, tmio, sql);
+    require('./events/totd').routine(client, totd, tmio, sql);
 });
 
 tmio.on('apiRequest', request=>{
