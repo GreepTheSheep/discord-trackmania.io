@@ -28,5 +28,11 @@
         "dir": "utils",
         "description": "Bot utilities commands",
         "emoji": "🔧"
+    },
+    {
+        "name": "Bot Owner",
+        "dir": "owner",
+        "description": "If you see this, you're the boss",
+        "emoji": "🧑‍💻"
     }
 ]

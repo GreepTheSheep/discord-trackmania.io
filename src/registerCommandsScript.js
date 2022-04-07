@@ -30,7 +30,9 @@ async function registerCommands(guildId, userId, commands) {
                             .setRequired(arg.required);
 
                         if (arg.choices && arg.choices.length > 0) {
-                            arg.choices.forEach(choice => slashCommandOption.addChoice(choice.name, choice.value));
+                            arg.choices.forEach(choice => {
+                                if (choice) slashCommandOption.addChoice(choice.name, choice.value);
+                            });
                         }
 
                         slashCommand.addStringOption(slashCommandOption);
