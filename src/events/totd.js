@@ -17,7 +17,7 @@ module.exports = async function(client, totd, tmio, sql) {
      * @type {Array<fetchedChannels>}
      */
     let dataChannels = await new Promise((resolve, reject)=>{
-        sql.query("SELECT guildId, channelId, roleId FROM `totd_channels`", (err, res)=>{
+        sql.query("SELECT guildId, channelId, roleId, threads FROM `totd_channels`", (err, res)=>{
             if (err){
                 reject(err);
             } else {
@@ -79,16 +79,27 @@ module.exports = async function(client, totd, tmio, sql) {
             }
 
             if (channel.isText()) {
+                let message;
+
                 if (dataChannel.roleId){
-                    channel.send({
+                    message = await channel.send({
                         embeds: [embed],
                         content: `<@&${dataChannel.roleId}>`,
                         components: interactionComponentRows
                     });
                 } else {
-                    channel.send({
+                    message = await channel.send({
                         embeds: [embed],
                         components: interactionComponentRows
+                    });
+                }
+
+                if (dataChannel.threads) {
+                    channel.threads.create({
+                        startMessage: message,
+                        reason: 'New Track of the Day: ' + tmio.formatTMText(map.name),
+                        name: '[TOTD] '+ new Date().toLocaleDateString() + ', ' + tmio.formatTMText(map.name),
+                        autoArchiveDuration: 1440
                     });
                 }
             }
@@ -104,4 +115,5 @@ module.exports = async function(client, totd, tmio, sql) {
  * @property {string} guildId
  * @property {string} channelId
  * @property {?string} roleId
+ * @property {boolean} threads
  */
