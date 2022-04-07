@@ -82,7 +82,7 @@ exports.sendTOTD = async function(dataChannel, client, tmio, map, totd){
                 channel.threads.create({
                     startMessage: message,
                     reason: 'New Track of the Day: ' + tmio.formatTMText(map.name),
-                    name: '[TOTD] '+ new Date().toLocaleDateString() + ', ' + tmio.formatTMText(map.name),
+                    name: '[TOTD] '+ new Date().toLocaleDateString().replace(/\//gmi,'-') + ', ' + tmio.formatTMText(map.name) + ' by ' + map.authorName,
                     autoArchiveDuration: 1440
                 });
             }

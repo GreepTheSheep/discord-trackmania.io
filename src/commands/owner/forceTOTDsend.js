@@ -41,8 +41,8 @@ exports.execute = async (interaction, tmio, commands, sql) => {
     });
     await interaction.deferReply({ephemeral:true});
 
-    const totd = tmio.totd.get(new Date()),
-        map = totd.map(),
+    const totd = await tmio.totd.get(new Date()),
+        map = await totd.map(),
         dataChannel = await new Promise((resolve, reject)=>{
             sql.query("SELECT guildId, channelId, roleId, threads FROM `totd_channels` WHERE guildId = ?", [interaction.guild.id], (err, res)=>{
                 if (err){
@@ -55,10 +55,9 @@ exports.execute = async (interaction, tmio, commands, sql) => {
 
     require('../../events/totd').sendTOTD(dataChannel, interaction.client, tmio, map, totd);
 
-    // interaction.reply({
-    //     content: 'hey! ' + question,
-    //     components: interactionComponentRows
-    // });
+    interaction.editReply({
+        content: 'Successfully sent TOTD event',
+    });
 };
 
 /**
