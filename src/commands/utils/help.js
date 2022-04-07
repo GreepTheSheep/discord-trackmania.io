@@ -158,7 +158,7 @@ function embedCommands(categoryDir, commands){
 
         return embed;
     } else {
-        const category = commands.find(c=>c.category.dir.toLowerCase() === categoryDir.toLowerCase()).category,
+        const category = commands.filter(c=>c.category != undefined).find(c=>c.category.dir.toLowerCase() === categoryDir.toLowerCase()).category,
             commandsInCategory = commands.filter(command => command.category === category),
             embed = new MessageEmbed().setColor('RANDOM').setTitle((category.emoji ? category.emoji + " ": "") + category.name);
 
