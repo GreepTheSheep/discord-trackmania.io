@@ -1,5 +1,5 @@
-const Command = require('../structures/Command'),
-    {MessageEmbed, CommandInteraction, SelectMenuInteraction, Message} = require('discord.js'),
+const Command = require('../../structures/Command'),
+    {MessageEmbed, CommandInteraction, SelectMenuInteraction, Message, MessageActionRow, MessageButton, MessageSelectMenu} = require('discord.js'),
     MySQL = require('mysql');
 
 /**
@@ -58,17 +58,17 @@ exports.execute = async (interaction, tmio, commands, sql) => {
 
     // Add 2 button to the message in the first row
     interactionComponentRows[0].addComponents(
-            new MessageButton()
-                .setCustomId(this.name+'_'+'button-primary')
-                .setLabel('Primary')
-                .setStyle('PRIMARY')
-        );
+        new MessageButton()
+            .setCustomId(this.name+'_'+'button-primary')
+            .setLabel('Primary')
+            .setStyle('PRIMARY')
+    );
     interactionComponentRows[0].addComponents(
         new MessageButton()
             .setURL('https://tmio.greep.gq')
             .setLabel('TMIO')
             .setStyle('LINK')
-        );
+    );
 
     // adds a select menu to the message in the second row
     interactionComponentRows[1].addComponents(
