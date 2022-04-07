@@ -7,7 +7,7 @@
     "scripts": {
         "start": "node .",
         "lint": "eslint src --fix",
-        "dev": "nodemon --delay 10 ."
+        "dev": "nodemon src/bot.js"
     },
     "engines": {
         "node": ">=16.6"
