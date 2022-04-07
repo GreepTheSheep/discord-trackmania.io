@@ -23,6 +23,7 @@ exports.args = [
         type: 'string',
         required: false,
         choices: categoryInfos.map(c=>{
+            if (c.dir === "owner") return null;
             return {
                 name: c.name,
                 value: c.dir
@@ -44,7 +45,7 @@ exports.execute = async (interaction, tmio, commands, sql) => {
     if (categoryTyped == null) {
         embed = embedCategories(commands);
 
-        const categoriesSelectMenu = new MessageActionRow().addComponents(generateCategorySelectMenu(commands));
+        const categoriesSelectMenu = new MessageActionRow().addComponents(generateCategorySelectMenu(interaction, commands));
 
         interaction.reply({
             embeds: [embed],
@@ -92,22 +93,27 @@ exports.executeSelectMenu = async (interaction, categoryId, argument, tmio, comm
 
 /**
  * Generate a MessageSelectMenu of categories of commands
+ * @param {CommandInteraction} interaction
  * @param {Command[]} commands The list of commands
  * @returns {MessageSelectMenu}
  */
-function generateCategorySelectMenu(commands){
+function generateCategorySelectMenu(interaction, commands){
     const categories = commandsCategories(commands),
         selectOptions = [];
 
     let hasUncategorized = false;
 
     categories.forEach(category => {
-        if (category) selectOptions.push({
-            label: category.name,
-            description: category.description ? category.description : "",
-            value: category.dir ? category.dir : category.name.toLowerCase(),
-            emoji: category.emoji ? category.emoji : ""
-        });
+        if (category) {
+            if (category.dir === "owner" && interaction.member.id !== process.env.OWNER_ID) return;
+
+            selectOptions.push({
+                label: category.name,
+                description: category.description ? category.description : "",
+                value: category.dir ? category.dir : category.name.toLowerCase(),
+                emoji: category.emoji ? category.emoji : ""
+            });
+        }
         else hasUncategorized = true;
     });
 
