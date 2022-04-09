@@ -1,7 +1,7 @@
 # discord-trackmania.io
  A discord.js bot that uses [node-trackmania.io](https://github.com/GreepTheSheep/node-trackmania.io)
 
-### [Invite the bot to your server](https://discordapp.com/oauth2/authorize?client_id=810191349214871583&scope=bot&permissions=604367952)
+### [Invite the bot to your server](https://discord.com/oauth2/authorize?client_id=810191349214871583&permissions=397888841808&scope=bot%20applications.commands)
 
 [![Trackmania.io icon](https://trackmania.io/img/square.png)](https://trackmania.io)
 
