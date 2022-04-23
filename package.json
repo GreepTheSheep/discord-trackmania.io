@@ -40,7 +40,7 @@
         "trackmania.io": "^3.1.0-dev.70422.3077edd"
     },
     "devDependencies": {
-        "eslint": "^8.13.0",
+        "eslint": "^8.14.0",
         "nodemon": "^2.0.15"
     }
 }
