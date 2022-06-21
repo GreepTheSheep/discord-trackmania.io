@@ -22,7 +22,7 @@ exports.sendTOTD = async function(dataChannel, client, tmio, map, totd){
 
         embed.setColor('GREEN')
             .setAuthor({name: `Track of The Day - ${date.getDate()} ${monthsArray[date.getMonth()]} ${date.getFullYear()}`})
-            .setTitle(tmio.formatTMText(map.name))
+            .setTitle(tmio.stripFormat(map.name))
             .addField('Created by:', map.authorName, true)
             .addField('Medals:', `Author: **${ms(map.medalTimes.author, {colonNotation: true, secondsDecimalDigits: 3})}**\nGold: ${ms(map.medalTimes.gold, {colonNotation: true, secondsDecimalDigits: 3})}\nSilver: ${ms(map.medalTimes.silver, {colonNotation: true, secondsDecimalDigits: 3})}\nBronze: ${ms(map.medalTimes.bronze, {colonNotation: true, secondsDecimalDigits: 3})}`)
             .addField('Uploaded:', `<t:${map.uploaded.getTime() / 1000}:R>`, true)
@@ -81,8 +81,8 @@ exports.sendTOTD = async function(dataChannel, client, tmio, map, totd){
             if (dataChannel.threads) {
                 channel.threads.create({
                     startMessage: message,
-                    reason: 'New Track of the Day: ' + tmio.formatTMText(map.name),
-                    name: '[TOTD] '+ new Date().toLocaleDateString().replace(/\//gmi,'-') + ', ' + tmio.formatTMText(map.name) + ' by ' + map.authorName,
+                    reason: 'New Track of the Day: ' + tmio.stripFormat(map.name),
+                    name: '[TOTD] '+ new Date().toLocaleDateString().replace(/\//gmi,'-') + ', ' + tmio.stripFormat(map.name) + ' by ' + map.authorName,
                     autoArchiveDuration: 1440
                 });
             }

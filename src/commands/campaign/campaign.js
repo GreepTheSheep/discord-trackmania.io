@@ -183,7 +183,7 @@ async function renderCampaignEmbed(campaign, tmio){
     if (!campaign.isOfficial) {
         let club = await campaign.club();
         clubID = club.id;
-        embed.addField('Club:', tmio.formatTMText(club.name), true)
+        embed.addField('Club:', tmio.stripFormat(club.name), true)
             .setImage(campaign.image);
     } else {
         embed.addField('Created by:', 'Nadeo', true);
@@ -201,7 +201,7 @@ async function renderCampaignEmbed(campaign, tmio){
     }
 
     embed.setColor('#9B850E')
-        .setTitle(tmio.formatTMText(campaign.name))
+        .setTitle(tmio.stripFormat(campaign.name))
         .addField('Maps number:', `${campaign.mapCount} maps`, true)
         .setFooter({text: `Leaderboard UID: ${campaign.leaderboardId}`});
 
@@ -227,7 +227,7 @@ async function renderCampaignEmbed(campaign, tmio){
     for (let i = 0; i < campaign.mapCount; i++) {
         let mapFromCampaign = campaign._data.playlist[i];
         selectOptions.push({
-            label: tmio.formatTMText(mapFromCampaign.name),
+            label: tmio.stripFormat(mapFromCampaign.name),
             value: mapFromCampaign.mapUid
         });
     }

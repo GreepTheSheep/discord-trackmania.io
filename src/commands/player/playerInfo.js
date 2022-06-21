@@ -164,7 +164,7 @@ function renderPlayerInfoEmbed(tmio, player){
     const embedColor = ["#1aa468", "#6b3511", "#c77e49", "#e89b6b", "#454545", "#6b6d6b", "#bebbbe", "#8a6100", "#d19500", "#ffd802"][player.trophies.echelon.number];
 
     let embed = new MessageEmbed()
-        .setTitle((player.clubTag ? `[${tmio.formatTMText(player.clubTag)}] `:"") + player.name)
+        .setTitle((player.clubTag ? `[${tmio.stripFormat(player.clubTag)}] `:"") + player.name)
         .setColor(embedColor)
         .setThumbnail(player.trophies.echelon.image)
         .addField("Zone", player.zone.map(p=>p.name).join(', '))

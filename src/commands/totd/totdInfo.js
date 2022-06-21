@@ -116,7 +116,7 @@ exports.executeButton = async (interaction, buttonId, argument, tmio, commands, 
             if (i >= map.leaderboard.length) break;
             const leader = map.leaderboard[i];
             table.cell('Rank', i + 1);
-            if (leader.playerClubTag) table.cell('Club tag', tmio.formatTMText(leader.playerClubTag));
+            if (leader.playerClubTag) table.cell('Club tag', tmio.stripFormat(leader.playerClubTag));
             table.cell('Player', leader.playerName);
             table.cell('Time', ms(leader.time, {colonNotation: true, secondsDecimalDigits: 3}));
             if (i > 0) table.cell("Delta (from WR)", `(+${ms(leader.time - map.leaderboard[0].time, {colonNotation: true, secondsDecimalDigits: 3})})`);
@@ -153,7 +153,7 @@ exports.executeButton = async (interaction, buttonId, argument, tmio, commands, 
 
         interaction.editReply({
             content: 'Top '+map.leaderboard.length+
-                ' on "' + tmio.formatTMText(map.name) + '" ' +
+                ' on "' + tmio.stripFormat(map.name) + '" ' +
                 '(page '+(Math.floor(leaderboardPosFromMapUID[argument] / rows) +1) +'/'+Math.ceil(map.leaderboard.length / rows)+')'+
                 '```'+table.toString()+
                 ((Math.floor(leaderboardPosFromMapUID[argument] / rows) + 1) == Math.ceil(map.leaderboard.length / rows) ?
@@ -197,7 +197,7 @@ async function renderTOTDEmbed(tmio, month, day, year){
             tmio.totd.get(date).then(totd=>{
                 totd.map().then(map=>{
                     embed.setColor('GREEN').setAuthor({name: `Track of The Day - ${date.getDate()} ${monthsArray[date.getMonth()]} ${date.getFullYear()}`})
-                        .setTitle(tmio.formatTMText(map.name))
+                        .setTitle(tmio.stripFormat(map.name))
                         .addField('Created by:', map.authorName, true)
                         .addField('Medals:', `Author: **${ms(map.medalTimes.author, {colonNotation: true, secondsDecimalDigits: 3})}**\nGold: ${ms(map.medalTimes.gold, {colonNotation: true, secondsDecimalDigits: 3})}\nSilver: ${ms(map.medalTimes.silver, {colonNotation: true, secondsDecimalDigits: 3})}\nBronze: ${ms(map.medalTimes.bronze, {colonNotation: true, secondsDecimalDigits: 3})}`)
                         .addField('Uploaded:', `<t:${map.uploaded.getTime() / 1000}:R>`, true)
