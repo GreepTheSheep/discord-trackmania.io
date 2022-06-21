@@ -40,7 +40,7 @@ exports.execute = async (interaction, tmio, commands, sql) => {
         gitCommit = execSync('git rev-parse --short HEAD').toString().trim(),
         gitCommitDate = new Date(execSync('git show -s --format=%ci HEAD').toString().trim()),
         totalGuilds = interaction.client.shard ? (
-            interaction.client.shard.fetchClientValues('guilds.cache.size')
+            await interaction.client.shard.fetchClientValues('guilds.cache.size')
                 .then(res=>{
                     return res.reduce((acc, guildCount) => acc + guildCount, 0);
                 })
