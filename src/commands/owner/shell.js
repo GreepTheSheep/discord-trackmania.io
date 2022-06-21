@@ -52,6 +52,7 @@ exports.execute = async (interaction, tmio, commands, sql) => {
             resStr = stdout + stderr;
 
         if (resStr.length > 1950) {
+            if (!fs.existsSync('./logs')) fs.mkdirSync('./logs');
             fs.writeFileSync('./logs/shell.txt', `Command: ${code}\nOutput code: ${outCode}\n\nOutput: ${resStr}`);
             interaction.editReply({
                 content: 'Output too long, here is the output in a file',
