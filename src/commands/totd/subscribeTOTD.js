@@ -67,6 +67,8 @@ exports.execute = async (interaction, tmio, commands, sql) => {
 
     let roleId = role ? role.id : null;
 
+    if (threads == null) threads = false;
+
     sql.query(`INSERT INTO totd_channels (userId, guildId, channelId, roleId, threads) VALUES (?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE channelId = ?, roleId = ?, threads = ?`, [
         interaction.member.id,
         interaction.guild.id,
