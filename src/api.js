@@ -12,6 +12,8 @@ class API {
         this.port = Number(process.env.PORT) || 5000;
         /** @type {Array} */
         this.shards = [];
+        /** @type {boolean} */
+        this.isListening = false;
 
         this.app.use(bosyParser.json());
         this.app.use(logger('API Request: :remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"'));
@@ -57,23 +59,23 @@ class API {
     start() {
         this.app.listen(this.port, () => {
             console.log(`✅ API Listening on port ${this.port}`);
+            this.isListening = true;
         });
     }
 
     routes() {
         this.app.get('/', (req, res)=>{
             res.json({
-                resTimeMs: (Date.now() - req.startTime),
                 message: 'Bot is running',
-                shards: this.shards
+                shards: this.shards,
             });
         });
     }
 
     registerShard(shard) {
-        this.shards.push(shard.ids[0]);
+        this.shards.push(shard);
         console.log('☑ API: Added shard #' + shard.ids[0]);
     }
 }
 
-module.exports = API;
+module.exports = new API();
