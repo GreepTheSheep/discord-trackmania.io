@@ -7,6 +7,14 @@ const shard = new ShardingManager('./src/bot.js',{
     autoSpawn: true
 });
 
+let BotAPI = require('./api'),
+    api = new BotAPI();
+api.start();
+
 shard.spawn().catch(e=>console.error(e));
 
-shard.on('shardCreate', shard => console.log(`[SHARD] Shard ${shard.id} started`));
+shard.on('shardCreate', shard => {
+    console.log(`[SHARD] Shard ${shard.id} started`);
+});
+
+module.exports = api;

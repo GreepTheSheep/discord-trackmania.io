@@ -50,6 +50,15 @@ client.on('ready', async () => {
     });
 
     require('./events/botStatus')(client, tmio, commands);
+
+    if (!client.shard) {
+        let BotAPI = require('./api'),
+            api = new BotAPI();
+        api.start();
+    } else {
+        let api = require('./index');
+        api.registerShard(client.shard);
+    }
 });
 
 client.on('interactionCreate', async interaction => {
