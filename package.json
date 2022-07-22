@@ -1,6 +1,6 @@
 {
     "name": "discord-trackmania.io",
-    "version": "2.0.2",
+    "version": "2.0.3",
     "private": true,
     "description": "A discord bot that uses node-trackmania.io",
     "main": "src/index.js",
@@ -30,11 +30,11 @@
     "funding": "https://github.com/GreepTheSheep/discord-trackmania.io/?sponsor=1",
     "dependencies": {
         "@discordjs/builders": "^0.12.0",
-        "@discordjs/rest": "^0.5.0",
+        "@discordjs/rest": "^1.0.0",
         "body-parser": "^1.20.0",
         "cors": "^2.8.5",
-        "discord-api-types": "^0.36.0",
-        "discord.js": "^13.8.1",
+        "discord-api-types": "^0.36.3",
+        "discord.js": "^13.9.0",
         "dotenv": "^16.0.1",
         "easy-table": "^1.2.0",
         "express": "^4.18.1",
@@ -42,10 +42,10 @@
         "morgan": "^1.10.0",
         "mysql": "^2.18.1",
         "pretty-ms": "^7.0.1",
-        "trackmania.io": "^3.2.0"
+        "trackmania.io": "^3.2.1-dev.220722.9c73aca"
     },
     "devDependencies": {
-        "eslint": "^8.18.0",
-        "nodemon": "^2.0.18"
+        "eslint": "^8.20.0",
+        "nodemon": "^2.0.19"
     }
 }
