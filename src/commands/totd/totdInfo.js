@@ -2,7 +2,7 @@ const Command = require('../../structures/Command'),
     {MessageEmbed, MessageActionRow, MessageButton, CommandInteraction, SelectMenuInteraction, ButtonInteraction, Message, MessageAttachment} = require('discord.js'),
     MySQL = require('mysql'),
     monthsArray = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-    ms = require('pretty-ms'),
+    { Time } = require('tm-essentials'),
     Table = require('easy-table');
 
 let leaderboardPosFromMapUID = {};
@@ -118,8 +118,8 @@ exports.executeButton = async (interaction, buttonId, argument, tmio, commands, 
             table.cell('Rank', i + 1);
             if (leader.playerClubTag) table.cell('Club tag', tmio.stripFormat(leader.playerClubTag));
             table.cell('Player', leader.playerName);
-            table.cell('Time', ms(leader.time, {colonNotation: true, secondsDecimalDigits: 3}));
-            if (i > 0) table.cell("Delta (from WR)", `(+${ms(leader.time - map.leaderboard[0].time, {colonNotation: true, secondsDecimalDigits: 3})})`);
+            table.cell('Time', Time.fromMilliseconds(leader.time).toTmString());
+            if (i > 0) table.cell("Delta (from WR)", `(+${Time.fromMilliseconds(leader.time - map.leaderboard[0].time).toTmString()})`);
             table.newRow();
         }
 
@@ -199,7 +199,7 @@ async function renderTOTDEmbed(tmio, month, day, year){
                     embed.setColor('GREEN').setAuthor({name: `Track of The Day - ${date.getDate()} ${monthsArray[date.getMonth()]} ${date.getFullYear()}`})
                         .setTitle(tmio.stripFormat(map.name))
                         .addField('Created by:', map.authorName, true)
-                        .addField('Medals:', `Author: **${ms(map.medalTimes.author, {colonNotation: true, secondsDecimalDigits: 3})}**\nGold: ${ms(map.medalTimes.gold, {colonNotation: true, secondsDecimalDigits: 3})}\nSilver: ${ms(map.medalTimes.silver, {colonNotation: true, secondsDecimalDigits: 3})}\nBronze: ${ms(map.medalTimes.bronze, {colonNotation: true, secondsDecimalDigits: 3})}`)
+                        .addField('Medals:', `Author: **${Time.fromMilliseconds(map.medalTimes.author).toTmString()}**\nGold: ${Time.fromMilliseconds(map.medalTimes.gold).toTmString()}\nSilver: ${Time.fromMilliseconds(map.medalTimes.silver).toTmString()}\nBronze: ${Time.fromMilliseconds(map.medalTimes.bronze).toTmString()}`)
                         .addField('Uploaded:', `<t:${map.uploaded.getTime() / 1000}:R>`, true)
                         .setFooter({text: `Map UID: ${map.uid}`})
                         .setImage(map.thumbnailCached);

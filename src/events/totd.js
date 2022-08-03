@@ -1,6 +1,6 @@
 const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js'),
     monthsArray = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-    ms = require('pretty-ms');
+    { Time } = require('tm-essentials');
 
 
 /**
@@ -24,7 +24,7 @@ exports.sendTOTD = async function(dataChannel, client, tmio, map, totd){
             .setAuthor({name: `Track of The Day - ${date.getDate()} ${monthsArray[date.getMonth()]} ${date.getFullYear()}`})
             .setTitle(tmio.stripFormat(map.name))
             .addField('Created by:', map.authorName, true)
-            .addField('Medals:', `Author: **${ms(map.medalTimes.author, {colonNotation: true, secondsDecimalDigits: 3})}**\nGold: ${ms(map.medalTimes.gold, {colonNotation: true, secondsDecimalDigits: 3})}\nSilver: ${ms(map.medalTimes.silver, {colonNotation: true, secondsDecimalDigits: 3})}\nBronze: ${ms(map.medalTimes.bronze, {colonNotation: true, secondsDecimalDigits: 3})}`)
+            .addField('Medals:', `Author: **${Time.fromMilliseconds(map.medalTimes.author).toTmString()}**\nGold: ${Time.fromMilliseconds(map.medalTimes.gold).toTmString()}\nSilver: ${Time.fromMilliseconds(map.medalTimes.silver).toTmString()}\nBronze: ${Time.fromMilliseconds(map.medalTimes.bronze).toTmString()}`)
             .addField('Uploaded:', `<t:${map.uploaded.getTime() / 1000}:R>`, true)
             .setFooter({text: `Map UID: ${map.uid}`})
             .setImage(map.thumbnailCached);

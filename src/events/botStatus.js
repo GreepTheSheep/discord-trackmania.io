@@ -1,5 +1,5 @@
 const Command = require('../structures/Command'),
-    ms = require('pretty-ms');
+    { Time } = require('tm-essentials');
 function randomItem(array) {
     return array[Math.floor(Math.random()*array.length)];
 }
@@ -30,7 +30,7 @@ module.exports = function(client, tmio, commands) {
                     client.user.setActivity(`Today's TOTD is called ${tmio.stripFormat(map.name)} and it's made by ${map.authorName}`, {type: 'WATCHING'});
                 } else if (status == 'totd wr'){
                     let leader = await map.leaderboardGet(1);
-                    client.user.setActivity(`TOTD WR is at ${ms(leader.time, {colonNotation: true, secondsDecimalDigits: 3})} by ${leader.playerName}`, {type: 'WATCHING'});
+                    client.user.setActivity(`TOTD WR is at ${Time.fromMilliseconds(leader.time).toTmString()} by ${leader.playerName}`, {type: 'WATCHING'});
                 }
             });
         } else if (status == 'version') {

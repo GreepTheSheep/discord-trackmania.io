@@ -41,7 +41,7 @@
         "http-errors": "^2.0.0",
         "morgan": "^1.10.0",
         "mysql": "^2.18.1",
-        "pretty-ms": "^7.0.1",
+        "tm-essentials": "^1.0.1",
         "trackmania.io": "^3.2.1"
     },
     "devDependencies": {
