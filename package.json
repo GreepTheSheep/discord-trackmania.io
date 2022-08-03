@@ -42,7 +42,7 @@
         "morgan": "^1.10.0",
         "mysql": "^2.18.1",
         "pretty-ms": "^7.0.1",
-        "trackmania.io": "^3.2.1-dev.220722.9c73aca"
+        "trackmania.io": "^3.2.1"
     },
     "devDependencies": {
         "eslint": "^8.21.0",
