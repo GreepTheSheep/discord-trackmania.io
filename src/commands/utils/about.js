@@ -36,6 +36,7 @@ exports.execute = async (interaction, tmio, commands, sql) => {
     let package = require('../../../package.json'),
         version = package.version,
         tmioVersion = package.dependencies['trackmania.io'].replace('^', ''),
+        tmEssentialsVersion = package.dependencies['tm-essentials'].replace('^', ''),
         djsVersion = package.dependencies['discord.js'].replace('^', ''),
         gitCommit = execSync('git rev-parse --short HEAD').toString().trim(),
         gitCommitDate = new Date(execSync('git show -s --format=%ci HEAD').toString().trim()),
@@ -58,7 +59,7 @@ exports.execute = async (interaction, tmio, commands, sql) => {
         .setTitle('About ' + interaction.client.user.tag)
         .addField('Version', `v${version}\nGit commit: \`${gitCommit}\`\nBuilt at: <t:${gitCommitDate.getTime() / 1000}>`, true)
         .addField('Uptime:', `${uptimeWeeks} weeks, ${uptimeDays} days, ${uptimeHours} hours, ${uptimeminutes} minutes`, true)
-        .addField('Technical informations', `Bot Library: [Discord.js](https://discord.js.org) (Version ${djsVersion})\n[Trackmania.io Library](https://github.com/GreepTheSheep/node-trackmania.io) (Version ${tmioVersion})\nNode.js version: ${process.version}\nServing to ${totalGuilds} guilds\n${interaction.client.shard ? `Shard #${interaction.client.shard.ids[0]} (${interaction.client.guilds.cache.size} guilds on this shard). Total shards: ${interaction.client.shard.count}` : 'No shards used.'}`)
+        .addField('Technical informations', `Bot Library: [Discord.js](https://discord.js.org) (Version ${djsVersion})\n[Trackmania.io Library](https://github.com/GreepTheSheep/node-trackmania.io) (Version ${tmioVersion})\n[Trackmania Essentials Library](https://github.com/GreepTheSheep/node-tm-essentials) (Version ${tmEssentialsVersion})\nNode.js version: ${process.version}\nServing to ${totalGuilds} guilds\n${interaction.client.shard ? `Shard #${interaction.client.shard.ids[0]} (${interaction.client.guilds.cache.size} guilds on this shard). Total shards: ${interaction.client.shard.count}` : 'No shards used.'}`)
         .addField('Thanks to:', `- [Greep#3022](https://github.com/GreepTheSheep) for creating the bot and the API library.\n- [Miss#8888](https://github.com/codecat) for creating Trackmania.io and for helping with the API.\n- [dassschaf](https://github.com/dassschaf) for the text formatting.\n- [jonese1234](https://github.com/jonese1234) for the player dataset`)
         .setThumbnail(interaction.client.user.displayAvatarURL({size:512}))
         .setFooter({
