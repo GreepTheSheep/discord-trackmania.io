@@ -46,9 +46,10 @@ client.on('ready', async () => {
     commands = require('./fetchAllCommands')();
 
     // Register commands
-    client.guilds.cache.forEach(async (guild) => {
-        await require('./registerCommandsScript')(guild.id, client.user.id, commands);
-    });
+    await require('./registerCommandsScript')(null, client.user.id, commands);
+    // client.guilds.cache.forEach(async (guild) => {
+    //     await require('./registerCommandsScript')(guild.id, client.user.id, []);
+    // });
 
     require('./events/botStatus')(client, tmio, commands);
 
@@ -107,7 +108,7 @@ client.on('interactionCreate', async interaction => {
 
 client.on('guildCreate', guild=>{
     console.log('📌 New guild joined: ' + guild.name);
-    require('./registerCommandsScript')(guild.id, client.user.id, commands);
+    // require('./registerCommandsScript')(guild.id, client.user.id, commands);
 });
 
 client.on('guildDelete', guild=>{

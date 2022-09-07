@@ -3,6 +3,7 @@
 const args = process.argv.slice(2),
     registerCommands = require('./src/registerCommandsScript'),
     commands = require('./src/fetchAllCommands')();
+    // commands = [];
 
 if (args.includes('-u')) {
     const userId = args[args.indexOf(args.find(arg => arg.startsWith('-u'))) + 1];
