@@ -7,13 +7,16 @@ const { REST } = require('@discordjs/rest'),
 
 /**
  * Register all commands for a guild
- * @param {string} guildId The Guild ID to register commands for
+ * @param {string|null} guildId The Guild ID to register commands for
  * @param {string} userId The bot's user ID
  * @param {Command[]} commands The list of commands to register
  */
 async function registerCommands(guildId, userId, commands) {
     try {
-        console.log(`🔃 Started refreshing slash commands for guild ${guildId}.`);
+        if (typeof guildId == "string")
+            console.log(`🔃 Started refreshing slash commands for guild ${guildId}.`);
+        else
+            console.log(`🔃 Started refreshing global slash commands.`);
         const bodyCommands = [];
 
         for (const command of commands) {
@@ -97,17 +100,25 @@ async function registerCommands(guildId, userId, commands) {
             bodyCommands.push(slashCommand);
         }
 
-        await rest.put(
-            Routes.applicationGuildCommands(userId, guildId),
-            { body: bodyCommands },
-        ).catch(err => {
-            if (err.code == 50013) {
-                console.log(`Guild ${guildId} does not exist.`);
-            }
-            if (err.code == 50001) {
-                console.log(`Missing access for guild ${guildId}.`);
-            }
-        });
+        if (guildId == null)
+            await rest.put(
+                Routes.applicationCommands(userId),
+                { body: bodyCommands },
+            ).catch(err=>{
+                console.error("Discord API error:", err);
+            });
+        else
+            await rest.put(
+                Routes.applicationGuildCommands(userId, guildId),
+                { body: bodyCommands },
+            ).catch(err => {
+                if (err.code == 50013) {
+                    console.log(`Guild ${guildId} does not exist.`);
+                }
+                if (err.code == 50001) {
+                    console.log(`Missing access for guild ${guildId}.`);
+                }
+            });
 
         console.log(`✔️  Done.`);
     } catch (error) {
