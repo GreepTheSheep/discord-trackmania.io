@@ -4,15 +4,18 @@ const args = process.argv.slice(2),
     registerCommands = require('./src/registerCommandsScript'),
     commands = require('./src/fetchAllCommands')();
 
-if (args.includes('-g') && args.includes('-u')) {
-    const guildId = args[args.indexOf(args.find(arg => arg.startsWith('-g'))) + 1];
+if (args.includes('-u')) {
     const userId = args[args.indexOf(args.find(arg => arg.startsWith('-u'))) + 1];
-    if (guildId && userId) {
-        registerCommands(guildId, userId, commands);
-    } else errUsage();
+    let guildId;
+    if (args.includes('-g'))
+        guildId = args[args.indexOf(args.find(arg => arg.startsWith('-g'))) + 1];
+    else
+        guildId = null;
+    if (userId) registerCommands(guildId, userId, commands);
+    else errUsage();
 } else errUsage();
 
 function errUsage() {
-    console.error('Usage: -g <guildId> -u <userId>');
+    console.error('Usage: -u <userId> [-g <guildId>]');
     process.exit(1);
 }
