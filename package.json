@@ -33,7 +33,7 @@
         "@discordjs/rest": "^1.1.0",
         "body-parser": "^1.20.0",
         "cors": "^2.8.5",
-        "discord-api-types": "^0.37.9",
+        "discord-api-types": "^0.37.10",
         "discord.js": "^13.11.0",
         "dotenv": "^16.0.2",
         "easy-table": "^1.2.0",
