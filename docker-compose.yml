@@ -1,0 +1,34 @@
+version: "3.8"
+services:
+  mariadb:
+    image: mariadb
+    restart: always
+    environment:
+      MARIADB_DATABASE: discord_tmio
+      MARIADB_ROOT_PASSWORD: ${DB_PASS}
+    volumes:
+      - ./data/mariadb:/var/lib/mysql
+    expose:
+      - "3306"
+  discordbot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      tags:
+        - "discord-tmio"
+    restart: always
+    depends_on:
+      - mariadb
+    environment:
+      DISCORD_TOKEN: ${DISCORD_TOKEN}
+      OWNER_ID: ${OWNER_ID}
+      TMIO_API: ${TMIO_API}
+      DB_HOST: mariadb
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASS: ${DB_PASS}
+      DB_NAME: discord_tmio
+      PORT: ${PORT}
+      API_TOKEN: ${API_TOKEN}
+    ports:
+      - ${PORT}:${PORT}

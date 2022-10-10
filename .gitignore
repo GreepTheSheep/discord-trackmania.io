@@ -103,4 +103,6 @@ dist
 # TernJS port file
 .tern-port
 
-data/*
+!data/mariadb/
+data/mariadb/*
+!data/mariadb/.gitkeep
