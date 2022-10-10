@@ -64,5 +64,6 @@ jobs:
             cd ${{ secrets.SERVER_PATH }}
             git checkout .
             git pull
-            npm i
-            pm2 restart pm2.config.js > /dev/null
+            docker compose down --remove-orphans
+            docker compose build
+            docker compose -f docker-compose.yml up -d --force-recreate
