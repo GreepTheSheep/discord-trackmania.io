@@ -1,4 +1,4 @@
-FROM keymetrics/pm2:latest-alpine
+FROM node:lts
 
 WORKDIR /server/tmiodiscord
 
@@ -10,4 +10,4 @@ COPY ./pm2.config.js /server/tmiodiscord/pm2.config.js
 ENV NPM_CONFIG_LOGLEVEL warn
 RUN npm i --production
 
-CMD pm2-runtime start /server/tmiodiscord/pm2.config.js
+CMD node /server/tmiodiscord/src/index.js
