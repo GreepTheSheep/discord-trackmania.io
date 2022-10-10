@@ -32,15 +32,3 @@ services:
       API_TOKEN: ${API_TOKEN}
     ports:
       - ${PORT}:${PORT}
-
-  phpmyadmin:
-    image: phpmyadmin
-    restart: always
-    environment:
-      PMA_HOST: mariadb
-      PMA_USER: root
-      PMA_PASSWORD: ${DB_PASS}
-    ports:
-      - 81:80
-    depends_on:
-      - mariadb
