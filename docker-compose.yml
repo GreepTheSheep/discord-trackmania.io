@@ -28,6 +28,3 @@ services:
       DB_USER: root
       DB_PASS: ${DB_PASS}
       DB_NAME: discord_tmio
-      PORT: ${PORT}
-    ports:
-      - ${PORT}:${PORT}
