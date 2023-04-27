@@ -29,6 +29,5 @@ services:
       DB_PASS: ${DB_PASS}
       DB_NAME: discord_tmio
       PORT: ${PORT}
-      API_TOKEN: ${API_TOKEN}
     ports:
       - ${PORT}:${PORT}

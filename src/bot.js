@@ -5,8 +5,7 @@ const Command = require('./structures/Command'),
         intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES]
     }),
     TrackmaniaIO = require('trackmania.io'),
-    tmio = new TrackmaniaIO.Client(),
-    api = require('./api');
+    tmio = new TrackmaniaIO.Client();
 let sql = require('mysql').createConnection({
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
@@ -52,12 +51,6 @@ client.on('ready', async () => {
     // });
 
     require('./events/botStatus')(client, tmio, commands);
-
-    if (!client.shard) {
-        if (!api.isListening) api.start();
-    } else {
-        api.registerShard(client.shard);
-    }
 });
 
 client.on('interactionCreate', async interaction => {
