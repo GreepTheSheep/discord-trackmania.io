@@ -22,7 +22,8 @@ services:
         - "discord-tmio"
     restart: always
     depends_on:
-      - mariadb
+      mariadb:
+        condition: service_healthy
     environment:
       DISCORD_TOKEN: ${DISCORD_TOKEN}
       OWNER_ID: ${OWNER_ID}
@@ -32,6 +33,3 @@ services:
       DB_USER: root
       DB_PASS: ${DB_PASS}
       DB_NAME: discord_tmio
-    depends_on:
-      mariadb:
-        condition: service_healthy
