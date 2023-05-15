@@ -36,7 +36,7 @@
         "dotenv": "^16.0.3",
         "easy-table": "^1.2.0",
         "mysql": "^2.18.1",
-        "tm-essentials": "^1.0.4",
+        "tm-essentials": "^1.0.5",
         "trackmania.io": "^3.2.1"
     },
     "devDependencies": {
