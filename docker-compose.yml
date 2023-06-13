@@ -7,7 +7,7 @@ services:
       MARIADB_DATABASE: discord_tmio
       MARIADB_ROOT_PASSWORD: ${DB_PASS}
     volumes:
-      - db:/var/lib/mysql
+      - database:/var/lib/mysql
       - ./create_db.sql:/docker-entrypoint-initdb.d/init.sql
     expose:
       - "3306"
