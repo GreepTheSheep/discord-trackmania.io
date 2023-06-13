@@ -4,7 +4,7 @@ services:
     image: mariadb
     restart: always
     environment:
-      MARIADB_DATABASE: discord_tmio
+      MARIADB_DATABASE: discord-tmio
       MARIADB_ROOT_PASSWORD: ${DB_PASS}
     volumes:
       - database:/var/lib/mysql
@@ -35,7 +35,7 @@ services:
       DB_PORT: 3306
       DB_USER: root
       DB_PASS: ${DB_PASS}
-      DB_NAME: discord_tmio
+      DB_NAME: discord-tmio
 
 volumes:
   database:

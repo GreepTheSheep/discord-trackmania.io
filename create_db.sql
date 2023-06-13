@@ -1,5 +1,4 @@
 CREATE DATABASE IF NOT EXISTS `discord-tmio` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-GRANT ALL PRIVILEGES ON `discord-tmio`.* TO `trackmaniaio-bot`@`localhost` IDENTIFIED BY 'trackmaniaio';
 USE `discord-tmio`;
 
 CREATE TABLE IF NOT EXISTS `players` ( `accountId` VARCHAR(128) NOT NULL , `discordId` VARCHAR(64) NOT NULL , PRIMARY KEY (`accountId`));
