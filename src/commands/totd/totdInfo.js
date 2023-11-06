@@ -195,7 +195,7 @@ async function renderTOTDEmbed(tmio, month, day, year){
         }
         try {
             tmio.totd.get(date).then(totd=>{
-                totd.map().then(map=>{
+                totd.map().then(async map=>{
                     embed.setColor('GREEN').setAuthor({name: `Track of The Day - ${date.getDate()} ${monthsArray[date.getMonth()]} ${date.getFullYear()}`})
                         .setTitle(tmio.stripFormat(map.name))
                         .addFields([
@@ -206,9 +206,8 @@ async function renderTOTDEmbed(tmio, month, day, year){
                         .setFooter({text: `Map UID: ${map.uid}`})
                         .setImage(map.thumbnailCached);
 
-                    map.exchange().then(exchange=>{
-                        if (exchange != null) embed.addFields({name:'TMX Info:', value:`🎮 ${exchange.difficulty}\n🏆 ${exchange.awards} Awards`, inline:true});
-                    }).catch(err=>{});
+                    let exchange = await map.exchange();
+                    if (exchange != null) embed.addFields({name:'TMX Info:', value:`🎮 ${exchange.difficulty}\n🏆 ${exchange.awards} Awards`, inline:true});
 
                     // create 2 interaction rows (button or select menus)
                     const interactionComponentRows = [];

@@ -172,7 +172,7 @@ async function renderMapEmbed(tmio, uid){
         let embed = new MessageEmbed();
 
         try {
-            tmio.maps.get(uid).then(map => {
+            tmio.maps.get(uid).then(async map => {
                 embed.setColor('GREEN')
                     .setTitle(tmio.stripFormat(map.name))
                     .addFields([
@@ -183,9 +183,8 @@ async function renderMapEmbed(tmio, uid){
                     .setFooter({text: `Map UID: ${map.uid}`})
                     .setImage(map.thumbnailCached);
 
-                map.exchange().then(exchange=>{
-                    if (exchange != null) embed.addFields({name:'TMX Info:', value:`🎮 ${exchange.difficulty}\n🏆 ${exchange.awards} Awards`, inline:true});
-                }).catch(err=>{});
+                let exchange = await map.exchange();
+                if (exchange != null) embed.addFields({name:'TMX Info:', value:`🎮 ${exchange.difficulty}\n🏆 ${exchange.awards} Awards`, inline:true});
 
                 // create 2 interaction rows (button or select menus)
                 const interactionComponentRows = [];
