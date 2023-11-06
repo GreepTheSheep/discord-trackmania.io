@@ -206,6 +206,10 @@ async function renderTOTDEmbed(tmio, month, day, year){
                         .setFooter({text: `Map UID: ${map.uid}`})
                         .setImage(map.thumbnailCached);
 
+                    map.exchange().then(exchange=>{
+                        if (exchange != null) embed.addFields({name:'TMX Info:', value:`🎮 ${exchange.difficulty}\n🏆 ${exchange.awards} Awards`, inline:true});
+                    }).catch(err=>{});
+
                     // create 2 interaction rows (button or select menus)
                     const interactionComponentRows = [];
                     for (let i = 0; i < 1; i++) {
