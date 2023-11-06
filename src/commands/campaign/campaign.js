@@ -183,10 +183,10 @@ async function renderCampaignEmbed(campaign, tmio){
     if (!campaign.isOfficial) {
         let club = await campaign.club();
         clubID = club.id;
-        embed.addField('Club:', tmio.stripFormat(club.name), true)
+        embed.addFields({name:'Club:', value:tmio.stripFormat(club.name), inline:true})
             .setImage(campaign.image);
     } else {
-        embed.addField('Created by:', 'Nadeo', true);
+        embed.addFields({name:'Created by:', value:'Nadeo', inline:true});
         const imageSeasons = {
             "fall": "https://i.imgur.com/DX5XnQD.png",
             "spring": "https://i.imgur.com/iQfwDqd.png",
@@ -202,7 +202,7 @@ async function renderCampaignEmbed(campaign, tmio){
 
     embed.setColor('#9B850E')
         .setTitle(tmio.stripFormat(campaign.name))
-        .addField('Maps number:', `${campaign.mapCount} maps`, true)
+        .addFields({name:'Maps number:', value:`${campaign.mapCount} maps`, inline:true})
         .setFooter({text: `Leaderboard UID: ${campaign.leaderboardId}`});
 
     const interactionComponentRows = [];

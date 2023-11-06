@@ -57,10 +57,12 @@ exports.execute = async (interaction, tmio, commands, sql) => {
     const embed = new MessageEmbed()
         .setColor("#9C01C4")
         .setTitle('About ' + interaction.client.user.tag)
-        .addField('Version', `v${version}\nGit commit: \`${gitCommit}\`\nBuilt at: <t:${gitCommitDate.getTime() / 1000}>`, true)
-        .addField('Uptime:', `${uptimeWeeks} weeks, ${uptimeDays} days, ${uptimeHours} hours, ${uptimeminutes} minutes`, true)
-        .addField('Technical informations', `Bot Library: [Discord.js](https://discord.js.org) (Version ${djsVersion})\n[Trackmania.io Library](https://github.com/GreepTheSheep/node-trackmania.io) (Version ${tmioVersion})\n[Trackmania Essentials Library](https://github.com/GreepTheSheep/node-tm-essentials) (Version ${tmEssentialsVersion})\nNode.js version: ${process.version}\nServing to ${totalGuilds} guilds\n${interaction.client.shard ? `Shard #${interaction.client.shard.ids[0]} (${interaction.client.guilds.cache.size} guilds on this shard). Total shards: ${interaction.client.shard.count}` : 'No shards used.'}`)
-        .addField('Thanks to:', `- [Greep#3022](https://github.com/GreepTheSheep) for creating the bot and the API library.\n- [Miss#8888](https://github.com/codecat) for creating Trackmania.io and for helping with the API.\n- [dassschaf](https://github.com/dassschaf) for the text formatting.\n- [jonese1234](https://github.com/jonese1234) for the player dataset`)
+        .addFields([
+            {name:'Version', value:`v${version}\nGit commit: \`${gitCommit}\`\nBuilt at: <t:${gitCommitDate.getTime() / 1000}>`, inline:true},
+            {name:'Uptime:', value:`${uptimeWeeks} weeks, ${uptimeDays} days, ${uptimeHours} hours, ${uptimeminutes} minutes`, inline:true},
+            {name:'Technical informations', value:`Bot Library: [Discord.js](https://discord.js.org) (Version ${djsVersion})\n[Trackmania.io Library](https://github.com/GreepTheSheep/node-trackmania.io) (Version ${tmioVersion})\n[Trackmania Essentials Library](https://github.com/GreepTheSheep/node-tm-essentials) (Version ${tmEssentialsVersion})\nNode.js version: ${process.version}\nServing to ${totalGuilds} guilds\n${interaction.client.shard ? `Shard #${interaction.client.shard.ids[0]} (${interaction.client.guilds.cache.size} guilds on this shard). Total shards: ${interaction.client.shard.count}` : 'No shards used.'}`},
+            {name:'Thanks to:', value:`- [Greep#3022](https://github.com/GreepTheSheep) for creating the bot and the API library.\n- [Miss#8888](https://github.com/codecat) for creating Trackmania.io and for helping with the API.\n- [dassschaf](https://github.com/dassschaf) for the text formatting.\n- [jonese1234](https://github.com/jonese1234) for the player dataset`}
+        ])
         .setThumbnail(interaction.client.user.displayAvatarURL({size:512}))
         .setFooter({
             text: interaction.client.user.tag + ' - click on my avatar to invite me!',

@@ -167,20 +167,22 @@ function renderPlayerInfoEmbed(tmio, player){
         .setTitle((player.clubTag ? `[${tmio.stripFormat(player.clubTag)}] `:"") + player.name)
         .setColor(embedColor)
         .setThumbnail(player.trophies.echelon.image)
-        .addField("Zone", player.zone.map(p=>p.name).join(', '))
-        .addField("Trophies Ranking", `${player.trophies.points} points (${player.trophies.echelon.name})\n__Number of trophies:__${trophiesStr}\nTotal: ${trophiesTotal}`, true)
-        .addField("Top", player.zone.map(z=>`Top ${z.ranking} ${z.name}`).join('\n'), true)
-        .addField("Player login:", `\`${player.login}\``)
-        .addField("Club tag:", player.clubTag ? `\`${player.clubTag}\`\n*(Last updated <t:${player.lastClubTagChange.getTime() / 1000}:R>)*` : "None")
-        .addField("Matchmaking 3v3:", `Score: **${player.matchmaking(2).progression}**/${player.matchmaking(2).division.maxPoints} pts (${player.matchmaking(2).division.name})\nRank: ${player.matchmaking(2).rank}/${player.matchmaking(2).totalPlayers}`, true)
-        .addField("Royal:", `**${player.matchmaking(3).progression}**/${player.matchmaking(3).division.maxPoints} wins (${player.matchmaking(3).division.name})\nRank: ${player.matchmaking(3).rank}/${player.matchmaking(3).totalPlayers}`, true)
+        .addFields([
+            {name:"Zone", value:player.zone.map(p=>p.name).join(', ')},
+            {name:"Trophies Ranking", value:`${player.trophies.points} points (${player.trophies.echelon.name})\n__Number of trophies:__${trophiesStr}\nTotal: ${trophiesTotal}`, inline:true},
+            {name:"Top", value:player.zone.map(z=>`Top ${z.ranking} ${z.name}`).join('\n'), inline:true},
+            {name:"Player login:", value:`\`${player.login}\``},
+            {name:"Club tag:", value:player.clubTag ? `\`${player.clubTag}\`\n*(Last updated <t:${player.lastClubTagChange.getTime() / 1000}:R>)*` : "None"},
+            {name:"Matchmaking 3v3:", value:`Score: **${player.matchmaking(2).progression}**/${player.matchmaking(2).division.maxPoints} pts (${player.matchmaking(2).division.name})\nRank: ${player.matchmaking(2).rank}/${player.matchmaking(2).totalPlayers}`, inline:true},
+            {name:"Royal:", value:`**${player.matchmaking(3).progression}**/${player.matchmaking(3).division.maxPoints} wins (${player.matchmaking(3).division.name})\nRank: ${player.matchmaking(3).rank}/${player.matchmaking(3).totalPlayers}`, inline:true}
+        ])
         .setFooter({text:player.id});
 
     if (player.meta.inNadeo || player.meta.inTMGL || player.meta.inTMIOTeam || player.meta.isSponsor || player.id == "26d9a7de-4067-4926-9d93-2fe62cd869fc")
-        embed.addField("Part of:", `${player.meta.inNadeo ? '- Nadeo Team\n' : ''}${player.meta.inTMGL ? '- Trackmania Grand League\n' : ''}${player.meta.inTMIOTeam ? '- Openplanet Team\n' : ''}${player.id == "26d9a7de-4067-4926-9d93-2fe62cd869fc" ? '- Trackmania.io Discord bot developer\n' : ''}${player.meta.isSponsor ? '- Trackmania.io / Openplanet Sponsor\n' : ''}`);
+        embed.addFields({name:"Part of:", value:`${player.meta.inNadeo ? '- Nadeo Team\n' : ''}${player.meta.inTMGL ? '- Trackmania Grand League\n' : ''}${player.meta.inTMIOTeam ? '- Openplanet Team\n' : ''}${player.id == "26d9a7de-4067-4926-9d93-2fe62cd869fc" ? '- Trackmania.io Discord bot developer\n' : ''}${player.meta.isSponsor ? '- Trackmania.io / Openplanet Sponsor\n' : ''}`});
 
     if (player.meta.twitch || player.meta.youtube || player.meta.twitter)
-        embed.addField("Links:", (player.meta.twitch?`- [Twitch](${player.meta.twitch})\n`:"")+(player.meta.youtube?`- [Youtube](${player.meta.youtube})\n`:"")+(player.meta.twitter?`- [Twitter](${player.meta.twitter})`:""));
+        embed.addFields({name:"Links:", value:(player.meta.twitch?`- [Twitch](${player.meta.twitch})\n`:"")+(player.meta.youtube?`- [Youtube](${player.meta.youtube})\n`:"")+(player.meta.twitter?`- [Twitter](${player.meta.twitter})`:"")});
 
     return embed;
 }
@@ -195,13 +197,15 @@ function renderPlayerCOTDStats(tmio, player){
     return player.cotd().then(cotd=>{
         return new MessageEmbed()
             .setTitle('Cup Of The Day stats of ' + player.name)
-            .addField('Total played', ''+cotd.count, true)
-            .addField('Total Wins', `${cotd.stats.totalWins != 0 ? `**In division 1**: ${cotd.stats.totalWins}\n`: ''}**In any division**: ${cotd.stats.totalDivWins}`, true)
-            .addField('Win streak', `${cotd.stats.winStreak != 0 ? `**In division 1**: ${cotd.stats.winStreak}\n`: ''}**In any division**: ${cotd.stats.divWinStreak}`, true)
-            .addField('Average Rank', `**Average Div Rank**: ${Math.round(cotd.stats.averageDivRank * 64)} ||*(the position, with a base of 64 players in a div.)*||\n**Overall**: ${(cotd.stats.averageRank * 100).toFixed(0)}% ||*('top percentage', lower is better)*||`)
-            .addField('Average Division', ''+Math.round(cotd.stats.averageDiv), true)
-            .addField('Primary COTD', `**Best rank** (position): ${cotd.stats.bestPrimary.rank} (<t:${cotd.stats.bestPrimary.rankDate.getTime() / 1000}:R>)\n**Best division**: ${cotd.stats.bestPrimary.division} (Rank: ${cotd.stats.bestPrimary.divRank}, <t:${cotd.stats.bestPrimary.divisionDate.getTime() / 1000}:R>)\n**Best Div Rank**: ${cotd.stats.bestPrimary.rankInDivision} (Division ${cotd.stats.bestPrimary.divisionOfRankInDivision}, <t:${cotd.stats.bestPrimary.rankDate.getTime() / 1000}:R>)`)
-            .addField('Overall COTD', `**Best rank** (position): ${cotd.stats.bestOverall.rank} (<t:${cotd.stats.bestOverall.rankDate.getTime() / 1000}:R>)\n**Best division**: ${cotd.stats.bestOverall.division} (Rank: ${cotd.stats.bestOverall.divRank}, <t:${cotd.stats.bestOverall.divisionDate.getTime() / 1000}:R>)\n**Best Div Rank**: ${cotd.stats.bestOverall.rankInDivision} (Division ${cotd.stats.bestOverall.divisionOfRankInDivision}, <t:${cotd.stats.bestOverall.rankDate.getTime() / 1000}:R>)`);
+            .addFields([
+                {name:'Total played', value:cotd.count, inline:true},
+                {name:'Total Wins', value:`${cotd.stats.totalWins != 0 ? `**In division 1**: ${cotd.stats.totalWins}\n`: ''}**In any division**: ${cotd.stats.totalDivWins}`, inline:true},
+                {name:'Win streak', value:`${cotd.stats.winStreak != 0 ? `**In division 1**: ${cotd.stats.winStreak}\n`: ''}**In any division**: ${cotd.stats.divWinStreak}`, inline:true},
+                {name:'Average Rank', value:`**Average Div Rank**: ${Math.round(cotd.stats.averageDivRank * 64)} ||*(the position, with a base of 64 players in a div.)*||\n**Overall**: ${(cotd.stats.averageRank * 100).toFixed(0)}% ||*('top percentage', lower is better)*||`},
+                {name:'Average Division', value:Math.round(cotd.stats.averageDiv), inline:true},
+                {name:'Primary COTD', value:`**Best rank** (position): ${cotd.stats.bestPrimary.rank} (<t:${cotd.stats.bestPrimary.rankDate.getTime() / 1000}:R>)\n**Best division**: ${cotd.stats.bestPrimary.division} (Rank: ${cotd.stats.bestPrimary.divRank}, <t:${cotd.stats.bestPrimary.divisionDate.getTime() / 1000}:R>)\n**Best Div Rank**: ${cotd.stats.bestPrimary.rankInDivision} (Division ${cotd.stats.bestPrimary.divisionOfRankInDivision}, <t:${cotd.stats.bestPrimary.rankDate.getTime() / 1000}:R>)`},
+                {name:'Overall COTD', value:`**Best rank** (position): ${cotd.stats.bestOverall.rank} (<t:${cotd.stats.bestOverall.rankDate.getTime() / 1000}:R>)\n**Best division**: ${cotd.stats.bestOverall.division} (Rank: ${cotd.stats.bestOverall.divRank}, <t:${cotd.stats.bestOverall.divisionDate.getTime() / 1000}:R>)\n**Best Div Rank**: ${cotd.stats.bestOverall.rankInDivision} (Division ${cotd.stats.bestOverall.divisionOfRankInDivision}, <t:${cotd.stats.bestOverall.rankDate.getTime() / 1000}:R>)`}
+            ]);
     }).catch(err=>{
         throw err;
     });

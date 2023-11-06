@@ -175,9 +175,11 @@ async function renderMapEmbed(tmio, uid){
             tmio.maps.get(uid).then(map => {
                 embed.setColor('GREEN')
                     .setTitle(tmio.stripFormat(map.name))
-                    .addField('Created by:', map.authorName, true)
-                    .addField('Medals:', `Author: **${Time.fromMilliseconds(map.medalTimes.author).toTmString()}**\nGold: ${Time.fromMilliseconds(map.medalTimes.gold).toTmString()}\nSilver: ${Time.fromMilliseconds(map.medalTimes.silver).toTmString()}\nBronze: ${Time.fromMilliseconds(map.medalTimes.bronze).toTmString()}`)
-                    .addField('Uploaded:', `<t:${map.uploaded.getTime() / 1000}:R>`, true)
+                    .addFields([
+                        {name:'Created by:', value:map.authorName, inline:true},
+                        {name:'Medals:', value:`Author: **${Time.fromMilliseconds(map.medalTimes.author).toTmString()}**\nGold: ${Time.fromMilliseconds(map.medalTimes.gold).toTmString()}\nSilver: ${Time.fromMilliseconds(map.medalTimes.silver).toTmString()}\nBronze: ${Time.fromMilliseconds(map.medalTimes.bronze).toTmString()}`},
+                        {name:'Uploaded:', value:`<t:${map.uploaded.getTime() / 1000}:R>`, inline:true}
+                    ])
                     .setFooter({text: `Map UID: ${map.uid}`})
                     .setImage(map.thumbnailCached);
 

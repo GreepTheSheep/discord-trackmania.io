@@ -68,7 +68,7 @@ exports.execute = async (interaction, tmio, commands, sql) => {
  * @param {string} buttonId
  * @param {string} argument
  * @param {import('trackmania.io').Client} tmio
- * @param {Command[]} commands 
+ * @param {Command[]} commands
  * @param {MySQL.Connection} sql
  */
 exports.executeButton = async (interaction, buttonId, argument, tmio, commands, sql) => {};
@@ -78,7 +78,7 @@ exports.executeButton = async (interaction, buttonId, argument, tmio, commands, 
  * @param {string} categoryId
  * @param {string} argument
  * @param {import('trackmania.io').Client} tmio
- * @param {Command[]} commands 
+ * @param {Command[]} commands
  * @param {MySQL.Connection} sql
  */
 exports.executeSelectMenu = async (interaction, categoryId, argument, tmio, commands, sql) => {
@@ -139,7 +139,7 @@ function embedCategories(commands){
         categories = commandsCategories(commands);
 
     categories.forEach(category => {
-        if (category) embed.addField((category.emoji ? category.emoji+" " : "") + category.name, `${category.description}\n\`/help ${category.dir}\``, true);
+        if (category) embed.addFields({name:(category.emoji ? category.emoji+" " : "") + category.name, value:`${category.description}\n\`/help ${category.dir}\``, inline:true});
     });
 
     return embed;
@@ -158,7 +158,7 @@ function embedCommands(categoryDir, commands){
         if (commandsInCategory.length === 0) embed.setColor("#FF0000").setTitle('No commands found');
         else {
             for (const command of commandsInCategory) {
-                embed.addField(`\`/${command.name}\``, command.description, true);
+                embed.addFields({name:`\`/${command.name}\``, value:command.description, inline:true});
             }
         }
 
@@ -170,9 +170,11 @@ function embedCommands(categoryDir, commands){
 
         if (commandsInCategory.length === 0) embed.setColor("#FF0000").setTitle('No commands found');
         else {
+            let fields = [];
             for (const command of commandsInCategory) {
-                embed.addField(`\`/${command.name}\``, command.description, true);
+                fields.push({name:`\`/${command.name}\``, value:command.description, inline:true});
             }
+            embed.addFields(fields);
         }
 
         return embed;

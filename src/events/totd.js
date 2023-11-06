@@ -23,9 +23,11 @@ exports.sendTOTD = async function(dataChannel, client, tmio, map, totd){
         embed.setColor('GREEN')
             .setAuthor({name: `Track of The Day - ${date.getDate()} ${monthsArray[date.getMonth()]} ${date.getFullYear()}`})
             .setTitle(tmio.stripFormat(map.name))
-            .addField('Created by:', map.authorName, true)
-            .addField('Medals:', `Author: **${Time.fromMilliseconds(map.medalTimes.author).toTmString()}**\nGold: ${Time.fromMilliseconds(map.medalTimes.gold).toTmString()}\nSilver: ${Time.fromMilliseconds(map.medalTimes.silver).toTmString()}\nBronze: ${Time.fromMilliseconds(map.medalTimes.bronze).toTmString()}`)
-            .addField('Uploaded:', `<t:${map.uploaded.getTime() / 1000}:R>`, true)
+            .addFields([
+                {name:'Created by:', value:map.authorName, inline:true},
+                {name:'Medals:', value:`Author: **${Time.fromMilliseconds(map.medalTimes.author).toTmString()}**\nGold: ${Time.fromMilliseconds(map.medalTimes.gold).toTmString()}\nSilver: ${Time.fromMilliseconds(map.medalTimes.silver).toTmString()}\nBronze: ${Time.fromMilliseconds(map.medalTimes.bronze).toTmString()}`}
+            ])
+            .addFields({name:'Uploaded:', value:`<t:${map.uploaded.getTime() / 1000}:R>`, inline:true})
             .setFooter({text: `Map UID: ${map.uid}`})
             .setImage(map.thumbnailCached);
 
