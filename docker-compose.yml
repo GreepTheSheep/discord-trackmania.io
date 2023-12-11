@@ -1,4 +1,4 @@
-version: "3.8"
+version: "3.9"
 services:
   mariadb:
     image: mariadb
@@ -15,15 +15,27 @@ services:
       test: ["CMD", "mariadb-admin" ,"ping", "--host=localhost", "--user=root", "--password=${DB_PASS}"]
       timeout: 20s
       retries: 10
-  discordbot:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      tags:
-        - "discord-tmio"
-    labels:
-      - "com.centurylinklabs.watchtower.enable=false"
+
+  phpmyadmin:
+    image: phpmyadmin
     restart: always
+    ports:
+      - 8002:80
+    environment:
+      PMA_HOST: mariadb
+      PMA_PORT: 3306
+      #PMA_USER: root
+      #PMA_PASSWORD: ${DB_PASSWORD}
+    depends_on:
+      mariadb:
+        condition: service_healthy
+
+  discord:
+    image: node:lts
+    restart: always
+    working_dir: /home/node/app
+    volumes:
+      - ./:/home/node/app
     depends_on:
       mariadb:
         condition: service_healthy
@@ -36,6 +48,8 @@ services:
       DB_USER: root
       DB_PASS: ${DB_PASS}
       DB_NAME: discord-tmio
+      NODE_ENV: production
+    command: node ./src/index.js
 
 volumes:
   database:
