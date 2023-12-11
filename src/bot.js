@@ -1,6 +1,6 @@
 require('dotenv').config();
 const Command = require('./structures/Command'),
-    { Client, GatewayIntentBits, Partials } = require('discord.js'),
+    { Client, GatewayIntentBits, Partials, ActivityType } = require('discord.js'),
     client = new Client({
         intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages],
         partials: [Partials.Channel]
@@ -39,7 +39,7 @@ let commands=[];
 
 client.on('ready', async () => {
     console.log(`🤖 Logged in as ${client.user.tag}!`);
-    client.user.setActivity('Bot is starting up...', {type: 'WATCHING'});
+    client.user.setActivity({name: 'Bot is starting up...', type: ActivityType.Custom});
 
     tmio.setUserAgent('DiscordBot ' + client.user.tag + ' (' + client.user.id + ')');
 
