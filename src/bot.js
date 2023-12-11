@@ -1,8 +1,9 @@
 require('dotenv').config();
 const Command = require('./structures/Command'),
-    { Client, Intents } = require('discord.js'),
+    { Client, GatewayIntentBits, Partials } = require('discord.js'),
     client = new Client({
-        intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES]
+        intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages],
+        partials: [Partials.Channel]
     }),
     TrackmaniaIO = require('trackmania.io'),
     tmio = new TrackmaniaIO.Client();

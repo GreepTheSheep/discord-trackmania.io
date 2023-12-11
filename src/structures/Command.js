@@ -1,5 +1,5 @@
 /** @type {categoryInfo[]} */
-const { ChannelType } = require('discord-api-types/v9');
+const { ChannelType } = require('discord.js');
 const categoryInfos = require('../commands/categoryInfo.json');
 
 class Command {

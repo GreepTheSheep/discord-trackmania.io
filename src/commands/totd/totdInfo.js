@@ -1,5 +1,5 @@
 const Command = require('../../structures/Command'),
-    {MessageEmbed, MessageActionRow, MessageButton, CommandInteraction, SelectMenuInteraction, ButtonInteraction, Message, MessageAttachment} = require('discord.js'),
+    {EmbedBuilder, ActionRowBuilder, ButtonBuilder, CommandInteraction, SelectMenuInteraction, ButtonInteraction, Message, MessageAttachment, ButtonStyle, Colors} = require('discord.js'),
     MySQL = require('mysql'),
     monthsArray = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
     { Time } = require('tm-essentials'),
@@ -124,30 +124,30 @@ exports.executeButton = async (interaction, buttonId, argument, tmio, commands, 
         }
 
         const interactionComponentRows = [];
-        interactionComponentRows.push(new MessageActionRow());
+        interactionComponentRows.push(new ActionRowBuilder());
 
         interactionComponentRows[0].addComponents(
-            new MessageButton()
+            new ButtonBuilder()
                 .setCustomId(this.name+'_totd-leaderboard-up_'+map.uid)
                 .setLabel('⬆')
-                .setStyle('PRIMARY')
+                .setStyle(ButtonStyle.Primary)
                 .setDisabled(leaderboardPosFromMapUID[argument] == 0)
         );
 
         interactionComponentRows[0].addComponents(
-            new MessageButton()
+            new ButtonBuilder()
                 .setCustomId(this.name+'_totd-leaderboard-down_'+map.uid)
                 .setLabel('⬇')
-                .setStyle('PRIMARY')
+                .setStyle(ButtonStyle.Primary)
                 .setDisabled(leaderboardPosFromMapUID[argument] + rows >= map.leaderboard.length)
         );
 
         if (leaderboardPosFromMapUID[argument] + rows >= map.leaderboard.length) {
             interactionComponentRows[0].addComponents(
-                new MessageButton()
+                new ButtonBuilder()
                     .setURL('https://trackmania.io/#/leaderboard/'+map.uid)
                     .setLabel('View on Trackmania.io')
-                    .setStyle('LINK')
+                    .setStyle(ButtonStyle.Link)
             );
         }
 
@@ -181,11 +181,11 @@ exports.executeSelectMenu = async (interaction, categoryId, argument, tmio, comm
  * @param {?Number} month The Month of the TOTD
  * @param {?Number} day The day of the TOTD
  * @param {?Number} year The year of the TOTD
- * @returns {Promise<Object<MessageEmbed, MessageActionRow>>}
+ * @returns {Promise<Object<EmbedBuilder, ActionRowBuilder>>}
  */
 async function renderTOTDEmbed(tmio, month, day, year){
     return new Promise((resolve, reject) => {
-        let embed = new MessageEmbed(),
+        let embed = new EmbedBuilder(),
             date = new Date();
 
         if (month != null && day != null) {
@@ -196,7 +196,7 @@ async function renderTOTDEmbed(tmio, month, day, year){
         try {
             tmio.totd.get(date).then(totd=>{
                 totd.map().then(async map=>{
-                    embed.setColor('GREEN').setAuthor({name: `Track of The Day - ${date.getDate()} ${monthsArray[date.getMonth()]} ${date.getFullYear()}`})
+                    embed.setColor(Colors.Green).setAuthor({name: `Track of The Day - ${date.getDate()} ${monthsArray[date.getMonth()]} ${date.getFullYear()}`})
                         .setTitle(tmio.stripFormat(map.name))
                         .addFields([
                             {name:'Created by:', value:map.authorName, inline:true},
@@ -212,34 +212,34 @@ async function renderTOTDEmbed(tmio, month, day, year){
                     // create 2 interaction rows (button or select menus)
                     const interactionComponentRows = [];
                     for (let i = 0; i < 1; i++) {
-                        interactionComponentRows.push(new MessageActionRow());
+                        interactionComponentRows.push(new ActionRowBuilder());
                     }
 
                     interactionComponentRows[0].addComponents(
-                        new MessageButton()
+                        new ButtonBuilder()
                             .setCustomId('totd_totd-leaderboard_'+map.uid)
                             .setLabel('Leaderboard')
-                            .setStyle('PRIMARY')
+                            .setStyle(ButtonStyle.Primary)
                     );
 
                     interactionComponentRows[0].addComponents(
-                        new MessageButton()
+                        new ButtonBuilder()
                             .setURL(map.url)
                             .setLabel('Download Map')
-                            .setStyle('LINK')
+                            .setStyle(ButtonStyle.Link)
                     );
                     interactionComponentRows[0].addComponents(
-                        new MessageButton()
+                        new ButtonBuilder()
                             .setURL(`https://trackmania.io/#/totd/leaderboard/${totd.leaderboardId}/${map.uid}`)
                             .setLabel('Trackmania.io')
-                            .setStyle('LINK')
+                            .setStyle(ButtonStyle.Link)
                     );
                     if (map.exchangeId) {
                         interactionComponentRows[0].addComponents(
-                            new MessageButton()
+                            new ButtonBuilder()
                                 .setURL(`https://trackmania.exchange/tracks/view/${map.exchangeId}`)
                                 .setLabel('Trackmania.exchange')
-                                .setStyle('LINK')
+                                .setStyle(ButtonStyle.Link)
                         );
                     }
 

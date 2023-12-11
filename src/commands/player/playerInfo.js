@@ -1,5 +1,5 @@
 const Command = require('../../structures/Command'),
-    {MessageEmbed, MessageActionRow, MessageButton, ButtonInteraction, CommandInteraction, SelectMenuInteraction, Message} = require('discord.js'),
+    {EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonInteraction, CommandInteraction, SelectMenuInteraction, Message, ButtonStyle} = require('discord.js'),
     MySQL = require('mysql');
 
 /**
@@ -81,19 +81,19 @@ exports.execute = async (interaction, tmio, commands, sql) => {
         }
 
         const embed = renderPlayerInfoEmbed(tmio, player),
-            interactionComponentRows = [new MessageActionRow()];
+            interactionComponentRows = [new ActionRowBuilder()];
 
         interactionComponentRows[0].addComponents(
-            new MessageButton()
+            new ButtonBuilder()
                 .setCustomId(this.name+'_'+'cotd_'+player.login)
                 .setLabel('COTD stats')
-                .setStyle('PRIMARY')
+                .setStyle(ButtonStyle.Primary)
         );
         interactionComponentRows[0].addComponents(
-            new MessageButton()
+            new ButtonBuilder()
                 .setURL(player.meta.displayURL)
                 .setLabel('View on Trackmania.io')
-                .setStyle('LINK')
+                .setStyle(ButtonStyle.Link)
         );
 
         interaction.editReply({
@@ -149,7 +149,7 @@ exports.executeSelectMenu = async (interaction, categoryId, argument, tmio, comm
  * Generates an Embed of the Player Info
  * @param {import('trackmania.io').Client} tmio
  * @param {import('trackmania.io/typings/structures/Player')} player
- * @returns {MessageEmbed}
+ * @returns {EmbedBuilder}
  */
 function renderPlayerInfoEmbed(tmio, player){
     let trophiesStr = "";
@@ -163,7 +163,7 @@ function renderPlayerInfoEmbed(tmio, player){
 
     const embedColor = ["#1aa468", "#6b3511", "#c77e49", "#e89b6b", "#454545", "#6b6d6b", "#bebbbe", "#8a6100", "#d19500", "#ffd802"][player.trophies.echelon.number];
 
-    let embed = new MessageEmbed()
+    let embed = new EmbedBuilder()
         .setTitle((player.clubTag ? `[${tmio.stripFormat(player.clubTag)}] `:"") + player.name)
         .setColor(embedColor)
         .setThumbnail(player.trophies.echelon.image)
@@ -191,11 +191,11 @@ function renderPlayerInfoEmbed(tmio, player){
  * Generates an Embed of the Player COTD Stats
  * @param {import('trackmania.io').Client} tmio
  * @param {import('trackmania.io/typings/structures/Player')} player
- * @returns {MessageEmbed}
+ * @returns {EmbedBuilder}
  */
 function renderPlayerCOTDStats(tmio, player){
     return player.cotd().then(cotd=>{
-        return new MessageEmbed()
+        return new EmbedBuilder()
             .setTitle('Cup Of The Day stats of ' + player.name)
             .addFields([
                 {name:'Total played', value:cotd.count, inline:true},

@@ -1,5 +1,5 @@
 const Command = require('../../structures/Command'),
-    {MessageEmbed, CommandInteraction, SelectMenuInteraction, Message, MessageActionRow, MessageButton} = require('discord.js'),
+    {EmbedBuilder, CommandInteraction, SelectMenuInteraction, Message, ActionRowBuilder, ButtonBuilder, ButtonStyle} = require('discord.js'),
     MySQL = require('mysql'),
     { execSync } = require('child_process');
 
@@ -54,7 +54,7 @@ exports.execute = async (interaction, tmio, commands, sql) => {
     uptimeTotalSeconds %= 3600;
     let uptimeminutes = Math.floor(uptimeTotalSeconds / 60);
 
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
         .setColor("#9C01C4")
         .setTitle('About ' + interaction.client.user.tag)
         .addFields([
@@ -70,18 +70,18 @@ exports.execute = async (interaction, tmio, commands, sql) => {
         });
 
     const interactionComponentRows = [];
-    interactionComponentRows.push(new MessageActionRow());
+    interactionComponentRows.push(new ActionRowBuilder());
     interactionComponentRows[0].addComponents(
-        new MessageButton()
+        new ButtonBuilder()
             .setURL(`https://discord.com/api/oauth2/authorize?client_id=${interaction.client.user.id}&permissions=397888841808&scope=bot%20applications.commands`)
             .setLabel('Invite the bot to your server!')
-            .setStyle('LINK')
+            .setStyle(ButtonStyle.Link)
     );
     interactionComponentRows[0].addComponents(
-        new MessageButton()
+        new ButtonBuilder()
             .setURL('https://github.com/GreepTheSheep/discord-trackmania.io')
             .setLabel('See the repository')
-            .setStyle('LINK')
+            .setStyle(ButtonStyle.Link)
     );
 
     interaction.reply({

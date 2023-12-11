@@ -1,5 +1,5 @@
 const Command = require('../../structures/Command'),
-    {ButtonInteraction, MessageEmbed, MessageActionRow, MessageButton, CommandInteraction, SelectMenuInteraction, Message, MessageAttachment, MessageSelectMenu} = require('discord.js'),
+    {ButtonInteraction, EmbedBuilder, ActionRowBuilder, ButtonBuilder, CommandInteraction, SelectMenuInteraction, Message, MessageAttachment, StringSelectMenuBuilder, ButtonStyle} = require('discord.js'),
     MySQL = require('mysql'),
     Table = require('easy-table');
 
@@ -113,30 +113,30 @@ exports.executeButton = async (interaction, buttonId, argument, tmio, commands, 
         }
 
         const interactionComponentRows = [];
-        interactionComponentRows.push(new MessageActionRow());
+        interactionComponentRows.push(new ActionRowBuilder());
 
         interactionComponentRows[0].addComponents(
-            new MessageButton()
+            new ButtonBuilder()
                 .setCustomId(this.name+'_leaderboard-up_'+clubId+'-'+campaignId)
                 .setLabel('⬆')
-                .setStyle('PRIMARY')
+                .setStyle(ButtonStyle.Primary)
                 .setDisabled(leaderboardPosFromCampaignID[campaignId] == 0)
         );
 
         interactionComponentRows[0].addComponents(
-            new MessageButton()
+            new ButtonBuilder()
                 .setCustomId(this.name+'_leaderboard-down_'+clubId+'-'+campaignId)
                 .setLabel('⬇')
-                .setStyle('PRIMARY')
+                .setStyle(ButtonStyle.Primary)
                 .setDisabled(leaderboardPosFromCampaignID[campaignId] + rows >= campaign.leaderboard.length)
         );
 
         if (leaderboardPosFromCampaignID[campaignId] + rows >= campaign.leaderboard.length) {
             interactionComponentRows[0].addComponents(
-                new MessageButton()
+                new ButtonBuilder()
                     .setURL('https://trackmania.io/#/campaigns/'+clubId+'/'+campaignId)
                     .setLabel('View on Trackmania.io')
-                    .setStyle('LINK')
+                    .setStyle(ButtonStyle.Link)
             );
         }
 
@@ -173,11 +173,11 @@ exports.executeSelectMenu = async (interaction, categoryId, argument, tmio, comm
  * Render the embeds
  * @param {import('trackmania.io/typings/structures/Campaign')} campaign
  * @param {import('trackmania.io').Client} tmio
- * @returns {Promise<Object<MessageEmbed, MessageActionRow>>}
+ * @returns {Promise<Object<EmbedBuilder, ActionRowBuilder>>}
  */
 async function renderCampaignEmbed(campaign, tmio){
 
-    let embed = new MessageEmbed(),
+    let embed = new EmbedBuilder(),
         clubID = 0;
 
     if (!campaign.isOfficial) {
@@ -207,20 +207,20 @@ async function renderCampaignEmbed(campaign, tmio){
 
     const interactionComponentRows = [];
     for (let i = 0; i < 2; i++) {
-        interactionComponentRows.push(new MessageActionRow());
+        interactionComponentRows.push(new ActionRowBuilder());
     }
 
     interactionComponentRows[0].addComponents(
-        new MessageButton()
+        new ButtonBuilder()
             .setCustomId('campaign_leaderboard_'+clubID+'-'+campaign.id)
             .setLabel('Campaign leaderboard')
-            .setStyle('PRIMARY')
+            .setStyle(ButtonStyle.Primary)
     );
     interactionComponentRows[0].addComponents(
-        new MessageButton()
+        new ButtonBuilder()
             .setURL(`https://trackmania.io/#/campaigns/${clubID}/${campaign.id}`)
             .setLabel('View on Trackmania.io')
-            .setStyle('LINK')
+            .setStyle(ButtonStyle.Link)
     );
 
     const selectOptions = [];
@@ -233,7 +233,7 @@ async function renderCampaignEmbed(campaign, tmio){
     }
 
     interactionComponentRows[1].addComponents(
-        new MessageSelectMenu()
+        new StringSelectMenuBuilder()
             .setCustomId('campaign_selectMap')
             .setPlaceholder('Select a map')
             .addOptions(selectOptions)

@@ -1,4 +1,4 @@
-const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js'),
+const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, Colors } = require('discord.js'),
     monthsArray = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
     { Time } = require('tm-essentials');
 
@@ -18,9 +18,9 @@ exports.sendTOTD = async function(dataChannel, client, tmio, map, totd){
         if (!channel) return console.log(`❌ Impossible to fetch channel ${dataChannel.channelId} from guild ${dataChannel.guildId}`);
 
         let date = new Date(),
-            embed = new MessageEmbed();
+            embed = new EmbedBuilder();
 
-        embed.setColor('GREEN')
+        embed.setColor(Colors.Green)
             .setAuthor({name: `Track of The Day - ${date.getDate()} ${monthsArray[date.getMonth()]} ${date.getFullYear()}`})
             .setTitle(tmio.stripFormat(map.name))
             .addFields([
@@ -36,34 +36,34 @@ exports.sendTOTD = async function(dataChannel, client, tmio, map, totd){
 
         const interactionComponentRows = [];
         for (let i = 0; i < 1; i++) {
-            interactionComponentRows.push(new MessageActionRow());
+            interactionComponentRows.push(new ActionRowBuilder());
         }
 
         interactionComponentRows[0].addComponents(
-            new MessageButton()
+            new ButtonBuilder()
                 .setCustomId('totd_totd-leaderboard_'+map.uid)
                 .setLabel('Leaderboard')
-                .setStyle('PRIMARY')
+                .setStyle(ButtonStyle.Primary)
         );
 
         interactionComponentRows[0].addComponents(
-            new MessageButton()
+            new ButtonBuilder()
                 .setURL(map.url)
                 .setLabel('Download Map')
-                .setStyle('LINK')
+                .setStyle(ButtonStyle.Link)
         );
         interactionComponentRows[0].addComponents(
-            new MessageButton()
+            new ButtonBuilder()
                 .setURL(`https://trackmania.io/#/totd/leaderboard/${totd.leaderboardId}/${map.uid}`)
                 .setLabel('Trackmania.io')
-                .setStyle('LINK')
+                .setStyle(ButtonStyle.Link)
         );
         if (map.exchangeId) {
             interactionComponentRows[0].addComponents(
-                new MessageButton()
+                new ButtonBuilder()
                     .setURL(`https://trackmania.exchange/tracks/view/${map.exchangeId}`)
                     .setLabel('Trackmania.exchange')
-                    .setStyle('LINK')
+                    .setStyle(ButtonStyle.Link)
             );
         }
 
