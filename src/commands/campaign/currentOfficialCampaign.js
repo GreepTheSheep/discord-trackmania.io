@@ -1,5 +1,5 @@
 const Command = require('../../structures/Command'),
-    {ButtonInteraction, MessageEmbed, MessageActionRow, MessageButton, CommandInteraction, SelectMenuInteraction, Message, MessageAttachment} = require('discord.js'),
+    {ButtonInteraction, EmbedBuilder, ActionRowBuilder, ButtonBuilder, CommandInteraction, SelectMenuInteraction, Message, MessageAttachment} = require('discord.js'),
     MySQL = require('mysql'),
     Table = require('easy-table'),
     campaignCmd = require('./campaign');

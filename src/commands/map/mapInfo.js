@@ -1,5 +1,5 @@
 const Command = require('../../structures/Command'),
-    {MessageEmbed, MessageActionRow, MessageButton, CommandInteraction, SelectMenuInteraction, ButtonInteraction, Message, MessageAttachment} = require('discord.js'),
+    {EmbedBuilder, ActionRowBuilder, ButtonBuilder, CommandInteraction, SelectMenuInteraction, ButtonInteraction, Message, MessageAttachment, ButtonStyle, Colors} = require('discord.js'),
     MySQL = require('mysql'),
     { Time } = require('tm-essentials'),
     Table = require('easy-table');
@@ -108,30 +108,30 @@ exports.executeButton = async (interaction, buttonId, argument, tmio, commands, 
         }
 
         const interactionComponentRows = [];
-        interactionComponentRows.push(new MessageActionRow());
+        interactionComponentRows.push(new ActionRowBuilder());
 
         interactionComponentRows[0].addComponents(
-            new MessageButton()
+            new ButtonBuilder()
                 .setCustomId(this.name+'_map-leaderboard-up_'+map.uid)
                 .setLabel('⬆')
-                .setStyle('PRIMARY')
+                .setStyle(ButtonStyle.Primary)
                 .setDisabled(leaderboardPosFromMapUID[argument] == 0)
         );
 
         interactionComponentRows[0].addComponents(
-            new MessageButton()
+            new ButtonBuilder()
                 .setCustomId(this.name+'_map-leaderboard-down_'+map.uid)
                 .setLabel('⬇')
-                .setStyle('PRIMARY')
+                .setStyle(ButtonStyle.Primary)
                 .setDisabled(leaderboardPosFromMapUID[argument] + rows >= map.leaderboard.length)
         );
 
         if (leaderboardPosFromMapUID[argument] + rows >= map.leaderboard.length) {
             interactionComponentRows[0].addComponents(
-                new MessageButton()
+                new ButtonBuilder()
                     .setURL('https://trackmania.io/#/leaderboard/'+map.uid)
                     .setLabel('View on Trackmania.io')
-                    .setStyle('LINK')
+                    .setStyle(ButtonStyle.Link)
             );
         }
 
@@ -165,15 +165,15 @@ exports.executeSelectMenu = async (interaction, categoryId, argument, tmio, comm
  * @param {?Number} month The Month of the TOTD
  * @param {?Number} day The day of the TOTD
  * @param {?Number} year The year of the TOTD
- * @returns {Promise<Object<MessageEmbed, MessageActionRow>>}
+ * @returns {Promise<Object<EmbedBuilder, ActionRowBuilder>>}
  */
 async function renderMapEmbed(tmio, uid){
     return new Promise((resolve, reject) => {
-        let embed = new MessageEmbed();
+        let embed = new EmbedBuilder();
 
         try {
             tmio.maps.get(uid).then(async map => {
-                embed.setColor('GREEN')
+                embed.setColor(Colors.Green)
                     .setTitle(tmio.stripFormat(map.name))
                     .addFields([
                         {name:'Created by:', value:map.authorName, inline:true},
@@ -188,33 +188,33 @@ async function renderMapEmbed(tmio, uid){
 
                 // create 2 interaction rows (button or select menus)
                 const interactionComponentRows = [];
-                interactionComponentRows.push(new MessageActionRow());
+                interactionComponentRows.push(new ActionRowBuilder());
 
                 interactionComponentRows[0].addComponents(
-                    new MessageButton()
+                    new ButtonBuilder()
                         .setCustomId('map_map-leaderboard_'+map.uid)
                         .setLabel('Leaderboard')
-                        .setStyle('PRIMARY')
+                        .setStyle(ButtonStyle.Primary)
                 );
 
                 interactionComponentRows[0].addComponents(
-                    new MessageButton()
+                    new ButtonBuilder()
                         .setURL(map.url)
                         .setLabel('Download Map')
-                        .setStyle('LINK')
+                        .setStyle(ButtonStyle.Link)
                 );
                 interactionComponentRows[0].addComponents(
-                    new MessageButton()
+                    new ButtonBuilder()
                         .setURL(`https://trackmania.io/#/leaderboard/${map.uid}`)
                         .setLabel('Trackmania.io')
-                        .setStyle('LINK')
+                        .setStyle(ButtonStyle.Link)
                 );
                 if (map.exchangeId) {
                     interactionComponentRows[0].addComponents(
-                        new MessageButton()
+                        new ButtonBuilder()
                             .setURL(`https://trackmania.exchange/tracks/view/${map.exchangeId}`)
                             .setLabel('Trackmania.exchange')
-                            .setStyle('LINK')
+                            .setStyle(ButtonStyle.Link)
                     );
                 }
 

@@ -1,5 +1,5 @@
 const Command = require('../../structures/Command'),
-    {MessageEmbed, CommandInteraction, SelectMenuInteraction, Message, MessageActionRow, MessageButton, MessageSelectMenu} = require('discord.js'),
+    {EmbedBuilder, CommandInteraction, SelectMenuInteraction, Message, ActionRowBuilder, ButtonBuilder, StringSelectMenuBuilder, ButtonStyle} = require('discord.js'),
     MySQL = require('mysql');
 
 /**
@@ -53,26 +53,26 @@ exports.execute = async (interaction, tmio, commands, sql) => {
     // create 2 interaction rows (button or select menus)
     const interactionComponentRows = [];
     for (let i = 0; i < 2; i++) {
-        interactionComponentRows.push(new MessageActionRow());
+        interactionComponentRows.push(new ActionRowBuilder());
     }
 
     // Add 2 button to the message in the first row
     interactionComponentRows[0].addComponents(
-        new MessageButton()
+        new ButtonBuilder()
             .setCustomId(this.name+'_'+'button-primary')
             .setLabel('Primary')
-            .setStyle('PRIMARY')
+            .setStyle(ButtonStyle.Primary)
     );
     interactionComponentRows[0].addComponents(
-        new MessageButton()
+        new ButtonBuilder()
             .setURL('https://tmio.greep.gq')
             .setLabel('TMIO')
-            .setStyle('LINK')
+            .setStyle(ButtonStyle.Link)
     );
 
     // adds a select menu to the message in the second row
     interactionComponentRows[1].addComponents(
-        new MessageSelectMenu()
+        new StringSelectMenuBuilder()
             .setCustomId(this.name+'_'+'select-category')
             .setPlaceholder('Select here')
             .addOptions([

@@ -1,5 +1,5 @@
 const Command = require('../../structures/Command'),
-    {MessageEmbed, CommandInteraction, SelectMenuInteraction, Message, MessageActionRow, MessageButton, ButtonInteraction, Permissions} = require('discord.js'),
+    {EmbedBuilder, CommandInteraction, SelectMenuInteraction, Message, ActionRowBuilder, ButtonBuilder, ButtonInteraction, Permissions} = require('discord.js'),
     MySQL = require('mysql');
 
 /**

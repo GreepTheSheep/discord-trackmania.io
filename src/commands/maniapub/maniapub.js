@@ -1,5 +1,5 @@
 const Command = require('../../structures/Command'),
-    {MessageEmbed, CommandInteraction, SelectMenuInteraction, Message, ButtonInteraction, MessageActionRow, MessageButton, MessageSelectMenu} = require('discord.js'),
+    {EmbedBuilder, CommandInteraction, SelectMenuInteraction, Message, ButtonInteraction, ActionRowBuilder, ButtonBuilder, StringSelectMenuBuilder, ButtonStyle} = require('discord.js'),
     MySQL = require('mysql');
 let ads = [],
     adIndex = 0;
@@ -43,7 +43,7 @@ exports.execute = async (interaction, tmio, commands, sql) => {
 
     let ad = ads[adIndex];
 
-    let embed = new MessageEmbed()
+    let embed = new EmbedBuilder()
         .setTitle(ad.name)
         .setDescription(ad.url)
         .setImage(ad.image)
@@ -53,21 +53,21 @@ exports.execute = async (interaction, tmio, commands, sql) => {
     // create 2 interaction rows (button or select menus)
     const interactionComponentRows = [];
     for (let i = 0; i < 1; i++) {
-        interactionComponentRows.push(new MessageActionRow());
+        interactionComponentRows.push(new ActionRowBuilder());
     }
 
     // Add 2 button to the message in the first row
     interactionComponentRows[0].addComponents(
-        new MessageButton()
+        new ButtonBuilder()
             .setCustomId(this.name+'_'+'button-prev')
             .setLabel('⬅')
-            .setStyle('PRIMARY')
+            .setStyle(ButtonStyle.Primary)
     );
     interactionComponentRows[0].addComponents(
-        new MessageButton()
+        new ButtonBuilder()
             .setCustomId(this.name+'_'+'button-next')
             .setLabel('➡')
-            .setStyle('PRIMARY')
+            .setStyle(ButtonStyle.Primary)
     );
 
     interaction.editReply({
@@ -90,7 +90,7 @@ exports.executeButton = async (interaction, buttonId, argument, tmio, commands, 
         adIndex++;
         if (adIndex >= ads.length) adIndex = 0;
         let ad = ads[adIndex];
-        let embed = new MessageEmbed()
+        let embed = new EmbedBuilder()
             .setTitle(ad.name)
             .setDescription(ad.url)
             .setImage(ad.image)
@@ -104,7 +104,7 @@ exports.executeButton = async (interaction, buttonId, argument, tmio, commands, 
         adIndex--;
         if (adIndex < 0) adIndex = ads.length-1;
         let ad = ads[adIndex];
-        let embed = new MessageEmbed()
+        let embed = new EmbedBuilder()
             .setTitle(ad.name)
             .setDescription(ad.url)
             .setImage(ad.image)

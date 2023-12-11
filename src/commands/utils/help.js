@@ -1,5 +1,5 @@
 const Command = require('../../structures/Command'),
-    {MessageEmbed, MessageButton, CommandInteraction, SelectMenuInteraction, ButtonInteraction, Message, MessageActionRow, MessageSelectMenu} = require('discord.js'),
+    {EmbedBuilder, ButtonBuilder, CommandInteraction, SelectMenuInteraction, ButtonInteraction, Message, ActionRowBuilder, StringSelectMenuBuilder} = require('discord.js'),
     MySQL = require('mysql'),
     categoryInfos = require('../categoryInfo.json');
 
@@ -45,7 +45,7 @@ exports.execute = async (interaction, tmio, commands, sql) => {
     if (categoryTyped == null) {
         embed = embedCategories(commands);
 
-        const categoriesSelectMenu = new MessageActionRow().addComponents(generateCategorySelectMenu(interaction, commands));
+        const categoriesSelectMenu = new ActionRowBuilder().addComponents(generateCategorySelectMenu(interaction, commands));
 
         interaction.reply({
             embeds: [embed],
@@ -92,10 +92,10 @@ exports.executeSelectMenu = async (interaction, categoryId, argument, tmio, comm
 // INTERNAL COMMAND METHODS
 
 /**
- * Generate a MessageSelectMenu of categories of commands
+ * Generate a StringSelectMenuBuilder of categories of commands
  * @param {CommandInteraction} interaction
  * @param {Command[]} commands The list of commands
- * @returns {MessageSelectMenu}
+ * @returns {StringSelectMenuBuilder}
  */
 function generateCategorySelectMenu(interaction, commands){
     const categories = commandsCategories(commands),
@@ -123,7 +123,7 @@ function generateCategorySelectMenu(interaction, commands){
         emoji: "❔"
     });
 
-    return new MessageSelectMenu()
+    return new StringSelectMenuBuilder()
         .setCustomId('help_select-category')
         .setPlaceholder('Select a category')
         .addOptions(selectOptions);
@@ -132,10 +132,10 @@ function generateCategorySelectMenu(interaction, commands){
 /**
  * Generates an embed of commands categories with the list of commands
  * @param {Commands[]} commands The list of commands
- * @returns {MessageEmbed} The embed to send
+ * @returns {EmbedBuilder} The embed to send
  */
 function embedCategories(commands){
-    const embed = new MessageEmbed().setColor('RANDOM').setTitle('Trackmania.io'),
+    const embed = new EmbedBuilder().setColor('Random').setTitle('Trackmania.io'),
         categories = commandsCategories(commands);
 
     categories.forEach(category => {
@@ -153,7 +153,7 @@ function embedCategories(commands){
 function embedCommands(categoryDir, commands){
     if (categoryDir == 'uncategorized') {
         const commandsInCategory = commands.filter(c => c.category == undefined),
-            embed = new MessageEmbed().setColor('RANDOM').setTitle('Uncategorized commands');
+            embed = new EmbedBuilder().setColor('Random').setTitle('Uncategorized commands');
 
         if (commandsInCategory.length === 0) embed.setColor("#FF0000").setTitle('No commands found');
         else {
@@ -166,7 +166,7 @@ function embedCommands(categoryDir, commands){
     } else {
         const category = commands.filter(c=>c.category != undefined).find(c=>c.category.dir.toLowerCase() === categoryDir.toLowerCase()).category,
             commandsInCategory = commands.filter(command => command.category === category),
-            embed = new MessageEmbed().setColor('RANDOM').setTitle((category.emoji ? category.emoji + " ": "") + category.name);
+            embed = new EmbedBuilder().setColor('Random').setTitle((category.emoji ? category.emoji + " ": "") + category.name);
 
         if (commandsInCategory.length === 0) embed.setColor("#FF0000").setTitle('No commands found');
         else {
