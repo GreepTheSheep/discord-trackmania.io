@@ -19,13 +19,12 @@ jobs:
         run: echo "::set-output name=sha::$(echo ${GITHUB_SHA})"
 
       - name: Checkout repository
-        uses: actions/checkout@latest
+        uses: actions/checkout@v4
 
       - name: Install Node v22
-        uses: actions/setup-node@latest
+        uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
 
       - name: Install dependencies
         run: npm ci
