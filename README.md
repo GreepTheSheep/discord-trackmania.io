@@ -1,3 +1,6 @@
+> [!IMPORTANT]
+> This discord bot has now been stopped. You can set up yours using the [node-trackmania.io library](https://github.com/GreepTheSheep/node-trackmania.io)
+
 # discord-trackmania.io
  A discord.js bot that uses [node-trackmania.io](https://github.com/GreepTheSheep/node-trackmania.io)
 
